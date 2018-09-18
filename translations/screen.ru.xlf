@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="ru" target-language="ru" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="main_menu_screen_title">
+                <source>main_menu_screen_title</source>
+                <target>
+*🏰 Королевство «%kingdomName%», %name% вы %supreme_gender%!*
+                </target>
+            </trans-unit>
+            <trans-unit id="refer_supreme_gender">
+                <source>refer_supreme_gender</source>
+                <target>
+{0}Ваш верховный король|{1}Ваша верховная королева
+                </target>
+            </trans-unit>
+            <trans-unit id="refer_kingdom">
+                <source>refer_kingdom</source>
+                <target>
+{0} |{1}, из королевства «%kingdom%»
+                </target>
+            </trans-unit>
+            <trans-unit id="main_menu_screen_message">
+                <source>main_menu_screen_message</source>
+                <target>
+`Ваше Королевство `*%level%*` уровня, его территория `*%territory%*` уровня, налоги установлены на уровень `*%tax%*`, у вас `%people%`, еды на `%foodDay%`, ресурсы королевства:`
+
+`💰`*%gold%*` | 🍞`*%food%*` | 🌲`*%wood%*` | ⛏`*%stone%*` | 🔨`*%iron%*
+                </target>
+            </trans-unit>
+            <trans-unit id="settings_screen_message">
+                <source>settings_screen_message</source>
+                <target>
+*%title%*
+
+©️ Ваше имя: *%name%*
+
+®️ Название вашего королевства: *%kingdomName%*
+
+🏰 Всего королевств: *%count%*
+
+💬 Администрация: %admin%
+                </target>
+            </trans-unit>
+            <trans-unit id="achivements_screen_message">
+                <source>achivements_screen_message</source>
+                <target>
+*%title%*
+
+Мы уже учитываем выши заслуги, скоро их сможете увидеть и вы!
+                </target>
+            </trans-unit>
+            <trans-unit id="bonuses_screen_message">
+                <source>bonuses_screen_message</source>
+                <target>
+*%title%*
+
+Вступайте в нашу группу, следите за новостями и получайте дополнительные ежедневные бонусы!
+                </target>
+            </trans-unit>
+            <trans-unit id="diplomacy_screen_message">
+                <source>diplomacy_screen_message</source>
+                <target>
+*%title%*
+
+В данный момент, в этом мире, королевства только начинают развиваться, но скоро начнется эпоха войн и дипломатии
+                </target>
+            </trans-unit>
+            <trans-unit id="research_screen_message">
+                <source>research_screen_message</source>
+                <target>
+*%title%*
+
+В будущем Скоро вас ждет огромный выбор очень важных исследований
+                </target>
+            </trans-unit>
+            <trans-unit id="research_screen_message_without_library">
+                <source>research_screen_message_without_library</source>
+                <target>
+*%title%*
+
+Для доступа к исследованиям королевства, необходимо построить библиотеку!
+                </target>
+            </trans-unit>
+            <trans-unit id="edicts_screen_message">
+                <source>edicts_screen_message</source>
+                <target>
+*%title%*
+
+Управляйте вашим королевством и подданными
+                </target>
+            </trans-unit>
+            <trans-unit id="event_screen_message">
+                <source>event_screen_message</source>
+                <target>
+*%title%*
+
+В будущем здесь вы увидите события происходящие в вашем королевстве
+                </target>
+            </trans-unit>
+            <trans-unit id="warehouse_screen_message">
+                <source>warehouse_screen_message</source>
+                <target>
+*%title%*
+
+`💰 Золота   - `*%gold% / %maxGold%*
+`🍞 Еды      - `*%food% / %maxFood%*
+`🌲 Дерева   - `*%wood% / %maxWood%*
+`⛏ Камней   - `*%stone% / %maxStone%*
+`🔨 Железа   - `*%iron% / %maxIron%*
+                </target>
+            </trans-unit>
+            <trans-unit id="warehouse_additional_screen_message">
+                <source>warehouse_additional_screen_message</source>
+                <target>
+`За `%hours%` после последней поставки ресурсов, накопилось`
+
+`💰 Золота   - `*%gold%*
+`🍞 Еды      - `*%food%*
+`🌲 Дерева   - `*%wood%*
+`⛏ Камней   - `*%stone%*
+`🔨 Железа   - `*%iron%*
+
+необходимо перенести ресурсы на склад королевства
+                </target>
+            </trans-unit>
+            <trans-unit id="warehouse_without_additional_screen_message">
+                <source>warehouse_without_additional_screen_message</source>
+                <target>
+С последней поставки ресурсов прошло слишком мало времени, попробуйте проверить склад через час
+                </target>
+            </trans-unit>
+            <trans-unit id="people_screen_message">
+                <source>people_screen_message</source>
+                <target>
+*%title%*
+
+`Всего у вас `%people%`, в час они съедают `*%eatHourly%*` еды 🍞`
+
+`Уровень налогов `*%taxLevel%*`, в час подданные платят `*%payHourly%*` налогов золотом 💰`
+
+`⚔️ Армия, на службе `*%onArmy% / %maxOnArmy%*
+`🍞 Еда, добывают `*%onFood% / %maxOnFood%*`, в час `*%foodHourly%*
+`🌲 Дерево, добывают `*%onWood% / %maxOnWood%*`, в час `*%woodHourly%*
+`⛏ Камень, добывают `*%onStone% / %maxOnStone%*`, в час `*%stoneHourly%*
+`🔨 Железо, добывают `*%onIron% / %maxOnIron%*`, в час `*%ironHourly%*
+
+`Свободно `%free%
+                </target>
+            </trans-unit>
+            <trans-unit id="buildings_screen_message">
+                <source>buildings_screen_message</source>
+                <target>
+*%title%*
+
+`💰 `*%gold%* | `🌲 `*%wood%*  | `⛏ `*%stone%*  | `🔨 `*%iron%*
+
+`🏛️ Мест для постройки: `*%size%*
+                </target>
+            </trans-unit>
+            <trans-unit id="buildings_screen_message_structure">
+                <source>buildings_screen_message_structure</source>
+                <target>
+`🏛 %structureName% - `*%structureLevel%*
+`%structureCost%`
+                </target>
+            </trans-unit>
+            <trans-unit id="buildings_screen_message_structure_choose">
+                <source>buildings_screen_message_structure_choose</source>
+                <target>
+_выберите ниже что вы хотите купить или улучшить_
+                </target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -1,0 +1,104 @@
+version: '3.6'
+networks:
+  public:
+    external: true
+    name: public
+  local:
+    internal: true
+    name: local
+
+volumes:
+  db:
+
+services:
+  mysql:
+    container_name: ${DOCKER_PROJECT_NAME}-mysql
+    build:
+      context: .docker
+      dockerfile: mysql.Dockerfile
+      args:
+        TIMEZONE: ${TIMEZONE}
+        VERSION: 8.0
+    networks:
+      - public
+      - local
+    ports:
+      - 33${PORT_SUFFIX}:3306
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      TZ: ${TIMEZONE}
+      MYSQL_ROOT_PASSWORD: ${DOCKER_PROJECT_NAME}
+      MYSQL_DATABASE: ${DOCKER_PROJECT_NAME}
+      MYSQL_USER: ${DOCKER_PROJECT_NAME}
+      MYSQL_PASSWORD: ${DOCKER_PROJECT_NAME}
+  php-fpm:
+    container_name: ${DOCKER_PROJECT_NAME}-php-fpm
+    build:
+      context: .docker
+      dockerfile: php-fpm.${DOCKER_ENV}.Dockerfile
+      args:
+        VERSION: 7.2-fpm-alpine
+    environment:
+      TZ: ${TIMEZONE}
+      XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
+    networks:
+      - public
+      - local
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app
+      - /etc/letsencrypt:/etc/letsencrypt
+  php-cron:
+    container_name: ${DOCKER_PROJECT_NAME}-php-cron
+    build:
+      context: .docker
+      dockerfile: php-cron.${DOCKER_ENV}.Dockerfile
+      args:
+        VERSION: 7.2-cli-alpine
+    environment:
+      TZ: ${TIMEZONE}
+      XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
+    networks:
+      - public
+      - local
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app
+  nginx:
+    container_name: ${DOCKER_PROJECT_NAME}-nginx
+    build:
+      context: .docker
+      dockerfile: nginx.${DOCKER_ENV}.Dockerfile
+    environment:
+      TZ: ${TIMEZONE}
+      NGINX_VERSION: 1.8
+    networks:
+      - public
+      - local
+    depends_on:
+      - php-fpm
+    ports:
+      - 80${PORT_SUFFIX}:80
+      - 44${PORT_SUFFIX}:443
+    volumes:
+      - .:/app
+      - /etc/ssl:/etc/ssl
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /home/projects/docker/proxy/snippets:/etc/nginx/snippets
+      - /var/www/letsencrypt:/var/www/letsencrypt
+  composer:
+    container_name: ${DOCKER_PROJECT_NAME}-composer
+    build:
+      context: .docker
+      dockerfile: composer.Dockerfile
+      args:
+        VERSION: 1.7
+    environment:
+      TZ: ${TIMEZONE}
+      PW: /app
+      COMPOSER_HOME: /tmp
+    volumes:
+      - .:/app

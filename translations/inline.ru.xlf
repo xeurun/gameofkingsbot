@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="ru" target-language="ru" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="channel_button">
+                <source>channel_button</source>
+                <target>💭 Новости</target>
+            </trans-unit>
+            <trans-unit id="group_button">
+                <source>group_button</source>
+                <target>Группа 📢</target>
+            </trans-unit>
+            <trans-unit id="subscribe_on_channel_button">
+                <source>subscribe_on_channel_button</source>
+                <target>📢 Новости</target>
+            </trans-unit>
+            <trans-unit id="enter_to_group_button">
+                <source>enter_to_group_button</source>
+                <target>Группа 💭</target>
+            </trans-unit>
+            <trans-unit id="change_user_name_button">
+                <source>change_user_name_button</source>
+                <target>Изменить ваше имя</target>
+            </trans-unit>
+            <trans-unit id="change_kingdom_name_button">
+                <source>change_kingdom_name_button</source>
+                <target>Изменить название королества</target>
+            </trans-unit>
+            <trans-unit id="receive_every_day_bonuses_button">
+                <source>receive_every_day_bonuses_button</source>
+                <target>❤ Получить ежедневный бонус</target>
+            </trans-unit>
+            <trans-unit id="move_extracted_resources_to_warehouse">
+                <source>move_extracted_resources_to_warehouse</source>
+                <target>Перенести ресурсы на склад</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

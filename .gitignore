@@ -1,0 +1,18 @@
+/build/
+/composer.phar
+/public/.htaccess
+/app/logs/.gitkeep
+/.idea/
+/public/js/
+/public/css/
+
+###> symfony/framework-bundle ###
+/.env
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> friendsofphp/php-cs-fixer ###
+/config/cs.php.cache
+###< friendsofphp/php-cs-fixer ###

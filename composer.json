@@ -1,0 +1,14 @@
+{
+    "name": "xeurun/gameofkingsbot",
+    "type": "project",
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "require": {
+        "php": "^7.2.0",
+        "longman/telegram-bot": "*",
+        "symfony/var-dumper": "*",
+        "symfony/dotenv": "^4.1"
+    },
+    "minimum-stability": "stable"
+}

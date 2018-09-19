@@ -1,8 +1,8 @@
 <?php
 
-namespace Longman\TelegramBot\Commands\SystemCommands;
+namespace App\Commands\System;
 
-use Factory\ScreenFactory;
+use App\Factory\ScreenFactory;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;

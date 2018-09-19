@@ -7,9 +7,6 @@ networks:
     internal: true
     name: local
 
-volumes:
-  logs:
-
 services:
   mysql:
     container_name: ${DOCKER_PROJECT_NAME}-mysql
@@ -49,7 +46,6 @@ services:
       - mysql
     volumes:
       - .:/app
-      - logs:/applogs
   nginx:
     container_name: ${DOCKER_PROJECT_NAME}-nginx
     build:

@@ -1,8 +1,8 @@
 <?php
 
-namespace Screens;
+namespace App\Screens;
 
-use Interfaces\ScreenInterface;
+use App\Interfaces\ScreenInterface;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;

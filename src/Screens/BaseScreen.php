@@ -1,6 +1,6 @@
 <?php
 
-namespace Screens;
+namespace App\Screens;
 
 abstract class BaseScreen
 {

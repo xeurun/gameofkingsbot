@@ -1,6 +1,6 @@
 <?php
 
-namespace Interfaces;
+namespace App\Interfaces;
 
 interface CallbackInterface
 {

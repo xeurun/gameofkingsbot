@@ -1,9 +1,9 @@
 <?php
 
-namespace Screens;
+namespace App\Screens;
 
 use Longman\TelegramBot\Entities\ServerResponse;
-use Responses\BackResponse;
+use App\Responses\BackResponse;
 
 class TODOScreen extends BaseScreen
 {

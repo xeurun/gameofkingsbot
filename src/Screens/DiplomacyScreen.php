@@ -1,12 +1,12 @@
 <?php
 
-namespace Screens;
+namespace App\Screens;
 
-use Interfaces\ScreenInterface;
+use App\Interfaces\ScreenInterface;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
-use Responses\BackResponse;
+use App\Responses\BackResponse;
 
 class DiplomacyScreen extends BaseScreen
 {

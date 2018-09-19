@@ -1,8 +1,8 @@
 <?php
 
-namespace Responses;
+namespace App\Responses;
 
-use Interfaces\ScreenInterface;
+use App\Interfaces\ScreenInterface;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
@@ -31,7 +31,7 @@ class BackResponse
         //Return a random keyboard.
         $keyboard = $keyboard
             ->setResizeKeyboard(true)
-            ->setOneTimeKeyboard(true)
+            ->setOneTimeKeyboard(false)
             ->setSelective(false);
 
         $data    = [

@@ -1,19 +1,19 @@
 <?php
 
-namespace Factory;
+namespace App\Factory;
 
-use Interfaces\ScreenInterface;
+use App\Interfaces\ScreenInterface;
 use Psr\Log\InvalidArgumentException;
-use Screens\AchivementsScreen;
-use Screens\BaseScreen;
-use Screens\BonusesScreen;
-use Screens\DiplomacyScreen;
-use Screens\EdictsScreen;
-use Screens\KingdomScreen;
-use Screens\MainMenuScreen;
-use Screens\SettingsScreen;
-use Screens\TODOScreen;
-use Screens\TreasureScreen;
+use App\Screens\AchivementsScreen;
+use App\Screens\BaseScreen;
+use App\Screens\BonusesScreen;
+use App\Screens\DiplomacyScreen;
+use App\Screens\EdictsScreen;
+use App\Screens\KingdomScreen;
+use App\Screens\MainMenuScreen;
+use App\Screens\SettingsScreen;
+use App\Screens\TODOScreen;
+use App\Screens\TreasureScreen;
 
 class ScreenFactory
 {

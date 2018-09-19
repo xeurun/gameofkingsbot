@@ -17,3 +17,10 @@
 /.idea/
 /public/js/
 /public/css/
+
+###> symfony/framework-bundle ###
+/.env
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###

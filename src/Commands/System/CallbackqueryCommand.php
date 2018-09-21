@@ -42,7 +42,7 @@ class CallbackqueryCommand extends BaseCommand
 
         $data = [
             'callback_query_id' => $callbackQuery->getId(),
-            'text'              => 'Hello World!',
+            'text'              => 'Функционал временно недоступен, спасибо!',
             'show_alert'        => true,
             'cache_time'        => 5,
         ];

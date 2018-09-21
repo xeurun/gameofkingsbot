@@ -104,29 +104,7 @@ class HookController extends AbstractController
         }
     }');
             } else if ($c === 0) {
-                $this->botManager->setCustomInput('{
-        "update_id":119409284, 
-        "message": {
-            "message_id":84,
-            "from":{
-                "id":191000234,
-                "is_bot":false,
-                "first_name":"Alexey",
-                "last_name":"Stepankov",
-                "username":"alexeystepankov",
-                "language_code":"en-US"
-            },
-            "chat":{
-                "id":191000234,
-                "first_name":"Alexey",
-                "last_name":"Stepankov",
-                "username":"alexeystepankov",
-                "type":"private"
-            },
-            "date":1537300010,
-            "text":"' . $m . '"
-        }
-    }');
+                $this->botManager->setCustomInput('{"update_id":119409820, "message":{"message_id":972,"from":{"id":508453111,"is_bot":false,"first_name":"\ud83d\udd25\ud83c\udf38","last_name":"\u0426\u0432\u0435\u0442","username":"banzisnsbd","language_code":"ru"},"chat":{"id":508453111,"first_name":"\ud83d\udd25\ud83c\udf38","last_name":"\u0426\u0432\u0435\u0442","username":"banzisnsbd","type":"private"},"date":1537514492,"text":"/start","entities":[{"offset":0,"length":6,"type":"bot_command"}]}}');
             } else {
                 $this->botManager->setCustomInput('{
                     "update_id":119409613, 

@@ -1,15 +1,17 @@
 [client]
-default-character-set=utf8
+default-character-set = utf8mb4
 
 [mysql]
-default-character-set=utf8
+default-character-set = utf8mb4
 
 [mysqld]
-character-set-server=utf8
-collation-server=utf8_unicode_ci
+innodb_use_native_aio=0
+character-set-client-handshake = false
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
 
-init_connect='SET collation_connection = utf8_unicode_ci'
-init_connect='SET NAMES utf8'
+init_connect='SET collation_connection = utf8mb4_unicode_ci'
+init_connect='SET NAMES utf8mb4'
 skip-character-set-client-handshake
 
 wait_timeout = 60

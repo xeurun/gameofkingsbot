@@ -3,6 +3,10 @@
 namespace App\Factory;
 
 use App\Interfaces\ScreenInterface;
+use App\Manager\BotManager;
+use App\Screens\BuildingsScreen;
+use App\Screens\PeopleScreen;
+use App\Screens\ResearchScreen;
 use Psr\Log\InvalidArgumentException;
 use App\Screens\AchivementsScreen;
 use App\Screens\BaseScreen;
@@ -18,44 +22,46 @@ use App\Screens\TreasureScreen;
 class ScreenFactory
 {
     /**
-     * @param int $chatId
      * @param string $screenName
-     * @return MainMenuScreen
+     * @param BotManager $botManager
+     * @return BaseScreen
      */
-    public function createScreen(int $chatId, string $screenName): BaseScreen
+    public function create(string $screenName, BotManager $botManager): BaseScreen
     {
         switch ($screenName) {
             case ScreenInterface::SCREEN_MAIN_MENU:
-                $screen = new MainMenuScreen($chatId, $screenName);
-                break;
             case ScreenInterface::SCREEN_BACK:
-                // TODO: move to prev state
-                $screen = new MainMenuScreen($chatId, ScreenInterface::SCREEN_MAIN_MENU);
+                $screen = $botManager->get(MainMenuScreen::class);
                 break;
             case ScreenInterface::SCREEN_KINGDOM:
-                $screen = new KingdomScreen($chatId, $screenName);
+                $screen = $botManager->get(KingdomScreen::class);
                 break;
             case ScreenInterface::SCREEN_EDICTS:
-                $screen = new EdictsScreen($chatId, $screenName);
+                $screen = $botManager->get(EdictsScreen::class);
                 break;
             case ScreenInterface::SCREEN_TREASURE:
-                $screen = new TreasureScreen($chatId, $screenName);
+                $screen = $botManager->get(TreasureScreen::class);
                 break;
             case ScreenInterface::SCREEN_DIPLOMACY:
-                $screen = new DiplomacyScreen($chatId, $screenName);
+                $screen = $botManager->get(DiplomacyScreen::class);
                 break;
-            case ScreenInterface::SCREEN_TODO1:
-            case ScreenInterface::SCREEN_TODO2:
-                $screen = new TODOScreen($chatId, $screenName);
+            case ScreenInterface::SCREEN_RESEARCH:
+                $screen = $botManager->get(ResearchScreen::class);
                 break;
             case ScreenInterface::SCREEN_BONUSES:
-                $screen = new BonusesScreen($chatId, $screenName);
+                $screen = $botManager->get(BonusesScreen::class);
                 break;
             case ScreenInterface::SCREEN_ACHIEVEMENTS:
-                $screen = new AchivementsScreen($chatId, $screenName);
+                $screen = $botManager->get(AchivementsScreen::class);
                 break;
             case ScreenInterface::SCREEN_SETTINGS:
-                $screen = new SettingsScreen($chatId, $screenName);
+                $screen = $botManager->get(SettingsScreen::class);
+                break;
+            case ScreenInterface::SCREEN_BUILDINGS:
+                $screen = $botManager->get(BuildingsScreen::class);
+                break;
+            case ScreenInterface::SCREEN_PEOPLE:
+                $screen = $botManager->get(PeopleScreen::class);
                 break;
             default:
                 throw new InvalidArgumentException('Incorrect screen name: ' . $screenName);
@@ -68,15 +74,15 @@ class ScreenFactory
      * @param string $screenName
      * @return bool
      */
-    public function isAvailableScreen(string $screenName): bool
+    public function isAvailable(string $screenName): bool
     {
-        return \in_array($screenName, $this->getAvailableScreens(), true);
+        return \in_array($screenName, $this->getAvailable(), true);
     }
 
     /**
      * @return array
      */
-    protected function getAvailableScreens(): array
+    protected function getAvailable(): array
     {
         return [
             ScreenInterface::SCREEN_BACK,
@@ -85,11 +91,12 @@ class ScreenFactory
             ScreenInterface::SCREEN_EDICTS,
             ScreenInterface::SCREEN_TREASURE,
             ScreenInterface::SCREEN_DIPLOMACY,
-            ScreenInterface::SCREEN_TODO1,
-            ScreenInterface::SCREEN_TODO2,
+            ScreenInterface::SCREEN_RESEARCH,
             ScreenInterface::SCREEN_BONUSES,
             ScreenInterface::SCREEN_ACHIEVEMENTS,
             ScreenInterface::SCREEN_SETTINGS,
+            ScreenInterface::SCREEN_BUILDINGS,
+            ScreenInterface::SCREEN_PEOPLE
         ];
     }
 }

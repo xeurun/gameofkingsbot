@@ -73,8 +73,11 @@ class HookController extends AbstractController
     public function fake(Request $request)
     {
         try {
-            $text = $request->get('message', '/survey');
-            $this->botManager->setCustomInput('{
+            $m = $request->get('m', '/start');
+            $c = (int)$request->get('c', 0);
+
+            if ($c === 1) {
+                $this->botManager->setCustomInput('{
         "update_id":119409284, 
         "message": {
             "message_id":84,
@@ -94,12 +97,75 @@ class HookController extends AbstractController
                 "type":"private"
             },
             "date":1537300010,
-            "text":"' . $text . '",
+            "text":"' . $m . '",
             "entities":[
                 {"offset":0,"length":6,"type":"bot_command"}
             ]
         }
     }');
+            } else if ($c === 0) {
+                $this->botManager->setCustomInput('{
+        "update_id":119409284, 
+        "message": {
+            "message_id":84,
+            "from":{
+                "id":191000234,
+                "is_bot":false,
+                "first_name":"Alexey",
+                "last_name":"Stepankov",
+                "username":"alexeystepankov",
+                "language_code":"en-US"
+            },
+            "chat":{
+                "id":191000234,
+                "first_name":"Alexey",
+                "last_name":"Stepankov",
+                "username":"alexeystepankov",
+                "type":"private"
+            },
+            "date":1537300010,
+            "text":"' . $m . '"
+        }
+    }');
+            } else {
+                $this->botManager->setCustomInput('{
+                    "update_id":119409613, 
+                    "callback_query":{
+                        "id":"820339762695174636",
+                        "from":{
+                            "id":191000234,
+                            "is_bot":false,
+                            "first_name":"Alexey",
+                            "last_name":"Stepankov",
+                            "username":"alexeystepankov",
+                            "language_code":"en-US"
+                        },
+                        "message":{
+                            "message_id":676,
+                            "from":{
+                                "id":642701144,
+                                "is_bot":true,
+                                "first_name":"Game of Kings",
+                                "username":"gameofkingsbot"
+                            },
+                            "chat":{
+                                "id":191000234,
+                                "first_name":"Alexey",
+                                "last_name":"Stepankov",
+                                "username":"alexeystepankov",
+                                "type":"private"
+                            },
+                            "date":1537485979,
+                            "text":"' . $m . '",
+                            "entities":[
+                                {"offset":0,"length":9,"type":"bold"}
+                            ]
+                        },
+                        "chat_instance":"-1983157652211501556",
+                        "data":"{\"name\":\"up_tax\"}"
+                    }
+                }');
+            }
             $this->botManager->handle();
         } catch (TelegramException $ex) {
             // log telegram errors

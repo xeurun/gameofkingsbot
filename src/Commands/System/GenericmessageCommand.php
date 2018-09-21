@@ -2,24 +2,24 @@
 
 namespace App\Commands\System;
 
+use App\Commands\BaseCommand;
+use App\Entity\Kingdom;
+use App\Entity\User;
 use App\Factory\ScreenFactory;
-use Longman\TelegramBot\Commands\SystemCommand;
+use App\Factory\StateFactory;
+use App\Manager\BotManager;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
-use Longman\TelegramBot\Telegram;
-use Longman\TelegramBot\TelegramLog;
 
-
-class GenericmessageCommand extends SystemCommand
+class GenericmessageCommand extends BaseCommand
 {
-    public function __construct(Telegram $telegram, Update $update = null)
+    public function __construct(BotManager $botManager, Update $update = null)
     {
         $this->name = 'genericmessage';
         $this->description  = 'Handle generic message';
         $this->version = '1.0.0';
-        $this->need_mysql = false;
 
-        parent::__construct($telegram, $update);
+        parent::__construct($botManager, $update);
     }
 
     /**
@@ -30,27 +30,44 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute()
     {
-        $callback = $this->getCallbackQuery();
-        $message = $this->getMessage();
-        $chatId = $message->getChat()->getId();
+        /** @var BotManager $botManager */
+        $botManager = $this->getTelegram();
 
-        $screen = null;
         $result = Request::emptyResponse();
 
-        if (null === $callback) {
-            $screenFactory = new ScreenFactory();
-            $screenName = $message->getText();
-            if ($screenFactory->isAvailableScreen($screenName)) {
-                $screen = $screenFactory->createScreen($chatId, $screenName);
+        $user = $botManager->getUser();
+        $stateName = $user->getState();
+        if (null !== $stateName) {
+            $state = null;
+            /** @var StateFactory $stateFactory */
+            $stateFactory = $botManager->get(StateFactory::class);
+            if ($stateFactory->isAvailable($stateName)) {
+                $state = $stateFactory->create(
+                    $stateName,
+                    $botManager
+                );
             }
-        } else {
-            $data  = $callback->getData();
-            $chid = $callback->getFrom()->getId();
-            // TODO: do it!
+
+            if (null !== $state) {
+                $state->execute();
+            }
         }
 
-        if (null !== $screen) {
-            $result = $screen->execute();
+        if ($user->getKingdom() instanceof Kingdom) {
+            $screen = null;
+            /** @var ScreenFactory $screenFactory */
+            $screenFactory = $botManager->get(ScreenFactory::class);
+            $screenName = $botManager->getMessage()->getText();
+            if ($screenFactory->isAvailable($screenName)) {
+                $screen = $screenFactory->create(
+                    $screenName,
+                    $botManager
+                );
+            }
+
+            if (null !== $screen) {
+                $result = $screen->execute();
+            }
         }
 
         return $result;

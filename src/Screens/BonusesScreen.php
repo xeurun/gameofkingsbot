@@ -3,6 +3,7 @@
 namespace App\Screens;
 
 use App\Interfaces\CallbackInterface;
+use App\Interfaces\ScreenInterface;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
@@ -16,24 +17,25 @@ class BonusesScreen extends BaseScreen
      */
     public function execute(): ServerResponse
     {
+        $kingdom = $this->botManager->getKingdom();
+        $title = ScreenInterface::SCREEN_BONUSES;
         $text = <<<TEXT
-*{$this->title}*
+*{$title}*
 
-Вступить в группу: нет
-Подписаться на канал: нет
-Вступить в группу н: да
+Вступайте в нашу группу и подписывайтесь на наш канал и получайте дополнительные ежедневные бонусы!
 
-В разработке
 TEXT;
         $inlineKeyboard = new InlineKeyboard(
             [
-                ['text' => 'Вступить в группу', 'callback_data' => CallbackInterface::CALLBACK_MOCK],
-                ['text' => 'Подписаться на канал', 'callback_data' => CallbackInterface::CALLBACK_MOCK],
+                ['text' => 'Вступить в группу', 'url' => 'https://t.me/worldofkings'],
+                ['text' => 'Подписаться на канал', 'url' => 'https://t.me/placeofkings'],
+            ], [
+                ['text' => 'Получить ежедневный бонус', 'callback_data' => CallbackInterface::CALLBACK_EVERY_DAY_BONUS],
             ]
         );
 
         $data = [
-            'chat_id'      => $this->chatId,
+            'chat_id'      => $kingdom->getUser()->getId(),
             'text'         => $text,
             'reply_markup' => $inlineKeyboard,
             'parse_mode'   => 'Markdown',

@@ -11,13 +11,13 @@ interface ScreenInterface
     /** @var string  */
     public const SCREEN_KINGDOM = '🏰 Королевство';
     /** @var string  */
-    public const SCREEN_EDICTS = '👂 Указы';
+    public const SCREEN_EDICTS = '📖 Указы';
     /** @var string  */
-    public const SCREEN_TREASURE = '💰 Казна';
+    public const SCREEN_TREASURE = '🏚️ Склад';
     /** @var string  */
-    public const SCREEN_DIPLOMACY = '🤝 Дипломатия';
+    public const SCREEN_DIPLOMACY = '🤝 Дипломатия ⚔';
     /** @var string  */
-    public const SCREEN_TODO1 = 'TODO';
+    public const SCREEN_RESEARCH = '💡 Исследования';
     /** @var string  */
     public const SCREEN_TODO2 = 'TODO';
     /** @var string  */
@@ -26,4 +26,8 @@ interface ScreenInterface
     public const SCREEN_ACHIEVEMENTS = '💪 Достижения';
     /** @var string  */
     public const SCREEN_SETTINGS = '⚙️ Настройки';
+    /** @var string  */
+    public const SCREEN_BUILDINGS = '🏛️ Постройки';
+    /** @var string  */
+    public const SCREEN_PEOPLE = '👪 Люди';
 }

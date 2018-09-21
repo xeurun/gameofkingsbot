@@ -16,9 +16,11 @@ class MainMenuScreen extends BaseScreen
      */
     public function execute(): ServerResponse
     {
+        $kingdom = $this->botManager->getKingdom();
+
         $keyboard = new Keyboard(
-            [ScreenInterface::SCREEN_KINGDOM, ScreenInterface::SCREEN_EDICTS, ScreenInterface::SCREEN_TREASURE],
-            [ScreenInterface::SCREEN_TODO1,  ScreenInterface::SCREEN_DIPLOMACY, ScreenInterface::SCREEN_TODO2],
+            [ScreenInterface::SCREEN_EDICTS, ScreenInterface::SCREEN_KINGDOM, ScreenInterface::SCREEN_TREASURE],
+            [ScreenInterface::SCREEN_RESEARCH,  ScreenInterface::SCREEN_DIPLOMACY],
             [ScreenInterface::SCREEN_BONUSES, ScreenInterface::SCREEN_ACHIEVEMENTS, ScreenInterface::SCREEN_SETTINGS]
         );
 
@@ -29,11 +31,11 @@ class MainMenuScreen extends BaseScreen
             ->setSelective(false);
 
         $text = <<<TEXT
-*{$this->title}*
+*🤴 {$kingdom->getName()} 👸*
 TEXT;
 
         $data    = [
-            'chat_id'      => $this->chatId,
+            'chat_id'      => $kingdom->getUser()->getId(),
             'text'         => $text,
             'reply_markup' => $keyboard,
             'parse_mode'   => 'Markdown'
@@ -41,10 +43,19 @@ TEXT;
 
         Request::sendMessage($data);
 
-        $text = <<<TEXT
-У вас:
+        $formatter = function ($value) {
+            return $value;
+        };
 
-    Людей 👪 (0)
+        $text = <<<TEXT
+💰  Золота ({$formatter($kingdom->getGold())})
+👪  Людей ({$formatter($kingdom->getPeople())})
+🍞  Еды ({$formatter($kingdom->getFood())})
+🌲  Древесины ({$formatter($kingdom->getWood())})
+⛏  Камней ({$formatter($kingdom->getStone())})
+🔨  Железа ({$formatter($kingdom->getMetal())})
+
+Проверьте склад!
 TEXT;
 
         $inlineKeyboard = new InlineKeyboard([
@@ -53,7 +64,7 @@ TEXT;
         ]);
 
         $data = [
-            'chat_id'      => $this->chatId,
+            'chat_id'      => $kingdom->getUser()->getId(),
             'text'         => $text,
             'reply_markup' => $inlineKeyboard,
             'parse_mode'   => 'Markdown',

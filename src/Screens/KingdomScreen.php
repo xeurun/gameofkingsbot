@@ -2,51 +2,64 @@
 
 namespace App\Screens;
 
-use App\Interfaces\CallbackInterface;
 use App\Interfaces\ScreenInterface;
-use Longman\TelegramBot\Entities\InlineKeyboard;
-use Longman\TelegramBot\Entities\Keyboard;
+use App\Interfaces\TaxesInterface;
+use App\Manager\BotManager;
+use App\Manager\PeopleManager;
+use App\Manager\WorkManager;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 class KingdomScreen extends BaseScreen
 {
+    protected $workManager;
+    protected $peopleManager;
+
+    public function __construct(BotManager $botManager, WorkManager $workManager, PeopleManager $peopleManager)
+    {
+        $this->workManager = $workManager;
+        $this->peopleManager = $peopleManager;
+        parent::__construct($botManager);
+    }
+
     /**
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): ServerResponse
     {
+        $kingdom = $this->botManager->getKingdom();
+        $user = $this->botManager->getKingdom()->getUser();
+        $eatHourly = $this->peopleManager->eat($kingdom);
+        $payHourly = $this->peopleManager->pay($kingdom);
+        $taxLevel = $this->peopleManager->taxLevel($kingdom);
+
+        $foodHourly = $this->workManager->food($kingdom);
+        $woodHourly = $this->workManager->wood($kingdom);
+        $stoneHourly = $this->workManager->stone($kingdom);
+        $metalHourly = $this->workManager->metal($kingdom);
+
+        $title = ScreenInterface::SCREEN_KINGDOM;
         $text = <<<TEXT
-*{$this->title}*
+*{$title} - {$kingdom->getName()}*
 
-Король: ...........
-В вашем королевстве ............... сейчас ..........
+*{$user->getFirstName()} {$user->getLastName()} вы верховный король*
 
-У вас 0 людей, 0 золота, 0 древесины, 0 еды
+Люди съедают {$eatHourly}ед. еды в час и плотят {$payHourly}ед. золота налогов
 
-0 людей заняты добычей древесины
-0 людей заняты добычей еды
-0 людей заняты добычей золота
-0 людей заняты поиском реликвий
-0 людей заняты постройкой
+{$kingdom->getOnFood()} людей заняты добычей еды, они добывают {$foodHourly}ед. в час
+{$kingdom->getOnWood()} людей заняты добычей древесины, они добывают {$woodHourly}ед. в час
+{$kingdom->getOnStone()} людей заняты добычей камней, они добывают {$stoneHourly}ед. в час
+{$kingdom->getOnMetal()} людей заняты добычей железа, они добывают {$metalHourly}ед. в час
+{$kingdom->getOnBuildings()} людей заняты постройкой
 
-Высокий уровень налогов
+Уровень налогов: {$taxLevel}
 
-За последние н дней умерло н человек
-
-В разработке
+За последние дни никто не умер...
 TEXT;
-        $inlineKeyboard = new InlineKeyboard(
-            [
-                ['text' => 'В разработке', 'callback_data' => CallbackInterface::CALLBACK_MOCK],
-            ]
-        );
-
         $data = [
-            'chat_id'      => $this->chatId,
+            'chat_id'      => $kingdom->getUser()->getId(),
             'text'         => $text,
-            'reply_markup' => $inlineKeyboard,
             'parse_mode'   => 'Markdown',
         ];
 

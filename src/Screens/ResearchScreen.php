@@ -6,7 +6,7 @@ use App\Interfaces\ScreenInterface;
 use Longman\TelegramBot\Entities\ServerResponse;
 use App\Responses\BackResponse;
 
-class TODOScreen extends BaseScreen
+class ResearchScreen extends BaseScreen
 {
     /**
      * @return \Longman\TelegramBot\Entities\ServerResponse
@@ -15,11 +15,11 @@ class TODOScreen extends BaseScreen
     public function execute(): ServerResponse
     {
         $kingdom = $this->botManager->getKingdom();
-        $title = ScreenInterface::SCREEN_TODO1;
+        $title = ScreenInterface::SCREEN_RESEARCH;
         $text = <<<TEXT
 *{$title}*
 
-В разработке
+Скоро вас ждет огромный выбор очень важных исследований
 TEXT;
 
         return (new BackResponse($kingdom->getUser()->getId(), $text))->execute();

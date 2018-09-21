@@ -20,7 +20,7 @@ services:
       - public
       - local
     ports:
-      - 3306
+      - 33${PORT_SUFFIX}:3306
     volumes:
       - .docker/var/lib/mysql:/var/lib/mysql
     environment:
@@ -60,8 +60,8 @@ services:
     depends_on:
       - php-fpm
     ports:
-      - "8015:80"
-      - "44315:443"
+      - 80${PORT_SUFFIX}:80
+      - 44${PORT_SUFFIX}:443
     volumes:
       - .:/app
   composer:

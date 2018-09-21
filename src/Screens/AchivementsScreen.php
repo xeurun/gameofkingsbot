@@ -3,6 +3,7 @@
 namespace App\Screens;
 
 use App\Interfaces\CallbackInterface;
+use App\Interfaces\ScreenInterface;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
@@ -16,25 +17,17 @@ class AchivementsScreen extends BaseScreen
      */
     public function execute(): ServerResponse
     {
+        $kingdom = $this->botManager->getKingdom();
+        $title = ScreenInterface::SCREEN_ACHIEVEMENTS;
         $text = <<<TEXT
-*{$this->title}*
+*{$title}*
 
-Заработать н золота: нет
-Расширить крепость: нет
-Получать н едениц древесины в день: да
-
-В разработке
+Мы уже учитываем выши заслуги, скоро их сможете увидеть и вы!
 TEXT;
-        $inlineKeyboard = new InlineKeyboard(
-            [
-                ['text' => 'В разработке', 'callback_data' => CallbackInterface::CALLBACK_MOCK],
-            ]
-        );
 
         $data = [
-            'chat_id'      => $this->chatId,
+            'chat_id'      => $kingdom->getUser()->getId(),
             'text'         => $text,
-            'reply_markup' => $inlineKeyboard,
             'parse_mode'   => 'Markdown',
         ];
 

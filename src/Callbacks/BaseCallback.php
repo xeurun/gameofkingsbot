@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Screens;
+namespace App\Callbacks;
 
-use App\Entity\Kingdom;
 use App\Manager\BotManager;
 use Longman\TelegramBot\Entities\ServerResponse;
 
-abstract class BaseScreen
+abstract class BaseCallback
 {
+    /** @var BotManager */
     protected $botManager;
 
     public function __construct(BotManager $botManager)

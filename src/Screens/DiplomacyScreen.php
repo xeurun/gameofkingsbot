@@ -16,20 +16,18 @@ class DiplomacyScreen extends BaseScreen
      */
     public function execute(): ServerResponse
     {
+        $kingdom = $this->botManager->getKingdom();
+        $title = ScreenInterface::SCREEN_DIPLOMACY;
         $text = <<<TEXT
-*{$this->title}*
+*{$title}*
 
-Вы верховный король
-или
-Ваш верховный король ....
+В данный момент, в этом мире, королевства только начинают развиваться, но скоро начнется эпоха войн и дипломатии
 
-В разработке
 TEXT;
 
         $keyboard = new Keyboard(
-            ['text'=> 'Ваши друзья'],
-            ['text' => 'Ваши враги'],
-            ['text' => 'Ваши вассалы'],
+            //['text'=> 'Ваши друзья'],
+            // ['text' => 'Ваши враги'],
             ['text' => ScreenInterface::SCREEN_BACK]
         );
 
@@ -40,7 +38,7 @@ TEXT;
             ->setSelective(false);
 
         $data    = [
-            'chat_id'      => $this->chatId,
+            'chat_id'      => $kingdom->getUser()->getId(),
             'text'         => $text,
             'reply_markup' => $keyboard,
             'parse_mode'   => 'Markdown'

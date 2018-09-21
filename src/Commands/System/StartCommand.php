@@ -2,108 +2,80 @@
 
 namespace App\Commands\System;
 
+use App\Commands\BaseCommand;
+use App\Entity\Kingdom;
 use App\Factory\ScreenFactory;
-use App\Interfaces\CallbackInterface;
 use App\Interfaces\ScreenInterface;
+use App\Interfaces\StateInterface;
 use App\Manager\BotManager;
-use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Conversation;
-use Longman\TelegramBot\Entities\InlineKeyboard;
-use Longman\TelegramBot\Entities\Keyboard;
+use Doctrine\ORM\ORMException;
+use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
-/**
- * Start command
- *
- * Gets executed when a user first starts using the bot.
- */
-class StartCommand extends SystemCommand
+class StartCommand extends BaseCommand
 {
     /**
-     * @var string
+     * @param BotManager $botManager
+     * @param Update|null $update
+     * @throws ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    protected $name = 'start';
-    /**
-     * @var string
-     */
-    protected $description = 'Start command';
-    /**
-     * @var string
-     */
-    protected $usage = '/start';
-    /**
-     * @var string
-     */
-    protected $version = '1.0.0';
-    /**
-     * @var bool
-     */
-    protected $private_only = true;
+    public function __construct(BotManager $botManager, Update $update = null)
+    {
+        $this->name = 'start';
+        $this->description  = 'Start command';
+        $this->usage = '/start';
+        $this->version = '1.0.0';
+
+        parent::__construct($botManager, $update, true);
+    }
 
     /**
      * Command execute method
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws ORMException
      */
     public function execute()
     {
         $message = $this->getMessage();
         $chatId = $message->getChat()->getId();
 
-        /** @var BotManager $telegram */
-        $telegram = $this->getTelegram();
-        $userRepository = $telegram->getUserRepository();
+        /** @var BotManager $botManager */
+        $botManager = $this->getTelegram();
+        $user = $botManager->getUser();
 
         $screen = null;
         $result = Request::emptyResponse();
 
-        if (!$userRepository->find($chatId)) {
-            $keyboard = new Keyboard(
-                ['Начать!']
-            );
-
-            //Return a random keyboard.
-            $keyboard = $keyboard
-                ->setResizeKeyboard(true)
-                ->setOneTimeKeyboard(false)
-                ->setSelective(false);
-
-            $text = <<<TEXT
+        $text = <<<TEXT
 *Приветствуем нового короля!*
+
+Пришлите название вашего королевства (позднее вы сможете его изменить)
 TEXT;
 
-            $data    = [
-                'chat_id'      => $chatId,
-                'text'         => $text,
-                'reply_markup' => $keyboard,
-                'parse_mode'   => 'Markdown'
-            ];
+        $data    = [
+            'chat_id'      => $chatId,
+            'text'         => $text,
+            'parse_mode'   => 'Markdown'
+        ];
 
-            Request::sendMessage($data);
-
-            $text = <<<TEXT
-Вас зовут: Алексей I
-Ваше королевство называется: Нарния 
-TEXT;
-
-            $inlineKeyboard = new InlineKeyboard([
-                ['text' => 'Изменить имя', 'callback_data' => CallbackInterface::CALLBACK_MOCK],
-                ['text' => 'Изменить название', 'callback_data' => CallbackInterface::CALLBACK_MOCK],
-            ]);
-
-            $data = [
-                'chat_id'      => $chatId,
-                'text'         => $text,
-                'reply_markup' => $inlineKeyboard,
-                'parse_mode'   => 'Markdown',
-            ];
-
+        if ($user->getState() === StateInterface::STATE_NEW_PLAYER) {
+            $user->setState(StateInterface::STATE_WAIT_KINGDOM_NAME);
             $result = Request::sendMessage($data);
-        } else {
-            $screenFactory = new ScreenFactory();
-            if ($screenFactory->isAvailableScreen( ScreenInterface::SCREEN_MAIN_MENU)) {
-                $screen = $screenFactory->createScreen($chatId,  ScreenInterface::SCREEN_MAIN_MENU);
+            if ($result->getOk()) {
+                $entityManager = $botManager->getEntityManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
+                $result = Request::emptyResponse();
+            }
+        } else if ($user->getState() === StateInterface::STATE_WAIT_KINGDOM_NAME) {
+            $result = Request::sendMessage($data);
+        } else if ($user->getKingdom() instanceof Kingdom) {
+            $screenFactory = $botManager->get(ScreenFactory::class);
+            if ($screenFactory->isAvailable( ScreenInterface::SCREEN_MAIN_MENU)) {
+                $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU, $botManager);
             }
 
             if (null !== $screen) {

@@ -15,16 +15,17 @@ class EdictsScreen extends BaseScreen
      */
     public function execute(): ServerResponse
     {
+        $kingdom = $this->botManager->getKingdom();
+        $title = ScreenInterface::SCREEN_EDICTS;
         $text = <<<TEXT
-*{$this->title}*
+*{$title}*
 
 В разработке
 TEXT;
 
         $keyboard = new Keyboard(
-            ['text'=> 'Постройки'],
-            ['text' => 'Экономика'],
-            ['text' => 'Люди'],
+            ['text'=> '🏛️ Постройки'],
+            ['text' => '👪 Люди'],
             ['text' => ScreenInterface::SCREEN_BACK]
         );
 
@@ -35,7 +36,7 @@ TEXT;
             ->setSelective(false);
 
         $data    = [
-            'chat_id'      => $this->chatId,
+            'chat_id'      => $kingdom->getUser()->getId(),
             'text'         => $text,
             'reply_markup' => $keyboard,
             'parse_mode'   => 'Markdown'

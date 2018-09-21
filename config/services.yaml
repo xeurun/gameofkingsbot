@@ -18,7 +18,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        exclude: '../src/{Commands,DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -28,3 +28,22 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Factory\:
+      resource: '../src/Factory'
+      public: true
+    App\Screens\:
+      resource: '../src/Screens'
+      exclude: '../src/Screens/{BaseScreen.php}'
+      public: true
+    App\States\:
+      resource: '../src/States'
+      exclude: '../src/States/{BaseState.php}'
+      public: true
+    App\Callbacks\:
+      resource: '../src/Callbacks'
+      exclude: '../src/Callbacks/{BaseCallback.php}'
+      public: true
+    App\Manager\:
+      resource: '../src/Manager'
+      exclude: '../src/Manager/{BotManager.php}'
+      public: true

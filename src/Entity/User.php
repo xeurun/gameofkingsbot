@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Interfaces\StateInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,6 +19,11 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      */
+    private $lang;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $first_name;
 
     /**
@@ -29,6 +35,31 @@ class User
      * @ORM\Column(type="string", length=255)
      */
     private $username;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $bonusDate;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $state;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Kingdom", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $kingdom;
+
+    public function __construct(\Longman\TelegramBot\Entities\User $user)
+    {
+        $this->id = $user->getId();
+        $this->lang = $user->getLanguageCode();
+        $this->username = $user->getUsername();
+        $this->first_name = $user->getFirstName();
+        $this->last_name = $user->getLastName();
+        $this->state = StateInterface::STATE_NEW_PLAYER;
+    }
 
     public function getId(): ?int
     {
@@ -68,6 +99,43 @@ class User
     {
         $this->username = $username;
 
+        return $this;
+    }
+
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    public function setState($state): self
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    public function getKingdom(): ?Kingdom
+    {
+        return $this->kingdom;
+    }
+
+    public function setKingdom(Kingdom $kingdom): self
+    {
+        $this->kingdom = $kingdom;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBonusDate()
+    {
+        return $this->bonusDate;
+    }
+
+    public function setBonusDate($bonusDate): self
+    {
+        $this->bonusDate = $bonusDate;
         return $this;
     }
 }

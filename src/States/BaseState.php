@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Screens;
+namespace App\States;
 
-use App\Entity\Kingdom;
 use App\Manager\BotManager;
-use Longman\TelegramBot\Entities\ServerResponse;
 
-abstract class BaseScreen
+abstract class BaseState
 {
+    /** @var BotManager */
     protected $botManager;
 
     public function __construct(BotManager $botManager)
@@ -15,5 +14,5 @@ abstract class BaseScreen
         $this->botManager = $botManager;
     }
 
-    abstract public function execute(): ServerResponse;
+    abstract public function execute(): void;
 }

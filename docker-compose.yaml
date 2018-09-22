@@ -64,6 +64,10 @@ services:
       - 44${PORT_SUFFIX}:443
     volumes:
       - .:/app
+      - /etc/ssl:/etc/ssl
+      - /home/projects/docker/proxy/snippets:/etc/nginx/snippets
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/www/letsencrypt:/var/www/letsencrypt
   composer:
     container_name: ${DOCKER_PROJECT_NAME}-composer
     build:

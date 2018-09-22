@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b4e44da25183c88aa2fa971e7b79e724",
+    "content-hash": "1e0d20d75d6fa4d0b549da6110196d65",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -3040,6 +3040,54 @@
             "time": "2018-08-06T14:22:27+00:00"
         },
         {
+            "name": "symfony/requirements-checker",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/requirements-checker.git",
+                "reference": "a4c66b5f2633a022269b57a16478a4ea3bfd89ab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/requirements-checker/zipball/a4c66b5f2633a022269b57a16478a4ea3bfd89ab",
+                "reference": "a4c66b5f2633a022269b57a16478a4ea3bfd89ab",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "bin": [
+                "bin/requirements-checker"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Requirements\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Check Symfony requirements and give recommendations",
+            "keywords": [
+                "configuration",
+                "distribution"
+            ],
+            "time": "2018-06-07T06:14:20+00:00"
+        },
+        {
             "name": "symfony/routing",
             "version": "v4.1.4",
             "source": {
@@ -3586,7 +3634,8 @@
     "platform": {
         "php": "^7.2.0",
         "ext-ctype": "*",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "ext-json": "*"
     },
     "platform-dev": []
 }

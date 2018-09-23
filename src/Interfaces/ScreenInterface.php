@@ -4,28 +4,28 @@ namespace App\Interfaces;
 
 interface ScreenInterface
 {
-    /** @var string  */
+    /** @var string */
     public const SCREEN_BACK = '↩️ Назад';
-    /** @var string  */
+    /** @var string */
     public const SCREEN_MAIN_MENU = '🤴 Главное меню 👸';
-    /** @var string  */
+    /** @var string */
     public const SCREEN_EVENT = '📅 События';
-    /** @var string  */
+    /** @var string */
     public const SCREEN_EDICTS = '📖 Указы';
-    /** @var string  */
+    /** @var string */
     public const SCREEN_TREASURE = '🏚️ Склад';
-    /** @var string  */
+    /** @var string */
     public const SCREEN_DIPLOMACY = '🤝 Дипломатия ⚔';
-    /** @var string  */
+    /** @var string */
     public const SCREEN_RESEARCH = '💡 Исследования';
-    /** @var string  */
+    /** @var string */
     public const SCREEN_BONUSES = '💎 Бонусы';
-    /** @var string  */
+    /** @var string */
     public const SCREEN_ACHIEVEMENTS = '💪 Достижения';
-    /** @var string  */
+    /** @var string */
     public const SCREEN_SETTINGS = '⚙️ Настройки';
-    /** @var string  */
+    /** @var string */
     public const SCREEN_BUILDINGS = '🏛️ Постройки';
-    /** @var string  */
+    /** @var string */
     public const SCREEN_PEOPLE = '👪 Люди';
 }

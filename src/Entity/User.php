@@ -47,7 +47,7 @@ class User
     private $state;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Kingdom", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Kingdom", mappedBy="user")
      */
     private $kingdom;
 

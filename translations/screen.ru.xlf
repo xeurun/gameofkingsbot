@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="ru" target-language="ru" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>main_menu_screen_title</source>
+                <target>
+*🤴 Королевство «%name%», вы верховный король 👸*
+                </target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>main_menu_screen_message</source>
+                <target>
+`Ваше королевство `*%level%*` уровня`
+`Территория вашего королевства `*%territory%*` уровня, `*%territorySize%*` мест для постройки`
+
+`👪 Людей `%people%
+
+`📜 Уровень налогов: `*%tax%*
+
+`💰 Золота   - `*%gold%*` ед.`
+`🍞 Еды      - `*%food%*` ед.`
+`🌲 Дерева   - `*%wood%*` ед.`
+`⛏ Камней   - `*%stone%*` ед.`
+`🔨 Железа   - `*%iron%*` ед.`
+
+`Еды на `%foodDay%
+
+Проверьте склад!
+                </target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>settings_screen_message</source>
+                <target>
+*%title%*
+
+®️ Название вашего королевства: *%name%*
+
+🏰 Всего королевств: *%count%*
+
+💬 Администрация: %admin%
+                </target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>achivements_screen_message</source>
+                <target>
+*%title%*
+
+Мы уже учитываем выши заслуги, скоро их сможете увидеть и вы!
+                </target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>bonuses_screen_message</source>
+                <target>
+*%title%*
+
+Вступайте в нашу группу, подписывайтесь на наш канал и получайте дополнительные ежедневные бонусы!
+                </target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>diplomacy_screen_message</source>
+                <target>
+*%title%*
+
+В данный момент, в этом мире, королевства только начинают развиваться, но скоро начнется эпоха войн и дипломатии
+                </target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>research_screen_message</source>
+                <target>
+*%title%*
+
+Скоро вас ждет огромный выбор очень важных исследований
+                </target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>edicts_screen_message</source>
+                <target>
+*%title%*
+
+Управляйте вашими людьми и королевством
+                </target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>event_screen_message</source>
+                <target>
+*%title%*
+
+За последние дни никто не умер...
+                </target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>warehouse_screen_message</source>
+                <target>
+*%title%*
+
+`💰 Золота   - `*%gold%*` ед.`
+`🍞 Еды      - `*%food%*` ед.`
+`🌲 Дерева   - `*%wood%*` ед.`
+`⛏ Камней   - `*%stone%*` ед.`
+`🔨 Железа   - `*%iron%*` ед.`
+                </target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>warehouse_additional_screen_message</source>
+                <target>
+`За `%hours%` с последней проверки склада`
+
+`💰 Золота   - `*%gold%*` ед.`
+`🍞 Еды      - `*%food%*` ед.`
+`🌲 Дерева   - `*%wood%*` ед.`
+`⛏ Камней   - `*%stone%*` ед.`
+`🔨 Железа   - `*%iron%*` ед.`
+
+необходимо перенести добытые ресурсы на склад королевства
+                </target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>warehouse_without_additional_screen_message</source>
+                <target>
+С последней проверки склада прошло слишком мало времени, попробуйте проверить склад через час!
+                </target>
+            </trans-unit>
+            <trans-unit id="13">
+                <source>people_screen_message</source>
+                <target>
+*%title%*
+
+`Всего в королевстве `%people%`, в час они съедают `*%eatHourly%*` ед. еды 🍞`
+
+`Уровень налогов `*%taxLevel%*`, в час люди платят `*%payHourly%*` ед. золота 💰 налогов`
+
+`🏛️ Строителей - `*%onStructure%*
+
+`🍞 Еда - добывают `*%onFood%*`, в час `*%foodHourly%*` ед.`
+`🌲 Дерево - добывают `*%onWood%*`, в час `*%woodHourly%*` ед.`
+`⛏ Камень - добывают `*%onStone%*`, в час `*%stoneHourly%*` ед.`
+`🔨 Железо - добывают `*%onIron%*`, в час `*%ironHourly%*` ед.`
+
+`Свободно человек - `%free%
+                </target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

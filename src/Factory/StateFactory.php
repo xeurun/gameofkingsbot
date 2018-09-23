@@ -15,7 +15,8 @@ class StateFactory
      * @param BotManager $botManager
      * @return BaseState
      */
-    public function create(string $stateName, BotManager $botManager): BaseState {
+    public function create(string $stateName, BotManager $botManager): BaseState
+    {
         switch ($stateName) {
             case StateInterface::STATE_WAIT_KINGDOM_NAME:
                 $state = $botManager->get(KingdomNameState::class);

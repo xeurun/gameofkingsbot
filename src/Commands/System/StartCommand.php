@@ -11,6 +11,7 @@ use App\Manager\BotManager;
 use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class StartCommand extends BaseCommand
 {
@@ -23,7 +24,7 @@ class StartCommand extends BaseCommand
     public function __construct(BotManager $botManager, Update $update = null)
     {
         $this->name = 'start';
-        $this->description  = 'Start command';
+        $this->description = 'Start command';
         $this->usage = '/start';
         $this->version = '1.0.0';
 
@@ -49,16 +50,16 @@ class StartCommand extends BaseCommand
         $screen = null;
         $result = Request::emptyResponse();
 
-        $text = <<<TEXT
-*Приветствуем нового короля!*
+        $text = $botManager->getTranslator()->trans(
+            \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING,
+            [],
+            \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_KINGDOM
+        );
 
-Пришлите название вашего королевства (позднее вы сможете его изменить)
-TEXT;
-
-        $data    = [
-            'chat_id'      => $chatId,
-            'text'         => $text,
-            'parse_mode'   => 'Markdown'
+        $data = [
+            'chat_id' => $chatId,
+            'text' => $text,
+            'parse_mode' => 'Markdown'
         ];
 
         if ($user->getState() === StateInterface::STATE_NEW_PLAYER) {
@@ -70,16 +71,21 @@ TEXT;
                 $entityManager->flush();
                 $result = Request::emptyResponse();
             }
-        } else if ($user->getState() === StateInterface::STATE_WAIT_KINGDOM_NAME) {
-            $result = Request::sendMessage($data);
-        } else if ($user->getKingdom() instanceof Kingdom) {
-            $screenFactory = $botManager->get(ScreenFactory::class);
-            if ($screenFactory->isAvailable( ScreenInterface::SCREEN_MAIN_MENU)) {
-                $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU, $botManager);
-            }
+        } else {
+            if ($user->getState() === StateInterface::STATE_WAIT_KINGDOM_NAME) {
+                $result = Request::sendMessage($data);
+            } else {
+                if ($user->getKingdom() instanceof Kingdom) {
+                    /** @var ScreenFactory $screenFactory */
+                    $screenFactory = $botManager->get(ScreenFactory::class);
+                    if ($screenFactory->isAvailable(ScreenInterface::SCREEN_MAIN_MENU)) {
+                        $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU, $botManager);
+                    }
 
-            if (null !== $screen) {
-                $result = $screen->execute();
+                    if (null !== $screen) {
+                        $result = $screen->execute();
+                    }
+                }
             }
         }
 

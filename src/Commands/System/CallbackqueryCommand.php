@@ -21,7 +21,7 @@ class CallbackqueryCommand extends BaseCommand
     public function __construct(BotManager $botManager, Update $update = null)
     {
         $this->name = 'callbackquery';
-        $this->description  = 'Reply to callback query';
+        $this->description = 'Reply to callback query';
         $this->version = '1.0.0';
 
         parent::__construct($botManager, $update, true);
@@ -38,13 +38,13 @@ class CallbackqueryCommand extends BaseCommand
         /** @var BotManager $botManager */
         $botManager = $this->getTelegram();
         $user = $botManager->getUser();
-        $callbackQuery     = $this->getCallbackQuery();
+        $callbackQuery = $this->getCallbackQuery();
 
         $data = [
             'callback_query_id' => $callbackQuery->getId(),
-            'text'              => 'Функционал временно недоступен, спасибо!',
-            'show_alert'        => true,
-            'cache_time'        => 5,
+            'text' => 'Функционал временно недоступен, спасибо!',
+            'show_alert' => true,
+            'cache_time' => 5,
         ];
 
         if ($user->getKingdom() instanceof Kingdom) {
@@ -53,19 +53,21 @@ class CallbackqueryCommand extends BaseCommand
             $callbackFactory = $botManager->get(CallbackFactory::class);
             $callbackData = $callbackFactory->getData($callbackQuery);
             $callbackName = $callbackData['n'] ?? null;
-            if ($callbackFactory->isAvailable($callbackName)) {
-                $callback = $callbackFactory->create(
-                    $callbackName,
-                    $botManager
-                );
-            }
 
-            if (null !== $callback) {
-                return $callback->execute();
-            }
 
             if ($callbackName === 'null') {
                 $data['text'] = '';
+            } else {
+                if ($callbackFactory->isAvailable($callbackName)) {
+                    $callback = $callbackFactory->create(
+                        $callbackName,
+                        $botManager
+                    );
+                }
+
+                if (null !== $callback) {
+                    return $callback->execute();
+                }
             }
         }
 

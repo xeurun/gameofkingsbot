@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use App\Interfaces\ResourceInterface;
+use App\Interfaces\StructureInterface;
 use App\Interfaces\TaxesInterface;
+use App\Interfaces\WorkInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,11 +26,6 @@ class Kingdom
      * @ORM\Column(type="string", length=255)
      */
     private $name;
-
-    /**
-     * @ORM\Column(type="integer", options={"default": 1})
-     */
-    private $level;
 
     /**
      * @ORM\Column(type="integer", options={"default": 0})
@@ -57,7 +55,7 @@ class Kingdom
     /**
      * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
-    private $metal;
+    private $iron;
 
     /**
      * @ORM\Column(type="integer", options={"default": 0})
@@ -77,12 +75,12 @@ class Kingdom
     /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
-    private $onMetal;
+    private $onIron;
 
     /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
-    private $onBuildings;
+    private $onStructure;
 
     /**
      * @ORM\Column(type="smallint", options={"default": 0})
@@ -95,38 +93,45 @@ class Kingdom
     private $grabResourcesDate;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="kingdom", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="kingdom")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Build", mappedBy="kingdom", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Structure", mappedBy="kingdom", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $builds;
+    private $structures;
 
-    public function __construct(string $kingdomName, User $user, BuildType $castleType)
+    public function __construct(string $kingdomName, User $user)
     {
         $this->name = $kingdomName;
         $this->user = $user;
 
-        $this->setTax(TaxesInterface::TAXE_MEDIUM);
-        $this->setLevel(1);
         $this->setPeople(100);
-        $this->setOnFood(40);
-        $this->setOnBuildings(20);
-        $this->setOnWood(40);
-        $this->setOnStone(0);
-        $this->setOnMetal(0);
-        $this->setFood(1000);
-        $this->setWood(1000);
-        $this->setStone(0);
-        $this->setMetal(0);
-        $this->setGold(10);
+        $this->setTax(TaxesInterface::INITIAL_TAXES_LEVEL);
+        $this->setOnFood(WorkInterface::INITIAL_FOOD_WORKER);
+        $this->setOnStructure(WorkInterface::INITIAL_STRUCTURE_WORKER);
+        $this->setOnWood(WorkInterface::INITIAL_WOOD_WORKER);
+        $this->setOnStone(WorkInterface::INITIAL_STONE_WORKER);
+        $this->setOnIron(WorkInterface::INITIAL_IRON_WORKER);
+        $this->setFood(ResourceInterface::INITIAL_FOOD);
+        $this->setWood(ResourceInterface::INITIAL_WOOD);
+        $this->setStone(ResourceInterface::INITIAL_STONE);
+        $this->setIron(ResourceInterface::INITIAL_IRON);
+        $this->setGold(ResourceInterface::INITIAL_GOLD);
         $this->setGrabResourcesDate(new \DateTime());
-        $this->builds = new ArrayCollection();
-        $castle = new Build($castleType, $this, 1);
-        $this->addBuild($castle);
+
+        $this->structures = new ArrayCollection();
+    }
+
+    public function addStructure(Structure $structure): self
+    {
+        if (!$this->structures->contains($structure)) {
+            $this->structures[] = $structure;
+        }
+
+        return $this;
     }
 
     public function getId(): int
@@ -143,22 +148,6 @@ class Kingdom
     {
         $this->name = $value;
         return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLevel()
-    {
-        return $this->level;
-    }
-
-    /**
-     * @param mixed $level
-     */
-    public function setLevel($level): void
-    {
-        $this->level = $level;
     }
 
     public function getPeople(): int
@@ -221,14 +210,14 @@ class Kingdom
         return $this;
     }
 
-    public function getMetal(): int
+    public function getIron(): int
     {
-        return $this->metal;
+        return $this->iron;
     }
 
-    public function setMetal(int $metal): self
+    public function setIron(int $value): self
     {
-        $this->metal = $metal;
+        $this->iron = $value;
         return $this;
     }
 
@@ -252,11 +241,91 @@ class Kingdom
     public function setTax($tax): self
     {
         if ($tax <= 0) {
-            throw new \DivisionByZeroError();
+            throw new \DivisionByZeroError('Taxes lower then zero be avoid');
         }
 
         $this->tax = $tax;
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOnFood(): int
+    {
+        return $this->onFood;
+    }
+
+    /**
+     * @param int $onFood
+     */
+    public function setOnFood(int $onFood): void
+    {
+        $this->onFood = $onFood;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOnIron(): int
+    {
+        return $this->onIron;
+    }
+
+    /**
+     * @param int $onIron
+     */
+    public function setOnIron(int $onIron): void
+    {
+        $this->onIron = $onIron;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOnStone(): int
+    {
+        return $this->onStone;
+    }
+
+    /**
+     * @param int $onStone
+     */
+    public function setOnStone(int $onStone): void
+    {
+        $this->onStone = $onStone;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOnWood(): int
+    {
+        return $this->onWood;
+    }
+
+    /**
+     * @param int $onWood
+     */
+    public function setOnWood(int $onWood): void
+    {
+        $this->onWood = $onWood;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOnStructure()
+    {
+        return $this->onStructure;
+    }
+
+    /**
+     * @param mixed $onStructure
+     */
+    public function setOnStructure($onStructure): void
+    {
+        $this->onStructure = $onStructure;
     }
 
     /**
@@ -274,102 +343,14 @@ class Kingdom
     }
 
     /**
-     * @return mixed
+     * @param string $structureTypeCode
+     * @return Structure|null
      */
-    public function getOnFood()
+    public function getStructure(string $structureTypeCode): ?Structure
     {
-        return $this->onFood;
-    }
-
-    /**
-     * @param mixed $onFood
-     */
-    public function setOnFood($onFood): void
-    {
-        $this->onFood = $onFood;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOnMetal()
-    {
-        return $this->onMetal;
-    }
-
-    /**
-     * @param mixed $onMetal
-     */
-    public function setOnMetal($onMetal): void
-    {
-        $this->onMetal = $onMetal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOnStone()
-    {
-        return $this->onStone;
-    }
-
-    /**
-     * @param mixed $onStone
-     */
-    public function setOnStone($onStone): void
-    {
-        $this->onStone = $onStone;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOnWood()
-    {
-        return $this->onWood;
-    }
-
-    /**
-     * @param mixed $onWood
-     */
-    public function setOnWood($onWood): void
-    {
-        $this->onWood = $onWood;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOnBuildings()
-    {
-        return $this->onBuildings;
-    }
-
-    /**
-     * @param mixed $onBuildings
-     */
-    public function setOnBuildings($onBuildings): void
-    {
-        $this->onBuildings = $onBuildings;
-    }
-
-    /**
-     * @return Collection|Build[]
-     */
-    public function getBuilds(): Collection
-    {
-        return $this->builds;
-    }
-
-    /**
-     * @param string $buildTypeCode
-     * @return Build|null
-     */
-    public function getBuild(string $buildTypeCode): ?Build
-    {
-        foreach ($this->getBuilds() as  $build) {
-            if ($build->getType()->getCode() === $buildTypeCode) {
-                return $build;
+        foreach ($this->getStructures() as $structure) {
+            if ($structure->getType()->getCode() === $structureTypeCode) {
+                return $structure;
             }
         }
 
@@ -377,45 +358,17 @@ class Kingdom
     }
 
     /**
-     * @param string $buildTypeCode
-     * @param Build $value
-     * @return self
+     * @return Collection|Structure[]
      */
-    public function setBuild(string $buildTypeCode, Build $value): self
+    public function getStructures(): Collection
     {
-        $found = false;
-        foreach ($this->getBuilds() as $key => $build) {
-            if ($build->getType()->getCode() === $buildTypeCode) {
-                $this->builds[$key] = $value;
-                $found = true;
-            }
-        }
-
-        if (!$found) {
-            $this->builds->add($value);
-        }
-
-        return $this;
+        return $this->structures;
     }
 
-    public function addBuild(Build $build): self
+    public function removeStructure(Structure $structure): self
     {
-        if (!$this->builds->contains($build)) {
-            $this->builds[] = $build;
-            $build->setKingdom($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBuild(Build $build): self
-    {
-        if ($this->builds->contains($build)) {
-            $this->builds->removeElement($build);
-            // set the owning side to null (unless already changed)
-            if ($build->getKingdom() === $this) {
-                $build->setKingdom(null);
-            }
+        if ($this->structures->contains($structure)) {
+            $this->structures->removeElement($structure);
         }
 
         return $this;

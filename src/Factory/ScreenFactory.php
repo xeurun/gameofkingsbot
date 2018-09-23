@@ -4,20 +4,19 @@ namespace App\Factory;
 
 use App\Interfaces\ScreenInterface;
 use App\Manager\BotManager;
-use App\Screens\BuildingsScreen;
-use App\Screens\PeopleScreen;
-use App\Screens\ResearchScreen;
-use Psr\Log\InvalidArgumentException;
 use App\Screens\AchivementsScreen;
 use App\Screens\BaseScreen;
 use App\Screens\BonusesScreen;
+use App\Screens\BuildingsScreen;
 use App\Screens\DiplomacyScreen;
 use App\Screens\EdictsScreen;
 use App\Screens\EventScreen;
 use App\Screens\MainMenuScreen;
+use App\Screens\PeopleScreen;
+use App\Screens\ResearchScreen;
 use App\Screens\SettingsScreen;
-use App\Screens\TODOScreen;
-use App\Screens\TreasureScreen;
+use App\Screens\WarehouseScreen;
+use Psr\Log\InvalidArgumentException;
 
 class ScreenFactory
 {
@@ -40,7 +39,7 @@ class ScreenFactory
                 $screen = $botManager->get(EdictsScreen::class);
                 break;
             case ScreenInterface::SCREEN_TREASURE:
-                $screen = $botManager->get(TreasureScreen::class);
+                $screen = $botManager->get(WarehouseScreen::class);
                 break;
             case ScreenInterface::SCREEN_DIPLOMACY:
                 $screen = $botManager->get(DiplomacyScreen::class);

@@ -2,15 +2,16 @@
 
 namespace App\Screens;
 
-use App\Entity\BuildType;
-use App\Interfaces\BuildInterface;
+use App\Helper\CurrencyHelper;
 use App\Interfaces\CallbackInterface;
 use App\Interfaces\ScreenInterface;
+use App\Interfaces\StructureInterface;
+use App\Interfaces\TaxesInterface;
 use App\Manager\BotManager;
 use App\Manager\KingdomManager;
 use App\Manager\PeopleManager;
 use App\Manager\WorkManager;
-use App\Repository\BuildTypeRepository;
+use App\Repository\StructureTypeRepository;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
@@ -27,7 +28,7 @@ class BuildingsScreen extends BaseScreen
         WorkManager $workManager,
         PeopleManager $peopleManager,
         KingdomManager $kingdomManager,
-        BuildTypeRepository $buildTypeRepository
+        StructureTypeRepository $buildTypeRepository
     ) {
         $this->workManager = $workManager;
         $this->peopleManager = $peopleManager;
@@ -37,23 +38,30 @@ class BuildingsScreen extends BaseScreen
         parent::__construct($botManager);
     }
 
+    /**
+     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function execute(): ServerResponse
+    {
+        return Request::sendMessage($this->getMessageData());
+    }
+
     public function getMessageData()
     {
         $kingdom = $this->botManager->getKingdom();
         $title = ScreenInterface::SCREEN_BUILDINGS;
 
         $free = $this->workManager->free($kingdom);
-        $level = $this->kingdomManager->level($kingdom);
+        $territorySize = $this->kingdomManager->getTerritorySize($kingdom);
 
         $text = <<<TEXT
 *{$title}*
 
-| `💰 `*{$kingdom->getGold()}* | `🌲 `*{$kingdom->getWood()}*  | `⛏ `*{$kingdom->getStone()}*  | `🔨 `*{$kingdom->getMetal()}* |
+`💰 `*{$kingdom->getGold()}* | `🌲 `*{$kingdom->getWood()}*  | `⛏ `*{$kingdom->getStone()}*  | `🔨 `*{$kingdom->getIron()}*
 
-`👪 Людей свободно: `*{$free}*
-`🏛️ Строителей: `*{$kingdom->getOnBuildings()}*
-
-`🏰 Уровень замка - `*{$level}*
+`🏛️ Мест для постройки: `*{$territorySize}*
+`🏛️ Строителей: `*{$kingdom->getOnStructure()}*
 
 
 TEXT;
@@ -66,62 +74,60 @@ TEXT;
         $buildings = [];
         $buildTypes = $this->buildTypeRepository->findAll();
         foreach ($buildTypes as $buildType) {
-            if ($buildType->getCode() === BuildInterface::BUILD_TYPE_CASTLE) {
-                $buildText = 'Улучшить ';
-            } else {
-                $buildText = 'Построить ';
-                $build = $kingdom->getBuild($buildType->getCode());
-                $level = 0;
-                if ($build) {
-                    $level = $build->getLevel();
-                }
-                $text .= <<<TEXT
-`🏛 {$buildType->getName()} - `*{$level}*
-
-TEXT;
+            $build = $kingdom->getStructure($buildType->getCode());
+            $level = 0;
+            if ($build) {
+                $level = $build->getLevel();
             }
-
-            $buildText .= mb_strtolower($buildType->getName());
-            $buildText .= ' за (';
 
             $cost = [];
-            if ($buildType->getGold() > 0) {
-                $cost[] = $buildType->getGold() . ' 💰';
+            if ($buildType->getGoldCost() > 0) {
+                $cost[] = CurrencyHelper::costFormat($buildType->getGoldCost()) . ' 💰';
             }
-            if ($buildType->getWood() > 0) {
-                $cost[] = $buildType->getWood() . ' 🌲';
+            if ($buildType->getWoodCost() > 0) {
+                $cost[] = CurrencyHelper::costFormat($buildType->getWoodCost()) . ' 🌲';
             }
-            if ($buildType->getStone() > 0) {
-                $cost[] = $buildType->getStone() . ' ⛏';
+            if ($buildType->getStoneCost() > 0) {
+                $cost[] = CurrencyHelper::costFormat($buildType->getStoneCost()) . ' ⛏';
             }
-            if ($buildType->getMetal() > 0) {
-                $cost[] = $buildType->getMetal() . ' 🔨';
+            if ($buildType->getIronCost() > 0) {
+                $cost[] = CurrencyHelper::costFormat($buildType->getIronCost()) . ' 🔨';
             }
-            $buildText .= implode(', ', $cost) . ')';
+
+            $costText = implode(', ', $cost);
+            $text .= <<<TEXT
+`🏛 {$buildType->getName()} - `*{$level}*
+`Стоимость $costText`
+---
+
+TEXT;
 
             $buildings[] = [
-                ['text' => $buildText, 'callback_data' => $pack(CallbackInterface::CALLBACK_BUILD_LEVEL_UP, ['c' => $buildType->getCode()])]
+                [
+                    'text' => '🏛 ' . $buildType->getName(),
+                    'callback_data' => $pack(CallbackInterface::CALLBACK_GET_INFO, ['t' => TaxesInterface::TAXES])
+                ],
+                [
+                    'text' => 'Купить 📝',
+                    'callback_data' => $pack(CallbackInterface::CALLBACK_INCREASE_STRUCTURE_LEVEL, ['c' => $buildType->getCode()])
+                ]
             ];
         }
+
+        $text .= <<<TEXT
+          
+выберите здание для покупки или улучшения
+TEXT;
 
         $inlineKeyboard = new InlineKeyboard(
             ...$buildings
         );
 
         return [
-            'chat_id'      => $kingdom->getUser()->getId(),
-            'text'         => $text,
+            'chat_id' => $kingdom->getUser()->getId(),
+            'text' => $text,
             'reply_markup' => $inlineKeyboard,
-            'parse_mode'   => 'Markdown',
+            'parse_mode' => 'Markdown',
         ];
-    }
-
-    /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    public function execute(): ServerResponse
-    {
-        return Request::sendMessage($this->getMessageData());
     }
 }

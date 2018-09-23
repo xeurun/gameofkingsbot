@@ -2,12 +2,10 @@
 
 namespace App\Screens;
 
-use App\Interfaces\CallbackInterface;
 use App\Interfaces\ScreenInterface;
-use Longman\TelegramBot\Entities\InlineKeyboard;
+use App\Interfaces\TranslatorInterface;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
-use App\Responses\BackResponse;
 
 class AchivementsScreen extends BaseScreen
 {
@@ -19,16 +17,18 @@ class AchivementsScreen extends BaseScreen
     {
         $kingdom = $this->botManager->getKingdom();
         $title = ScreenInterface::SCREEN_ACHIEVEMENTS;
-        $text = <<<TEXT
-*{$title}*
-
-Мы уже учитываем выши заслуги, скоро их сможете увидеть и вы!
-TEXT;
+        $text = $this->botManager->getTranslator()->trans(
+            TranslatorInterface::TRANSLATOR_MESSAGE_ACHIVEMENTS_SCREEN_MESSAGE,
+            [
+                '%title%' => $title
+            ],
+            TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
+        );
 
         $data = [
-            'chat_id'      => $kingdom->getUser()->getId(),
-            'text'         => $text,
-            'parse_mode'   => 'Markdown',
+            'chat_id' => $kingdom->getUser()->getId(),
+            'text' => $text,
+            'parse_mode' => 'Markdown',
         ];
 
         return Request::sendMessage($data);

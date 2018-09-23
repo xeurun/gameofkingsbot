@@ -3,12 +3,12 @@
 namespace App\Factory;
 
 use App\Callbacks\BaseCallback;
-use App\Callbacks\BuildLevelUpCallback;
 use App\Callbacks\ChangeKingdomNameCallback;
 use App\Callbacks\EveryDayBonusCallback;
-use App\Callbacks\GrabResourcesCallback;
-use App\Callbacks\UpDownTaxCallback;
-use App\Callbacks\UpDownWorkerCallback;
+use App\Callbacks\HireOrFirePeopleCallback;
+use App\Callbacks\IncreaseStructureLevelCallback;
+use App\Callbacks\MoveResourcesToWarehouseCallback;
+use App\Callbacks\RiseOrLowerTaxesCallback;
 use App\Interfaces\CallbackInterface;
 use App\Manager\BotManager;
 use Longman\TelegramBot\Entities\CallbackQuery;
@@ -21,22 +21,23 @@ class CallbackFactory
      * @param BotManager $botManager
      * @return BaseCallback
      */
-    public function create(string $callbackName, BotManager $botManager): BaseCallback {
+    public function create(string $callbackName, BotManager $botManager): BaseCallback
+    {
         switch ($callbackName) {
             case CallbackInterface::CALLBACK_EVERY_DAY_BONUS:
                 $state = $botManager->get(EveryDayBonusCallback::class);
                 break;
-            case CallbackInterface::CALLBACK_UP_DOWN_TAX:
-                $state = $botManager->get(UpDownTaxCallback::class);
+            case CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES:
+                $state = $botManager->get(RiseOrLowerTaxesCallback::class);
                 break;
-            case CallbackInterface::CALLBACK_UP_DOWN_WORKER:
-                $state = $botManager->get(UpDownWorkerCallback::class);
+            case CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE:
+                $state = $botManager->get(HireOrFirePeopleCallback::class);
                 break;
-            case CallbackInterface::CALLBACK_GRAB_RESOURCES:
-                $state = $botManager->get(GrabResourcesCallback::class);
+            case CallbackInterface::CALLBACK_MOVE_RESOURCES_TO_WAREHOUSE:
+                $state = $botManager->get(MoveResourcesToWarehouseCallback::class);
                 break;
-            case CallbackInterface::CALLBACK_BUILD_LEVEL_UP:
-                $state = $botManager->get(BuildLevelUpCallback::class);
+            case CallbackInterface::CALLBACK_INCREASE_STRUCTURE_LEVEL:
+                $state = $botManager->get(IncreaseStructureLevelCallback::class);
                 break;
             case CallbackInterface::CALLBACK_CHANGE_KINGDOM_NAME:
                 $state = $botManager->get(ChangeKingdomNameCallback::class);
@@ -82,11 +83,11 @@ class CallbackFactory
     {
         return [
             CallbackInterface::CALLBACK_EVERY_DAY_BONUS,
-            CallbackInterface::CALLBACK_UP_DOWN_TAX,
-            CallbackInterface::CALLBACK_UP_DOWN_WORKER,
-            CallbackInterface::CALLBACK_GRAB_RESOURCES,
+            CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES,
+            CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
+            CallbackInterface::CALLBACK_MOVE_RESOURCES_TO_WAREHOUSE,
             CallbackInterface::CALLBACK_CHANGE_KINGDOM_NAME,
-            CallbackInterface::CALLBACK_BUILD_LEVEL_UP
+            CallbackInterface::CALLBACK_INCREASE_STRUCTURE_LEVEL
         ];
     }
 }

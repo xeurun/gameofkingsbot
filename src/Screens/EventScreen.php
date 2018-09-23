@@ -3,7 +3,7 @@
 namespace App\Screens;
 
 use App\Interfaces\ScreenInterface;
-use App\Interfaces\TaxesInterface;
+use App\Interfaces\TranslatorInterface;
 use App\Manager\BotManager;
 use App\Manager\PeopleManager;
 use App\Manager\WorkManager;
@@ -32,16 +32,18 @@ class EventScreen extends BaseScreen
         $title = ScreenInterface::SCREEN_EVENT;
 
         // Смотрим последнюю дату проверки событий и выводим
-        $text = <<<TEXT
-*{$title}*
-
-За последние дни никто не умер...
-TEXT;
+        $text = $this->botManager->getTranslator()->trans(
+            TranslatorInterface::TRANSLATOR_MESSAGE_EVENT_SCREEN_MESSAGE,
+            [
+                '%title%' => $title
+            ],
+            TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
+        );
 
         $data = [
-            'chat_id'      => $kingdom->getUser()->getId(),
-            'text'         => $text,
-            'parse_mode'   => 'Markdown',
+            'chat_id' => $kingdom->getUser()->getId(),
+            'text' => $text,
+            'parse_mode' => 'Markdown',
         ];
 
         return Request::sendMessage($data);

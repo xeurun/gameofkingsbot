@@ -3,6 +3,7 @@
 namespace App\Screens;
 
 use App\Interfaces\ScreenInterface;
+use App\Interfaces\TranslatorInterface;
 use App\Manager\BotManager;
 use App\Manager\KingdomManager;
 use App\Manager\PeopleManager;
@@ -41,7 +42,7 @@ class MainMenuScreen extends BaseScreen
 
         $keyboard = new Keyboard(
             [ScreenInterface::SCREEN_EVENT, ScreenInterface::SCREEN_TREASURE, ScreenInterface::SCREEN_EDICTS],
-            [ScreenInterface::SCREEN_RESEARCH,  ScreenInterface::SCREEN_DIPLOMACY],
+            [ScreenInterface::SCREEN_RESEARCH, ScreenInterface::SCREEN_DIPLOMACY],
             [ScreenInterface::SCREEN_BONUSES, ScreenInterface::SCREEN_ACHIEVEMENTS, ScreenInterface::SCREEN_SETTINGS]
         );
 
@@ -51,52 +52,94 @@ class MainMenuScreen extends BaseScreen
             ->setOneTimeKeyboard(false)
             ->setSelective(false);
 
-        $text = <<<TEXT
-*🤴 Королевство «{$kingdom->getName()}», вы верховный король 👸*
-TEXT;
+        $text = $this->botManager->getTranslator()->trans(
+            TranslatorInterface::TRANSLATOR_MESSAGE_MAIN_MENU_SCREEN_TITLE,
+            [
+                '%name%' => $kingdom->getName()
+            ],
+            TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
+        );
 
-        $data    = [
-            'chat_id'      => $kingdom->getUser()->getId(),
-            'text'         => $text,
+        $data = [
+            'chat_id' => $kingdom->getUser()->getId(),
+            'text' => $text,
             'reply_markup' => $keyboard,
-            'parse_mode'   => 'Markdown'
+            'parse_mode' => 'Markdown'
         ];
 
         Request::sendMessage($data);
-
-        $taxLevel = $this->peopleManager->taxLevel($kingdom);
 
         $eatHourly = $this->peopleManager->eat($kingdom);
         $foodDay = round($kingdom->getFood() / $eatHourly);
 
         $level = $this->kingdomManager->level($kingdom);
+        $territory = $this->kingdomManager->level($kingdom);
 
-        $text = <<<TEXT
-`👪  В вашем королевстве `*{$level}*` уровня - `*{$kingdom->getPeople()}*` людей`
-
-`📜  Уровень налогов: `*{$taxLevel}*
-
-`💰 Золота - `*{$kingdom->getGold()}*` ед.`
-`🍞 Еды    - `*{$kingdom->getFood()}*` ед.`
-`🌲 Дерева - `*{$kingdom->getWood()}*` ед.`
-`⛏ Камней - `*{$kingdom->getStone()}*` ед.`
-`🔨 Железа - `*{$kingdom->getMetal()}*` ед.`
-
-Еды на *{$foodDay}* часов
-
-Проверьте склад!
-TEXT;
+        $text = $this->botManager->getTranslator()->trans(
+            TranslatorInterface::TRANSLATOR_MESSAGE_MAIN_MENU_SCREEN_MESSAGE,
+            [
+                '%level%' => $level,
+                '%territory%' => $territory,
+                '%territorySize%' => $this->kingdomManager->getTerritorySize($kingdom),
+                '%people%' => $this->botManager->getTranslator()->transChoice(
+                    TranslatorInterface::TRANSLATOR_MESSAGE_PEOPLES,
+                    $kingdom->getPeople(),
+                    [
+                        '%count%' => $kingdom->getPeople()
+                    ],
+                    TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+                ),
+                '%tax%' => $this->botManager->getTranslator()->transChoice(
+                    TranslatorInterface::TRANSLATOR_MESSAGE_TAXES_LEVEL,
+                    $kingdom->getTax(),
+                    [],
+                    TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+                ),
+                '%gold%' => $kingdom->getGold(),
+                '%food%' => $kingdom->getFood(),
+                '%wood%' => $kingdom->getWood(),
+                '%stone%' => $kingdom->getStone(),
+                '%iron%' => $kingdom->getIron(),
+                '%foodDay%' => $this->botManager->getTranslator()->transChoice(
+                    TranslatorInterface::TRANSLATOR_MESSAGE_HOURS,
+                    $foodDay,
+                    [
+                        '%count%' => $foodDay
+                    ],
+                    TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+                )
+            ],
+            TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
+        );
 
         $inlineKeyboard = new InlineKeyboard([
-            ['text' => 'Новости', 'url' => 'https://t.me/worldofkings'],
-            ['text' => 'Группа для общения', 'url' => 'https://t.me/placeofkings'],
+            [
+                'text' => $this->botManager->getTranslator()->trans(
+                    TranslatorInterface::TRANSLATOR_MESSAGE_GROUP_BUTTON,
+                    [
+                        'name' => $kingdom->getName()
+                    ],
+                    TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
+                ),
+                'url' => 'https://t.me/worldofkings'
+            ],
+            [
+                'text' => $this->botManager->getTranslator()->trans(
+                    TranslatorInterface::TRANSLATOR_MESSAGE_CHANNEL_BUTTON,
+                    [
+                        'name' => $kingdom->getName()
+                    ],
+                    TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
+                ),
+                'url' => 'https://t.me/placeofkings'
+            ],
         ]);
 
         $data = [
-            'chat_id'      => $kingdom->getUser()->getId(),
-            'text'         => $text,
+            'chat_id' => $kingdom->getUser()->getId(),
+            'text' => $text,
             'reply_markup' => $inlineKeyboard,
-            'parse_mode'   => 'Markdown',
+            'parse_mode' => 'Markdown',
         ];
 
         return Request::sendMessage($data);

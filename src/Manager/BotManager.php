@@ -10,11 +10,12 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Longman\TelegramBot\Entities\CallbackQuery;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Exception\TelegramLogException;
 use Longman\TelegramBot\Telegram;
-use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\TelegramLog;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class BotManager extends Telegram
 {
@@ -22,6 +23,8 @@ class BotManager extends Telegram
     protected $container;
     /** @var EntityManagerInterface */
     protected $entityManager;
+    /** @var TranslatorInterface */
+    protected $translator;
     /** @var User */
     protected $user;
     /** @var Message */
@@ -31,12 +34,18 @@ class BotManager extends Telegram
 
     /**
      * @param ContainerInterface $container
+     * @param EntityManagerInterface $entityManager
+     * @param TranslatorInterface $translator
      * @throws TelegramException
      * @throws TelegramLogException
      */
-    public function __construct(ContainerInterface $container, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ) {
         $this->container = $container;
+        $this->translator = $translator;
         $this->entityManager = $entityManager;
 
         $apiKey = getenv('API_KEY');
@@ -93,11 +102,31 @@ class BotManager extends Telegram
     }
 
     /**
+     * @return TranslatorInterface
+     */
+    public function getTranslator(): TranslatorInterface
+    {
+        return $this->translator;
+    }
+
+    /**
      * @return EntityManagerInterface
      */
     public function getEntityManager(): EntityManagerInterface
     {
         return $this->entityManager;
+    }
+
+    /**
+     * @return Kingdom
+     */
+    public function getKingdom(): Kingdom
+    {
+        if ($this->getUser()) {
+            return $this->getUser()->getKingdom();
+        }
+
+        throw new \UnexpectedValueException('Not initialized kingdom');
     }
 
     /**
@@ -119,9 +148,9 @@ class BotManager extends Telegram
     }
 
     /**
-     * @return Message
+     * @return Message|null
      */
-    public function getMessage(): Message
+    public function getMessage(): ?Message
     {
         return $this->message;
     }
@@ -137,9 +166,9 @@ class BotManager extends Telegram
     }
 
     /**
-     * @return CallbackQuery
+     * @return CallbackQuery|null
      */
-    public function getCallbackQuery(): CallbackQuery
+    public function getCallbackQuery(): ?CallbackQuery
     {
         return $this->callbackQuery;
     }
@@ -152,17 +181,5 @@ class BotManager extends Telegram
     {
         $this->callbackQuery = $callbackQuery;
         return $this;
-    }
-
-    /**
-     * @return Kingdom
-     */
-    public function getKingdom(): Kingdom
-    {
-        if ($this->getUser()) {
-            return $this->getUser()->getKingdom();
-        }
-
-        throw new \UnexpectedValueException('Not initialized kingdom');
     }
 }

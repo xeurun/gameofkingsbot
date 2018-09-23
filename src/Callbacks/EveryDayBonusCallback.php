@@ -2,69 +2,116 @@
 
 namespace App\Callbacks;
 
+use App\Entity\Kingdom;
+use App\Entity\User;
+use App\Interfaces\CallbackInterface;
+use App\Interfaces\ResourceInterface;
+use App\Manager\BotManager;
+use App\Manager\ResourceManager;
 use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class EveryDayBonusCallback extends BaseCallback
 {
+    /** @var ResourceManager */
+    protected $resourceManager;
+
+    public function __construct(
+        BotManager $botManager,
+        TranslatorInterface $translator,
+        ResourceManager $resourceManager
+    ) {
+        $this->resourceManager = $resourceManager;
+        parent::__construct($botManager, $translator);
+    }
+
     /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return ServerResponse
+     * @throws TelegramException
      * @throws ORMException
      */
     public function execute(): ServerResponse
     {
+        $data = $this->requestEveryDayBonus();
+
+        return Request::answerCallbackQuery($data);
+    }
+
+    /**
+     * @return array
+     * @throws
+     */
+    public function requestEveryDayBonus(): array
+    {
         $user = $this->botManager->getUser();
+        $kingdom = $this->botManager->getKingdom();
+
         $today = new \DateTime();
 
-        if (!$user->getBonusDate() || $user->getBonusDate()->format('d') !== $today->format('d')) {
-            $bonusGold = 5;
-            $bonusFood = 50;
-            $bonusWood = 10;
-            $bonusStone = 1;
-            $bonusMetal = 1;
-            $text = <<<TEXT
-Спасибо что остаетесь с нами, вот ваша награда!
+        $data = [
+            'callback_query_id' => $this->callbackQuery->getId(),
+            'show_alert' => false
+        ];
 
-💰 Золота ({$bonusGold}ед.)
-🍞 Еды ({$bonusFood}ед.)
-🌲 Дерева ({$bonusWood}ед.)
-⛏ Камней ({$bonusStone}ед.)
-🔨 Железа ({$bonusMetal}ед.)
-TEXT;
+        if (!$user->getBonusDate() ||
+            $user->getBonusDate()->format('d') !== $today->format('d')
+        ) {
+            $currentFood = $kingdom->getFood();
+            $currentGold = $kingdom->getGold();
+            $currentWood = $kingdom->getWood();
+            $currentStone = $kingdom->getStone();
+            $currentIron = $kingdom->getIron();
+
+            $this->resourceManager->addEveryDayBonus($kingdom);
+
+            $foodDiff = $kingdom->getFood() - $currentFood;
+            $goldDiff = $kingdom->getGold() - $currentGold;
+            $woodDiff = $kingdom->getWood() - $currentWood;
+            $stoneDiff = $kingdom->getStone() - $currentStone;
+            $ironDiff = $kingdom->getIron() - $currentIron;
+
+            $subText = $this->botManager->getTranslator()->trans(
+                CallbackInterface::CALLBACK_EVERY_DAY_BONUS,
+                [
+                    '%' . ResourceInterface::RESOURCE_GOLD . '%' => $goldDiff,
+                    '%' . ResourceInterface::RESOURCE_FOOD . '%' => $foodDiff,
+                    '%' . ResourceInterface::RESOURCE_WOOD . '%' => $woodDiff,
+                    '%' . ResourceInterface::RESOURCE_STONE . '%' => $stoneDiff,
+                    '%' . ResourceInterface::RESOURCE_IRON . '%' => $ironDiff
+                ],
+                \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+            );
+
+            Request::sendMessage([
+                'chat_id' => $kingdom->getUser()->getId(),
+                'text' => $subText,
+                'parse_mode' => 'Markdown',
+            ]);
+
+            $text = $this->botManager->getTranslator()->trans(
+                \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_EVERY_DAY_BONUS_RECEIVED,
+                [],
+                \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+            );
 
             $entityManager = $this->botManager->getEntityManager();
             $user->setBonusDate($today);
             $entityManager->persist($user);
-            $kingdom = $user->getKingdom();
-            if ($kingdom) {
-                $kingdom->setGold($kingdom->getGold() + $bonusGold);
-                $kingdom->setFood($kingdom->getFood() + $bonusFood);
-                $kingdom->setWood($kingdom->getWood() + $bonusWood);
-                $kingdom->setStone($kingdom->getStone() + $bonusStone);
-                $kingdom->setMetal($kingdom->getMetal() + $bonusMetal);
-            }
             $entityManager->persist($kingdom);
             $entityManager->flush();
-
-            $data = [
-                'callback_query_id' => $this->botManager->getCallbackQuery()->getId(),
-                'text'              => $text,
-                'show_alert'        => true,
-            ];
         } else {
-            $text = <<<TEXT
-Сегодня вы уже получали ежедневный бонус!
-TEXT;
-
-            $data = [
-                'callback_query_id' => $this->botManager->getCallbackQuery()->getId(),
-                'text'              => $text,
-                'show_alert'        => true,
-            ];
+            $text = $this->botManager->getTranslator()->trans(
+                \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_EVERY_DAY_BONUS_ALREADY_RECEIVED,
+                [],
+                \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+            );
         }
 
-        return Request::answerCallbackQuery($data);
+        $data['text'] = $text;
+
+        return $data;
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Manager;
 
 use App\Entity\Kingdom;
+use App\Interfaces\ResourceInterface;
+use App\Interfaces\TaxesInterface;
 
 class PeopleManager
 {
@@ -14,7 +16,7 @@ class PeopleManager
      */
     public function eat(Kingdom $kingdom): float
     {
-        return round($kingdom->getPeople() * (1 / $kingdom->getTax()));
+        return round($kingdom->getPeople() * (ResourceInterface::INITIAL_EAT_FOOD / $kingdom->getTax()));
     }
 
     /**
@@ -25,24 +27,6 @@ class PeopleManager
      */
     public function pay(Kingdom $kingdom): float
     {
-        return round($kingdom->getPeople() * (0.1 * $kingdom->getTax()));
-    }
-
-    /**
-     * @param Kingdom $kingdom
-     * @return string
-     */
-    public function taxLevel(Kingdom $kingdom): string
-    {
-        $taxLevel = 'вручную';
-        if ($kingdom->getTax() === 1) {
-            $taxLevel = 'низкий';
-        } else if ($kingdom->getTax() === 2) {
-            $taxLevel = 'средний';
-        } else if ($kingdom->getTax() === 3) {
-            $taxLevel = 'высокий';
-        }
-
-        return $taxLevel;
+        return round($kingdom->getPeople() * (TaxesInterface::INITIAL_TAXES_SIZE * $kingdom->getTax()));
     }
 }

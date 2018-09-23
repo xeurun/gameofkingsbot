@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="ru" target-language="ru" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>channel_button</source>
+                <target>Группа для общения</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>group_button</source>
+                <target>Новости</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>change_kingdom_name_button</source>
+                <target>Изменить название королества</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>enter_to_group_button</source>
+                <target>Вступить в группу</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>subscribe_on_channel_button</source>
+                <target>Подписаться на канал</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>receive_every_day_bonuses_button</source>
+                <target>Получить ежедневный бонус</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>move_extracted_resources_to_warehouse</source>
+                <target>Перенести добытые ресурсы на склад</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -4,7 +4,6 @@ namespace App\Commands\System;
 
 use App\Commands\BaseCommand;
 use App\Entity\Kingdom;
-use App\Entity\User;
 use App\Factory\ScreenFactory;
 use App\Factory\StateFactory;
 use App\Manager\BotManager;
@@ -16,7 +15,7 @@ class GenericmessageCommand extends BaseCommand
     public function __construct(BotManager $botManager, Update $update = null)
     {
         $this->name = 'genericmessage';
-        $this->description  = 'Handle generic message';
+        $this->description = 'Handle generic message';
         $this->version = '1.0.0';
 
         parent::__construct($botManager, $update);
@@ -35,38 +34,41 @@ class GenericmessageCommand extends BaseCommand
 
         $result = Request::emptyResponse();
 
-        $user = $botManager->getUser();
-        $stateName = $user->getState();
-        if (null !== $stateName) {
-            $state = null;
-            /** @var StateFactory $stateFactory */
-            $stateFactory = $botManager->get(StateFactory::class);
-            if ($stateFactory->isAvailable($stateName)) {
-                $state = $stateFactory->create(
-                    $stateName,
-                    $botManager
-                );
+        $message = $botManager->getMessage();
+        if ($message) {
+            $user = $botManager->getUser();
+            $stateName = $user->getState();
+            if (null !== $stateName) {
+                $state = null;
+                /** @var StateFactory $stateFactory */
+                $stateFactory = $botManager->get(StateFactory::class);
+                if ($stateFactory->isAvailable($stateName)) {
+                    $state = $stateFactory->create(
+                        $stateName,
+                        $botManager
+                    );
+                }
+
+                if (null !== $state) {
+                    $state->execute();
+                }
             }
 
-            if (null !== $state) {
-                $state->execute();
-            }
-        }
+            if ($user->getKingdom() instanceof Kingdom) {
+                $screen = null;
+                /** @var ScreenFactory $screenFactory */
+                $screenFactory = $botManager->get(ScreenFactory::class);
+                $screenName = $message->getText();
+                if ($screenFactory->isAvailable($screenName)) {
+                    $screen = $screenFactory->create(
+                        $screenName,
+                        $botManager
+                    );
+                }
 
-        if ($user->getKingdom() instanceof Kingdom) {
-            $screen = null;
-            /** @var ScreenFactory $screenFactory */
-            $screenFactory = $botManager->get(ScreenFactory::class);
-            $screenName = $botManager->getMessage()->getText();
-            if ($screenFactory->isAvailable($screenName)) {
-                $screen = $screenFactory->create(
-                    $screenName,
-                    $botManager
-                );
-            }
-
-            if (null !== $screen) {
-                $result = $screen->execute();
+                if (null !== $screen) {
+                    $result = $screen->execute();
+                }
             }
         }
 

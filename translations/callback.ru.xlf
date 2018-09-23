@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="ru" target-language="ru" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>change_kingdom_name</source>
+                <target>
+*Ваше желание - закон!*
+
+Пришлите новое название вашего королевства
+                </target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>every_day_bonus</source>
+                <target>
+`Спасибо что остаетесь с нами, вот ваша награда!`
+
+`💰 Золота   - `*%gold%*` ед.`
+`🍞 Еды      - `*%food%*` ед.`
+`🌲 Дерева   - `*%wood%*` ед.`
+`⛏ Камней   - `*%stone%*` ед.`
+`🔨 Железа   - `*%iron%*` ед.`
+                </target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>every_day_bonus_already_received</source>
+                <target>
+Сегодня вы уже получали ежедневный бонус!
+                </target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>move_resources_to_warehouse</source>
+                <target>
+`Пополнение склада!`
+
+`💰 Золота    - `*%gold%*` ед.`
+`🍞 Еды       - `*%food%*` ед.`
+`🌲 Дерева    - `*%wood%*` ед.`
+`⛏ Камней    - `*%stone%*` ед.`
+`🔨 Железа    - `*%iron%*` ед.`
+                </target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>raise_taxes</source>
+                <target>увеличены</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>lower_taxes</source>
+                <target>уменьшены</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>raise_or_lower_taxes</source>
+                <target>
+Налоги %status% до уровня %level%
+                </target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>taxes_level</source>
+                <target>
+{1} Низкий|{2} Средний|{3}Высокий|]3,Inf[Произвольный
+                </target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>hired_people</source>
+                <target>Нанят рабочий</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>fired_people</source>
+                <target>Уволен рабочий</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>no_hired_people</source>
+                <target>Некого нанимать!</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>no_fired_people</source>
+                <target>Некого увольнять!</target>
+            </trans-unit>
+            <trans-unit id="13">
+                <source>every_day_bonus_received</source>
+                <target>Ежедневный бонус добавлен на ваш склад!</target>
+            </trans-unit>
+            <trans-unit id="14">
+                <source>extracted_resources_received</source>
+                <target>Добытые ресурсы добавлены на склад!</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

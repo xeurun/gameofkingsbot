@@ -34,11 +34,11 @@ class BackResponse
             ->setOneTimeKeyboard(false)
             ->setSelective(false);
 
-        $data    = [
-            'chat_id'      => $this->chatId,
-            'text'         => $this->text,
+        $data = [
+            'chat_id' => $this->chatId,
+            'text' => $this->text,
             'reply_markup' => $keyboard,
-            'parse_mode'   => 'Markdown'
+            'parse_mode' => 'Markdown'
         ];
 
         return Request::sendMessage($data);

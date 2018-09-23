@@ -3,8 +3,10 @@
 namespace App\Screens;
 
 use App\Interfaces\ScreenInterface;
-use Longman\TelegramBot\Entities\ServerResponse;
+use App\Interfaces\TranslatorInterface;
 use App\Responses\BackResponse;
+use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Request;
 
 class ResearchScreen extends BaseScreen
 {
@@ -16,12 +18,20 @@ class ResearchScreen extends BaseScreen
     {
         $kingdom = $this->botManager->getKingdom();
         $title = ScreenInterface::SCREEN_RESEARCH;
-        $text = <<<TEXT
-*{$title}*
+        $text = $this->botManager->getTranslator()->trans(
+            TranslatorInterface::TRANSLATOR_MESSAGE_RESEACRH_SCREEN_MESSAGE,
+            [
+                '%title%' => $title
+            ],
+            TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
+        );
 
-Скоро вас ждет огромный выбор очень важных исследований
-TEXT;
+        $data = [
+            'chat_id' => $kingdom->getUser()->getId(),
+            'text' => $text,
+            'parse_mode' => 'Markdown'
+        ];
 
-        return (new BackResponse($kingdom->getUser()->getId(), $text))->execute();
+        return Request::sendMessage($data);
     }
 }

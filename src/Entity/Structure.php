@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\BuildRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\StructureRepository")
  */
-class Build
+class Structure
 {
     /**
      * @ORM\Id()
@@ -22,8 +22,8 @@ class Build
     private $level;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\BuildType")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\StructureType")
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="code")
      */
     private $type;
 
@@ -36,14 +36,21 @@ class Build
     /**
      * @ORM\Column(type="datetime", options={"default"="CURRENT_TIMESTAMP"})
      */
-    private $createdDate;
+    private $buildEndDate;
 
-    public function __construct(BuildType $buildType, Kingdom $kingdom, int $level)
+    public function __construct(StructureType $buildType, Kingdom $kingdom, int $level)
     {
         $this->kingdom = $kingdom;
         $this->type = $buildType;
         $this->setLevel($level);
-        $this->setCreatedDate(new \DateTime());
+        $this->setBuildEndDate(new \DateTime());
+    }
+
+    public function setBuildEndDate(\DateTimeInterface $value): self
+    {
+        $this->buildEndDate = $value;
+
+        return $this;
     }
 
     public function getId(): int
@@ -63,7 +70,7 @@ class Build
         return $this;
     }
 
-    public function getType(): BuildType
+    public function getType(): StructureType
     {
         return $this->type;
     }
@@ -75,13 +82,6 @@ class Build
 
     public function getCreatedDate(): \DateTimeInterface
     {
-        return $this->createdDate;
-    }
-
-    public function setCreatedDate(\DateTimeInterface $createdDate): self
-    {
-        $this->createdDate = $createdDate;
-
-        return $this;
+        return $this->buildEndDate;
     }
 }

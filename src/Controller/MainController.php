@@ -11,7 +11,7 @@ class MainController extends AbstractController
     /**
      * @Route("/")
      */
-    public function main()
+    public function main(): Response
     {
         return new Response();
     }

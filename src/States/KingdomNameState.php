@@ -2,16 +2,26 @@
 
 namespace App\States;
 
-use App\Entity\BuildType;
 use App\Entity\Kingdom;
+use App\Entity\StructureType;
 use App\Factory\ScreenFactory;
-use App\Interfaces\BuildInterface;
 use App\Interfaces\ScreenInterface;
-use App\Repository\BuildTypeRepository;
+use App\Interfaces\StructureInterface;
+use App\Manager\BotManager;
+use App\Manager\KingdomManager;
+use App\Repository\StructureTypeRepository;
 use Doctrine\ORM\ORMException;
 
 class KingdomNameState extends BaseState
 {
+    protected $kingdomManager;
+
+    public function __construct(BotManager $botManager, KingdomManager $kingdomManager)
+    {
+        $this->kingdomManager = $kingdomManager;
+        parent::__construct($botManager);
+    }
+
     /**
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
@@ -25,23 +35,20 @@ class KingdomNameState extends BaseState
             $user = $this->botManager->getUser();
             $kingdom = $user->getKingdom();
             if (!$kingdom) {
-                /** @var BuildTypeRepository $buildTypeRepository */
-                $buildTypeRepository = $this->botManager->getEntityManager()->getRepository(BuildType::class);
-                $castle = $buildTypeRepository->findOneByCode(BuildInterface::BUILD_TYPE_CASTLE);
-                $kingdom = new Kingdom($kingdomName, $user, $castle);
-                $user->setState(null);
+                $kingdom = $this->kingdomManager->createNewKingdom($kingdomName);
                 $user->setKingdom($kingdom);
-                $entityManager->persist($user);
             } else {
                 $kingdom->changeName($kingdomName);
-                $user->setState(null);
-                $entityManager->persist($user);
             }
+            $entityManager->persist($kingdom);
+            $user->setState(null);
+            $entityManager->persist($user);
             $entityManager->flush();
 
             $screen = null;
+            /** @var ScreenFactory $screenFactory */
             $screenFactory = $this->botManager->get(ScreenFactory::class);
-            if ($screenFactory->isAvailable( ScreenInterface::SCREEN_MAIN_MENU)) {
+            if ($screenFactory->isAvailable(ScreenInterface::SCREEN_MAIN_MENU)) {
                 $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU, $this->botManager);
             }
 
@@ -50,4 +57,6 @@ class KingdomNameState extends BaseState
             }
         }
     }
+
+
 }

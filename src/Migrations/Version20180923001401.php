@@ -12,68 +12,94 @@ final class Version20180923001401 extends AbstractMigration
 {
     protected static $buildTypes = [
         [
-            "'Замок'",
             "'castle'",
-            10000,
-            10000,
-            10000,
-            10000
+            "'Замок'",
+            100000,
+            100000,
+            100000,
+            100000,
+            10,
         ],
         [
+            "'territory'",
+            "'Территория'",
+            5000,
+            100000,
+            5000,
+            3500,
+            10,
+        ],
+        [
+            "'lifehouse'",
             "'Жилое здание'",
-            "'life_house'",
-            5,
             1000,
-            0,
-            0
+            20000,
+            500,
+            50,
+            10,
         ],
         [
-            "'Амбар'",
             "'barn'",
-            30,
-            3000,
-            0,
-            0
+            "'Амбар'",
+            10000,
+            10000,
+            10000,
+            10000,
+            10,
         ],
         [
-            "'Лесопилка'",
             "'sawmill'",
-            30,
-            3000,
-            0,
-            0
+            "'Лесопилка'",
+            10000,
+            10000,
+            10000,
+            10000,
+            10,
         ],
         [
-            "'Каменоломня'",
             "'stonemason'",
-            100,
-            5000,
-            5000,
-            0
+            "'Каменоломня'",
+            10000,
+            10000,
+            10000,
+            10000,
+            10,
         ],
         [
-            "'Плавильня'",
             "'smeltery'",
-            500,
+            "'Плавильня'",
             10000,
             10000,
-            10000
+            10000,
+            10000,
+            10,
         ],
         [
-            "'Библиотека'",
             "'library'",
-            100,
-            1000,
-            1000,
-            1000,
+            "'Библиотека'",
+            10000,
+            10000,
+            10000,
+            10000,
+            10,
         ],
         [
-            "'Гарнизон'",
+            "'market'",
+            "'Рынок'",
+            10000,
+            10000,
+            10000,
+            10000,
+            10,
+        ],
+        [
             "'garrison'",
-            500,
-            3000,
-            3000,
-            3000,
+            "'Гарнизон'",
+            10000,
+            10000,
+            10000,
+            10000,
+            10,
         ]
     ];
 
@@ -88,7 +114,7 @@ final class Version20180923001401 extends AbstractMigration
         }
 
         $this->addSql(
-            'INSERT IGNORE INTO build_type (name, code, gold, wood, stone, metal) VALUES '
+            'INSERT IGNORE INTO structure_type (code, name, gold_cost, wood_cost, stone_cost, iron_cost, time_cost) VALUES '
             . implode(',', $values)
         );
     }
@@ -98,6 +124,6 @@ final class Version20180923001401 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('TRUNCATE TABLE build_type');
+        $this->addSql('TRUNCATE TABLE structure_type');
     }
 }

@@ -26,10 +26,10 @@ abstract class BaseCommand extends SystemCommand
 
         if (!$this->getCallbackQuery()) {
             $botManager->setMessage($this->getMessage());
-            $from = $botManager->getMessage()->getFrom();
+            $from = $this->getMessage()->getFrom();
         } else {
             $botManager->setCallbackQuery($this->getCallbackQuery());
-            $from = $botManager->getCallbackQuery()->getFrom();
+            $from = $this->getCallbackQuery()->getFrom();
         }
 
         $entityManager = $botManager->getEntityManager();

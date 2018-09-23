@@ -5,13 +5,13 @@ namespace App\Interfaces;
 interface ResourceInterface
 {
     /** @var string  */
-    public const RESOURCE_GOLD = 'gold';
+    public const RESOURCE_GOLD = '💰 Золото';
     /** @var string  */
-    public const RESOURCE_WOOD = 'wood';
+    public const RESOURCE_FOOD = '🍞 Еда';
     /** @var string  */
-    public const RESOURCE_FOOD = 'food';
+    public const RESOURCE_WOOD = '🌲 Дерево';
     /** @var string  */
-    public const RESOURCE_STONE = 'stone';
+    public const RESOURCE_STONE = '⛏ Камень';
     /** @var string  */
-    public const RESOURCE_METAL = 'metal';
+    public const RESOURCE_METAL = '🔨 Железо';
 }

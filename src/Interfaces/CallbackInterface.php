@@ -15,5 +15,7 @@ interface CallbackInterface
     /** @var string  */
     public const CALLBACK_GRAB_RESOURCES = 'grab_resouces';
     /** @var string  */
+    public const CALLBACK_BUILD_LEVEL_UP = 'build_level_up';
+    /** @var string  */
     public const CALLBACK_CHANGE_KINGDOM_NAME = 'change_kingdom_name';
 }

@@ -17,6 +17,7 @@
         "symfony/framework-bundle": "*",
         "symfony/orm-pack": "^1.0",
         "symfony/requirements-checker": "^1.1",
+        "symfony/translation": "*",
         "symfony/var-dumper": "*",
         "symfony/yaml": "*"
     },

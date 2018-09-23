@@ -8,6 +8,18 @@ use App\Entity\Kingdom;
 class WorkManager
 {
     /**
+     * @param Kingdom $kingdom
+     * @return int
+     */
+    public function workedHours(Kingdom $kingdom): int
+    {
+        $now = new \DateTime();
+        $diff = $now->diff($kingdom->getGrabResourcesDate());
+
+        return $diff->h + (($diff->d * ($diff->m * $diff->y)) * 24);
+    }
+
+    /**
      * 1 people made x food unit
      * If tax big, people made lower
      * @param Kingdom $kingdom
@@ -15,7 +27,7 @@ class WorkManager
      */
     public function food(Kingdom $kingdom): float
     {
-        return $kingdom->getOnFood() * 2 / $kingdom->getTax();
+        return round($kingdom->getOnFood() * 2 / $kingdom->getTax());
     }
 
     /**
@@ -26,7 +38,7 @@ class WorkManager
      */
     public function wood(Kingdom $kingdom): float
     {
-        return $kingdom->getOnWood() * 1 / $kingdom->getTax();
+        return round($kingdom->getOnWood() * 1 / $kingdom->getTax());
     }
 
     /**

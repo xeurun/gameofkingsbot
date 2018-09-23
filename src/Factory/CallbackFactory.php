@@ -3,6 +3,7 @@
 namespace App\Factory;
 
 use App\Callbacks\BaseCallback;
+use App\Callbacks\BuildLevelUpCallback;
 use App\Callbacks\ChangeKingdomNameCallback;
 use App\Callbacks\EveryDayBonusCallback;
 use App\Callbacks\GrabResourcesCallback;
@@ -33,6 +34,9 @@ class CallbackFactory
                 break;
             case CallbackInterface::CALLBACK_GRAB_RESOURCES:
                 $state = $botManager->get(GrabResourcesCallback::class);
+                break;
+            case CallbackInterface::CALLBACK_BUILD_LEVEL_UP:
+                $state = $botManager->get(BuildLevelUpCallback::class);
                 break;
             case CallbackInterface::CALLBACK_CHANGE_KINGDOM_NAME:
                 $state = $botManager->get(ChangeKingdomNameCallback::class);
@@ -81,7 +85,8 @@ class CallbackFactory
             CallbackInterface::CALLBACK_UP_DOWN_TAX,
             CallbackInterface::CALLBACK_UP_DOWN_WORKER,
             CallbackInterface::CALLBACK_GRAB_RESOURCES,
-            CallbackInterface::CALLBACK_CHANGE_KINGDOM_NAME
+            CallbackInterface::CALLBACK_CHANGE_KINGDOM_NAME,
+            CallbackInterface::CALLBACK_BUILD_LEVEL_UP
         ];
     }
 }

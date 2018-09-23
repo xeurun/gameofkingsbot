@@ -20,12 +20,12 @@ class EdictsScreen extends BaseScreen
         $text = <<<TEXT
 *{$title}*
 
-В разработке
+Управляйте вашими людьми и королевством
 TEXT;
 
         $keyboard = new Keyboard(
-            ['text'=> '🏛️ Постройки'],
-            ['text' => '👪 Люди'],
+            ['text'=> ScreenInterface::SCREEN_BUILDINGS],
+            ['text' => ScreenInterface::SCREEN_PEOPLE],
             ['text' => ScreenInterface::SCREEN_BACK]
         );
 

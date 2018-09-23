@@ -7,7 +7,6 @@ use App\Interfaces\ScreenInterface;
 use App\Manager\BotManager;
 use App\Manager\PeopleManager;
 use App\Manager\WorkManager;
-use App\Packages\UpDownCallbackDataPack;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
@@ -48,42 +47,55 @@ class PeopleScreen extends BaseScreen
         $text = <<<TEXT
 *{$title}*
 
-Всего людей: {$kingdom->getPeople()} съедают {$eatHourly}ед. еды в час
-Уровень налогов: {$taxLevel}, в час {$payHourly}ед. золота
+`Всего в королевстве `*{$kingdom->getPeople()}* `людей, в час они съедают `*{$eatHourly}*` ед. еды 🍞`
 
-Свободно людей: {$free}
+`Уровень налогов `*{$taxLevel}*`, в час люди платят `*{$payHourly}*` ед. золота 💰 налогов`
 
-{$kingdom->getOnFood()} людей заняты добычей еды, в час {$foodHourly}
-{$kingdom->getOnWood()} людей заняты добычей древесины, в час {$woodHourly}
-{$kingdom->getOnStone()} людей заняты добычей камней, в час {$stoneHourly}
-{$kingdom->getOnMetal()} людей заняты добычей железа, в час {$metalHourly}
-{$kingdom->getOnBuildings()} людей заняты постройкой
+`🏛️ Строителей - `*{$kingdom->getOnBuildings()}*` человек`
+
+`🍞 Еда - добывают `*{$kingdom->getOnFood()}*`, в час `*{$foodHourly}*` ед.`
+`🌲 Дерево - добывают `*{$kingdom->getOnWood()}*`, в час `*{$woodHourly}*` ед.`
+`⛏ Камень - добывают `*{$kingdom->getOnStone()}*`, в час `*{$stoneHourly}*` ед.`
+`🔨 Железо - добывают `*{$kingdom->getOnMetal()}*`, в час `*{$metalHourly}*` ед.`
+
+`Свободно человек` - *{$free}*
 TEXT;
+
+        $pack = function ($name, $data) {
+            $data['n'] = $name;
+            return json_encode($data);
+        };
 
         $inlineKeyboard = new InlineKeyboard(
             [
-                ['text' => '⬇️ Понизить налог', 'callback_data' => json_encode(['n' => CallbackInterface::CALLBACK_UP_DOWN_TAX, 'v' => '-'])],
-                ['text' => 'Увеличить налог ⬆️', 'callback_data' => json_encode(['n' => CallbackInterface::CALLBACK_UP_DOWN_TAX, 'v' => '+'])],
+                ['text' => '📜 Налог', 'callback_data' => 'null'],
+                ['text' => '⬇ Понизить', 'callback_data' => $pack(CallbackInterface::CALLBACK_UP_DOWN_TAX, ['v' => '-'])],
+                ['text' => 'Увеличить ⬆', 'callback_data' => $pack(CallbackInterface::CALLBACK_UP_DOWN_TAX, ['v' => '+'])],
             ],
             [
-                ['text' => '⬇️ С добычи еды', 'callback_data' => json_encode(['n' => CallbackInterface::CALLBACK_UP_DOWN_WORKER, 't' => 'food', 'v' => '-'])],
-                ['text' => 'На добычу еды ⬆', 'callback_data' => json_encode(['n' => CallbackInterface::CALLBACK_UP_DOWN_WORKER, 't' => 'food', 'v' => '+'])],
+                ['text' => '🏛️ Строители', 'callback_data' => 'null'],
+                ['text' => '⬇ Уволить', 'callback_data' => $pack(CallbackInterface::CALLBACK_UP_DOWN_WORKER, ['t' => 'buildings', 'v' => '-'])],
+                ['text' => 'Нанять ⬆', 'callback_data' => $pack(CallbackInterface::CALLBACK_UP_DOWN_WORKER, ['t' => 'buildings', 'v' => '+'])],
             ],
             [
-                ['text' => '⬇️ С добычи древесины', 'callback_data' => json_encode(['n' => CallbackInterface::CALLBACK_UP_DOWN_WORKER, 't' => 'wood', 'v' => '-'])],
-                ['text' => 'На добычу древесины ⬆', 'callback_data' => json_encode(['n' => CallbackInterface::CALLBACK_UP_DOWN_WORKER, 't' => 'wood', 'v' => '+'])],
+                ['text' => '🍞 Еда', 'callback_data' => 'null'],
+                ['text' => '⬇ Уволить', 'callback_data' => $pack(CallbackInterface::CALLBACK_UP_DOWN_WORKER, ['t' => 'food', 'v' => '-'])],
+                ['text' => 'Нанять ⬆', 'callback_data' => $pack(CallbackInterface::CALLBACK_UP_DOWN_WORKER, ['t' => 'food', 'v' => '+'])],
             ],
             [
-                ['text' => '⬇️ С добычи камней', 'callback_data' => json_encode(['n' => CallbackInterface::CALLBACK_UP_DOWN_WORKER, 't' => 'stone', 'v' => '-'])],
-                ['text' => 'На добычу камней ⬆', 'callback_data' => json_encode(['n' => CallbackInterface::CALLBACK_UP_DOWN_WORKER, 't' => 'stone', 'v' => '+'])],
+                ['text' => '🌲 Дерево', 'callback_data' => 'null'],
+                ['text' => '⬇ Уволить', 'callback_data' => $pack(CallbackInterface::CALLBACK_UP_DOWN_WORKER, ['t' => 'wood', 'v' => '-'])],
+                ['text' => 'Нанять ⬆', 'callback_data' => $pack(CallbackInterface::CALLBACK_UP_DOWN_WORKER, ['t' => 'wood', 'v' => '+'])],
             ],
             [
-                ['text' => '⬇️ С добычи железа', 'callback_data' => json_encode(['n' => CallbackInterface::CALLBACK_UP_DOWN_WORKER, 't' => 'metal', 'v' => '-'])],
-                ['text' => 'На добычу железа ⬆', 'callback_data' => json_encode(['n' => CallbackInterface::CALLBACK_UP_DOWN_WORKER, 't' => 'metal', 'v' => '+'])],
+                ['text' => '⛏ Камень', 'callback_data' => 'null'],
+                ['text' => '⬇ Уволить', 'callback_data' => $pack(CallbackInterface::CALLBACK_UP_DOWN_WORKER, ['t' => 'stone', 'v' => '-'])],
+                ['text' => 'Нанять ⬆', 'callback_data' => $pack(CallbackInterface::CALLBACK_UP_DOWN_WORKER, ['t' => 'stone', 'v' => '+'])],
             ],
             [
-                ['text' => '⬇️ С построек', 'callback_data' => json_encode(['n' => CallbackInterface::CALLBACK_UP_DOWN_WORKER, 't' => 'buildings', 'v' => '-'])],
-                ['text' => 'На постройки ⬆️', 'callback_data' => json_encode(['n' => CallbackInterface::CALLBACK_UP_DOWN_WORKER, 't' => 'buildings', 'v' => '+'])],
+                ['text' => '🔨 Железо', 'callback_data' => 'null'],
+                ['text' => '⬇ Уволить', 'callback_data' => $pack(CallbackInterface::CALLBACK_UP_DOWN_WORKER, ['t' => 'metal', 'v' => '-'])],
+                ['text' => 'Нанять ⬆', 'callback_data' => $pack(CallbackInterface::CALLBACK_UP_DOWN_WORKER, ['t' => 'metal', 'v' => '+'])],
             ]
         );
 

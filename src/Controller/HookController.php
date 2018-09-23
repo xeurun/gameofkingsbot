@@ -97,15 +97,26 @@ class HookController extends AbstractController
                 "type":"private"
             },
             "date":1537300010,
-            "text":"' . $m . '",
-            "entities":[
-                {"offset":0,"length":6,"type":"bot_command"}
-            ]
+            "text":"' . $m . '"
         }
     }');
             } else if ($c === 0) {
-                $this->botManager->setCustomInput('{"update_id":119409820, "message":{"message_id":972,"from":{"id":508453111,"is_bot":false,"first_name":"\ud83d\udd25\ud83c\udf38","last_name":"\u0426\u0432\u0435\u0442","username":"banzisnsbd","language_code":"ru"},"chat":{"id":508453111,"first_name":"\ud83d\udd25\ud83c\udf38","last_name":"\u0426\u0432\u0435\u0442","username":"banzisnsbd","type":"private"},"date":1537514492,"text":"/start","entities":[{"offset":0,"length":6,"type":"bot_command"}]}}');
-            } else {
+                $this->botManager->setCustomInput('{
+                "update_id":119409820, 
+                "message":{
+                "message_id":972,
+                "from":{
+                "id":508453111,
+                "is_bot":false,
+                "first_name":"\ud83d\udd25\ud83c\udf38",
+                "last_name":"\u0426\u0432\u0435\u0442",
+                "username":"banzisnsbd","language_code":"ru"},
+                "chat":{"id":508453111,"first_name":"\ud83d\udd25\ud83c\udf38",
+                "last_name":"\u0426\u0432\u0435\u0442","username":"banzisnsbd",
+                "type":"private"},"date":1537514492,"text":"/start",
+                "entities":[{"offset":0,"length":6,
+                "type":"bot_command"}]}}');
+            } else if ($c === 2) {
                 $this->botManager->setCustomInput('{
                     "update_id":119409613, 
                     "callback_query":{
@@ -140,7 +151,7 @@ class HookController extends AbstractController
                             ]
                         },
                         "chat_instance":"-1983157652211501556",
-                        "data":"{\"name\":\"up_tax\"}"
+                        "data":"{\"n\":\"build_level_up\",\"c\":\"barn\"}"
                     }
                 }');
             }

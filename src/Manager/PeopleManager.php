@@ -14,7 +14,7 @@ class PeopleManager
      */
     public function eat(Kingdom $kingdom): float
     {
-        return $kingdom->getPeople() * (1 / $kingdom->getTax());
+        return round($kingdom->getPeople() * (1 / $kingdom->getTax()));
     }
 
     /**
@@ -25,7 +25,7 @@ class PeopleManager
      */
     public function pay(Kingdom $kingdom): float
     {
-        return $kingdom->getPeople() * (0.1 * $kingdom->getTax());
+        return round($kingdom->getPeople() * (0.1 * $kingdom->getTax()));
     }
 
     /**

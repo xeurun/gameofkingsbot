@@ -54,14 +54,14 @@ class User
     public function __construct(\Longman\TelegramBot\Entities\User $user)
     {
         $this->id = $user->getId();
-        $this->lang = $user->getLanguageCode();
-        $this->username = $user->getUsername();
-        $this->first_name = $user->getFirstName();
-        $this->last_name = $user->getLastName();
-        $this->state = StateInterface::STATE_NEW_PLAYER;
+        $this->setLang($user->getLanguageCode());
+        $this->setUsername($user->getUsername());
+        $this->setFirstName($user->getFirstName());
+        $this->setLastName($user->getLastName());
+        $this->setState(StateInterface::STATE_NEW_PLAYER);
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -71,7 +71,7 @@ class User
         return $this->first_name;
     }
 
-    public function setFirstName(string $first_name): self
+    public function setFirstName(?string $first_name): self
     {
         $this->first_name = $first_name;
 
@@ -83,7 +83,7 @@ class User
         return $this->last_name;
     }
 
-    public function setLastName(string $last_name): self
+    public function setLastName(?string $last_name): self
     {
         $this->last_name = $last_name;
 
@@ -95,19 +95,38 @@ class User
         return $this->username;
     }
 
-    public function setUsername(string $username): self
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
 
         return $this;
     }
 
-    public function getState()
+    /**
+     * @return string
+     */
+    public function getLang(): string
+    {
+        return $this->lang;
+    }
+
+    /**
+     * @param string $lang
+     * @return self
+     */
+    public function setLang($lang): self
+    {
+        $this->lang = $lang;
+
+        return $this;
+    }
+
+    public function getState(): ?string
     {
         return $this->state;
     }
 
-    public function setState($state): self
+    public function setState(?string $state): self
     {
         $this->state = $state;
 

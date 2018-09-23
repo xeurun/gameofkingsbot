@@ -24,11 +24,11 @@ class SettingsScreen extends BaseScreen
         $text = <<<TEXT
 *{$title}*
 
-Название вашего королевства: *{$kingdom->getName()}*
+®️ Название вашего королевства: *{$kingdom->getName()}*
 
-Всего королевств: *{$userRepository->count([])}*
+🏰 Всего королевств: *{$userRepository->count([])}*
 
-Администрация: 
+💬 Администрация: @alexeystepankov
 TEXT;
 
         $inlineKeyboard = new InlineKeyboard(

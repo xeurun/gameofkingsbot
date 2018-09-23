@@ -2,9 +2,12 @@
 
 namespace App\States;
 
+use App\Entity\BuildType;
 use App\Entity\Kingdom;
 use App\Factory\ScreenFactory;
+use App\Interfaces\BuildInterface;
 use App\Interfaces\ScreenInterface;
+use App\Repository\BuildTypeRepository;
 use Doctrine\ORM\ORMException;
 
 class KingdomNameState extends BaseState
@@ -22,7 +25,10 @@ class KingdomNameState extends BaseState
             $user = $this->botManager->getUser();
             $kingdom = $user->getKingdom();
             if (!$kingdom) {
-                $kingdom = new Kingdom($kingdomName, $user);
+                /** @var BuildTypeRepository $buildTypeRepository */
+                $buildTypeRepository = $this->botManager->getEntityManager()->getRepository(BuildType::class);
+                $castle = $buildTypeRepository->findOneByCode(BuildInterface::BUILD_TYPE_CASTLE);
+                $kingdom = new Kingdom($kingdomName, $user, $castle);
                 $user->setState(null);
                 $user->setKingdom($kingdom);
                 $entityManager->persist($user);

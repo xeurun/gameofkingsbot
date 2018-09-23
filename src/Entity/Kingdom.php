@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Interfaces\TaxesInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,72 +20,77 @@ class Kingdom
     private $id;
 
     /**
-     * @ORM\Column(type="string", nullable=false, length=255)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="integer", nullable=false, options={"default": 0})
+     * @ORM\Column(type="integer", options={"default": 1})
+     */
+    private $level;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 0})
      */
     private $people;
 
     /**
-     * @ORM\Column(type="float", nullable=false, precision=2, options={"default": 0})
+     * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
     private $food;
 
     /**
-     * @ORM\Column(type="float", nullable=false, precision=2, options={"default": 0})
+     * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
     private $wood;
 
     /**
-     * @ORM\Column(type="float", nullable=false, precision=2, options={"default": 0})
+     * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
     private $gold;
 
     /**
-     * @ORM\Column(type="float", nullable=false, precision=2, options={"default": 0})
+     * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
     private $stone;
 
     /**
-     * @ORM\Column(type="float", nullable=false, precision=2, options={"default": 0})
+     * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
     private $metal;
 
     /**
-     * @ORM\Column(type="integer", nullable=false, options={"default": 0})
+     * @ORM\Column(type="integer", options={"default": 0})
      */
     private $onFood;
 
     /**
-     * @ORM\Column(type="integer", nullable=false, options={"default": 0})
+     * @ORM\Column(type="integer", options={"default": 0})
      */
     private $onWood;
 
     /**
-     * @ORM\Column(type="integer", nullable=false, options={"default": 0})
+     * @ORM\Column(type="integer", options={"default": 0})
      */
     private $onStone;
 
     /**
-     * @ORM\Column(type="integer", nullable=false, options={"default": 0})
+     * @ORM\Column(type="integer", options={"default": 0})
      */
     private $onMetal;
 
     /**
-     * @ORM\Column(type="integer", nullable=false, options={"default": 0})
+     * @ORM\Column(type="integer", options={"default": 0})
      */
     private $onBuildings;
 
     /**
-     * @ORM\Column(type="smallint", nullable=false, options={"default": 0})
+     * @ORM\Column(type="smallint", options={"default": 0})
      */
     private $tax;
 
     /**
-     * @ORM\Column(type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime", options={"default"="CURRENT_TIMESTAMP"})
      */
     private $grabResourcesDate;
 
@@ -93,12 +100,18 @@ class Kingdom
      */
     private $user;
 
-    public function __construct(string $kingdomName, User $user)
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Build", mappedBy="kingdom", cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $builds;
+
+    public function __construct(string $kingdomName, User $user, BuildType $castleType)
     {
         $this->name = $kingdomName;
         $this->user = $user;
 
         $this->setTax(TaxesInterface::TAXE_MEDIUM);
+        $this->setLevel(1);
         $this->setPeople(100);
         $this->setOnFood(40);
         $this->setOnBuildings(20);
@@ -111,6 +124,9 @@ class Kingdom
         $this->setMetal(0);
         $this->setGold(10);
         $this->setGrabResourcesDate(new \DateTime());
+        $this->builds = new ArrayCollection();
+        $castle = new Build($castleType, $this, 1);
+        $this->addBuild($castle);
     }
 
     public function getId(): int
@@ -127,6 +143,22 @@ class Kingdom
     {
         $this->name = $value;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * @param mixed $level
+     */
+    public function setLevel($level): void
+    {
+        $this->level = $level;
     }
 
     public function getPeople(): int
@@ -319,5 +351,73 @@ class Kingdom
     public function setOnBuildings($onBuildings): void
     {
         $this->onBuildings = $onBuildings;
+    }
+
+    /**
+     * @return Collection|Build[]
+     */
+    public function getBuilds(): Collection
+    {
+        return $this->builds;
+    }
+
+    /**
+     * @param string $buildTypeCode
+     * @return Build|null
+     */
+    public function getBuild(string $buildTypeCode): ?Build
+    {
+        foreach ($this->getBuilds() as  $build) {
+            if ($build->getType()->getCode() === $buildTypeCode) {
+                return $build;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $buildTypeCode
+     * @param Build $value
+     * @return self
+     */
+    public function setBuild(string $buildTypeCode, Build $value): self
+    {
+        $found = false;
+        foreach ($this->getBuilds() as $key => $build) {
+            if ($build->getType()->getCode() === $buildTypeCode) {
+                $this->builds[$key] = $value;
+                $found = true;
+            }
+        }
+
+        if (!$found) {
+            $this->builds->add($value);
+        }
+
+        return $this;
+    }
+
+    public function addBuild(Build $build): self
+    {
+        if (!$this->builds->contains($build)) {
+            $this->builds[] = $build;
+            $build->setKingdom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBuild(Build $build): self
+    {
+        if ($this->builds->contains($build)) {
+            $this->builds->removeElement($build);
+            // set the owning side to null (unless already changed)
+            if ($build->getKingdom() === $this) {
+                $build->setKingdom(null);
+            }
+        }
+
+        return $this;
     }
 }

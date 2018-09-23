@@ -13,7 +13,7 @@ use App\Screens\BaseScreen;
 use App\Screens\BonusesScreen;
 use App\Screens\DiplomacyScreen;
 use App\Screens\EdictsScreen;
-use App\Screens\KingdomScreen;
+use App\Screens\EventScreen;
 use App\Screens\MainMenuScreen;
 use App\Screens\SettingsScreen;
 use App\Screens\TODOScreen;
@@ -33,8 +33,8 @@ class ScreenFactory
             case ScreenInterface::SCREEN_BACK:
                 $screen = $botManager->get(MainMenuScreen::class);
                 break;
-            case ScreenInterface::SCREEN_KINGDOM:
-                $screen = $botManager->get(KingdomScreen::class);
+            case ScreenInterface::SCREEN_EVENT:
+                $screen = $botManager->get(EventScreen::class);
                 break;
             case ScreenInterface::SCREEN_EDICTS:
                 $screen = $botManager->get(EdictsScreen::class);
@@ -87,7 +87,7 @@ class ScreenFactory
         return [
             ScreenInterface::SCREEN_BACK,
             ScreenInterface::SCREEN_MAIN_MENU,
-            ScreenInterface::SCREEN_KINGDOM,
+            ScreenInterface::SCREEN_EVENT,
             ScreenInterface::SCREEN_EDICTS,
             ScreenInterface::SCREEN_TREASURE,
             ScreenInterface::SCREEN_DIPLOMACY,

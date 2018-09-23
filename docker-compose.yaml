@@ -33,7 +33,7 @@ services:
     container_name: ${DOCKER_PROJECT_NAME}-php-fpm
     build:
       context: .docker
-      dockerfile: php-fpm.Dockerfile
+      dockerfile: php-fpm.${DOCKER_ENV}.Dockerfile
       args:
         VERSION: 7.2-fpm-alpine
     environment:
@@ -50,7 +50,7 @@ services:
     container_name: ${DOCKER_PROJECT_NAME}-nginx
     build:
       context: .docker
-      dockerfile: nginx.Dockerfile
+      dockerfile: nginx.${DOCKER_ENV}.Dockerfile
     environment:
       TZ: ${TIMEZONE}
       NGINX_VERSION: 1.8

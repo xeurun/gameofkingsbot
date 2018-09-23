@@ -5,5 +5,5 @@ namespace App\Interfaces;
 interface BuildInterface
 {
     /** @var string  */
-    public const BUILD_HOUSE = 'house';
+    public const BUILD_TYPE_CASTLE = 'castle';
 }

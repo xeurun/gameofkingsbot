@@ -63,6 +63,10 @@ class CallbackqueryCommand extends BaseCommand
             if (null !== $callback) {
                 return $callback->execute();
             }
+
+            if ($callbackName === 'null') {
+                $data['text'] = '';
+            }
         }
 
         return Request::answerCallbackQuery($data);

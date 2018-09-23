@@ -148,7 +148,7 @@ class PeopleScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
                     'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => 'buildings', 'v' => '-'])
+                        ['t' => WorkInterface::WORK_TYPE_STRUCTURE, 'v' => '-'])
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -157,7 +157,7 @@ class PeopleScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
                     'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => 'buildings', 'v' => '+'])
+                        ['t' =>  WorkInterface::WORK_TYPE_STRUCTURE, 'v' => '+'])
                 ],
             ],
             [
@@ -176,7 +176,7 @@ class PeopleScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
                     'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => 'food', 'v' => '-'])
+                        ['t' => WorkInterface::WORK_TYPE_FOOD, 'v' => '-'])
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -185,7 +185,7 @@ class PeopleScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
                     'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => 'food', 'v' => '+'])
+                        ['t' => WorkInterface::WORK_TYPE_FOOD, 'v' => '+'])
                 ],
             ],
             [
@@ -204,7 +204,7 @@ class PeopleScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
                     'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => 'wood', 'v' => '-'])
+                        ['t' => WorkInterface::WORK_TYPE_WOOD, 'v' => '-'])
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -213,7 +213,7 @@ class PeopleScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
                     'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => 'wood', 'v' => '+'])
+                        ['t' => WorkInterface::WORK_TYPE_WOOD, 'v' => '+'])
                 ],
             ],
             [
@@ -232,7 +232,7 @@ class PeopleScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
                     'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => 'stone', 'v' => '-'])
+                        ['t' => WorkInterface::WORK_TYPE_STONE, 'v' => '-'])
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -241,7 +241,7 @@ class PeopleScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
                     'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => 'stone', 'v' => '+'])
+                        ['t' => WorkInterface::WORK_TYPE_STONE, 'v' => '+'])
                 ],
             ],
             [
@@ -260,7 +260,7 @@ class PeopleScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
                     'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => 'metal', 'v' => '-'])
+                        ['t' => WorkInterface::WORK_TYPE_IRON, 'v' => '-'])
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -269,7 +269,7 @@ class PeopleScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
                     'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => 'metal', 'v' => '+'])
+                        ['t' => WorkInterface::WORK_TYPE_IRON, 'v' => '+'])
                 ],
             ]
         );

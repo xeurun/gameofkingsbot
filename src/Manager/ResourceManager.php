@@ -43,11 +43,11 @@ class ResourceManager
         $extractedStone = $this->getExtractedCountByResourceName(ResourceInterface::RESOURCE_STONE);
         $extractedIron = $this->getExtractedCountByResourceName(ResourceInterface::RESOURCE_IRON);
 
-        $kingdom->setFood($kingdom->getFood() - $extractedFood);
-        $kingdom->setGold($kingdom->getGold() - $extractedGold);
-        $kingdom->setWood($kingdom->getWood() - $extractedWood);
-        $kingdom->setStone($kingdom->getStone() - $extractedStone);
-        $kingdom->setIron($kingdom->getIron() - $extractedIron);
+        $kingdom->setFood($kingdom->getFood() + $extractedFood);
+        $kingdom->setGold($kingdom->getGold() + $extractedGold);
+        $kingdom->setWood($kingdom->getWood() + $extractedWood);
+        $kingdom->setStone($kingdom->getStone() + $extractedStone);
+        $kingdom->setIron($kingdom->getIron() + $extractedIron);
 
         $kingdom->setGrabResourcesDate($today);
     }

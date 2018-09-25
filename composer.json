@@ -70,6 +70,7 @@
     },
     "require-dev": {
         "sensiolabs/security-checker": "^4.1",
-        "symfony/maker-bundle": "^1.7"
+        "symfony/maker-bundle": "^1.7",
+        "symfony/profiler-pack": "^1.0"
     }
 }

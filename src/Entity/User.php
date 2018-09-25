@@ -17,7 +17,7 @@ class User
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", nullable=true, length=255)
      */
     private $lang;
 
@@ -105,16 +105,16 @@ class User
     /**
      * @return string
      */
-    public function getLang(): string
+    public function getLang(): ?string
     {
         return $this->lang;
     }
 
     /**
-     * @param string $lang
+     * @param string|null $lang
      * @return self
      */
-    public function setLang($lang): self
+    public function setLang(?string $lang): self
     {
         $this->lang = $lang;
 

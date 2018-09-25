@@ -28,7 +28,7 @@ class Structure
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Kingdom", inversedBy="builds")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Kingdom", inversedBy="structures")
      * @ORM\JoinColumn(nullable=false)
      */
     private $kingdom;

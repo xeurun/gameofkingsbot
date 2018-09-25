@@ -12,6 +12,9 @@ use Longman\TelegramBot\Request;
 
 class GenericmessageCommand extends BaseCommand
 {
+    /**
+     * @inheritdoc
+     */
     public function __construct(BotManager $botManager, Update $update = null)
     {
         $this->name = 'genericmessage';

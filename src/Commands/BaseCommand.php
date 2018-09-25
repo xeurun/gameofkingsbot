@@ -24,25 +24,31 @@ abstract class BaseCommand extends SystemCommand
 
         parent::__construct($botManager, $update);
 
-        if (!$this->getCallbackQuery()) {
-            $botManager->setMessage($this->getMessage());
-            $from = $this->getMessage()->getFrom();
-        } else {
+        $from = null;
+        if ($this->getCallbackQuery()) {
             $botManager->setCallbackQuery($this->getCallbackQuery());
             $from = $this->getCallbackQuery()->getFrom();
+        } else if ($this->getMessage()) {
+            $botManager->setMessage($this->getMessage());
+            $from = $this->getMessage()->getFrom();
+        } else if ($this->getInlineQuery()) {
+            $botManager->setInlineQuery($this->getInlineQuery());
+            $from = $this->getInlineQuery()->getFrom();
         }
 
-        $entityManager = $botManager->getEntityManager();
-        $userRepository = $entityManager->getRepository(User::class);
+        if ($from) {
+            $entityManager = $botManager->getEntityManager();
+            $userRepository = $entityManager->getRepository(User::class);
 
-        $user = $userRepository->find($from->getId());
-        if (!$user && $createUser) {
-            $user = new User($from);
+            $user = $userRepository->find($from->getId());
+            if (!$user && $createUser) {
+                $user = new User($from);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+                $entityManager->persist($user);
+                $entityManager->flush();
+            }
+
+            $botManager->setUser($user);
         }
-
-        $botManager->setUser($user);
     }
 }

@@ -13,10 +13,7 @@ use Longman\TelegramBot\Request;
 class CallbackqueryCommand extends BaseCommand
 {
     /**
-     * @param BotManager $botManager
-     * @param Update|null $update
-     * @throws ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @inheritdoc
      */
     public function __construct(BotManager $botManager, Update $update = null)
     {

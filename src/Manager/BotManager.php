@@ -4,11 +4,14 @@ namespace App\Manager;
 
 use App\Commands\System\CallbackqueryCommand;
 use App\Commands\System\GenericmessageCommand;
+use App\Commands\System\InlinequeryCommand;
 use App\Commands\System\StartCommand;
+use App\Commands\User\HelpCommand;
 use App\Entity\Kingdom;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Longman\TelegramBot\Entities\CallbackQuery;
+use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Exception\TelegramLogException;
@@ -31,6 +34,8 @@ class BotManager extends Telegram
     protected $message;
     /** @var CallbackQuery */
     protected $callbackQuery;
+    /** @var InlineQuery */
+    protected $inlineQuery;
 
     /**
      * @param ContainerInterface $container
@@ -64,6 +69,16 @@ class BotManager extends Telegram
         class_alias(
             CallbackqueryCommand::class,
             \Longman\TelegramBot\Commands\SystemCommands\CallbackqueryCommand::class
+        );
+
+        class_alias(
+            InlinequeryCommand::class,
+            \Longman\TelegramBot\Commands\SystemCommands\InlinequeryCommand::class
+        );
+
+        class_alias(
+            HelpCommand::class,
+            \Longman\TelegramBot\Commands\UserCommands\HelpCommand::class
         );
 
         TelegramLog::initErrorLog('php://stderr');
@@ -156,10 +171,10 @@ class BotManager extends Telegram
     }
 
     /**
-     * @param Message $value
+     * @param Message|null $value
      * @return self
      */
-    public function setMessage(Message $value): self
+    public function setMessage(?Message $value): self
     {
         $this->message = $value;
         return $this;
@@ -174,12 +189,30 @@ class BotManager extends Telegram
     }
 
     /**
-     * @param CallbackQuery $callbackQuery
+     * @param CallbackQuery|null $callbackQuery
      * @return self
      */
-    public function setCallbackQuery(CallbackQuery $callbackQuery): self
+    public function setCallbackQuery(?CallbackQuery $callbackQuery): self
     {
         $this->callbackQuery = $callbackQuery;
+        return $this;
+    }
+
+    /**
+     * @return InlineQuery
+     */
+    public function getInlineQuery(): InlineQuery
+    {
+        return $this->inlineQuery;
+    }
+
+    /**
+     * @param InlineQuery|null $inlineQuery
+     * @return self
+     */
+    public function setInlineQuery(?InlineQuery $inlineQuery): self
+    {
+        $this->inlineQuery = $inlineQuery;
         return $this;
     }
 }

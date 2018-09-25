@@ -50,7 +50,14 @@ class HookController extends AbstractController
     {
         try {
             $hookUrl = getenv('HOOK_URL');
-            $result = $this->botManager->setWebhook($hookUrl);
+            $result = $this->botManager->setWebhook(
+                $hookUrl,
+                [
+                    'certificate',
+                    'max_connections' => 100,
+                    'allowed_updates' => ["message", "inline_query", "callback_query"]
+                ]
+            );
             if ($result->isOk()) {
                 echo $result->getDescription();
             }
@@ -203,6 +210,41 @@ class HookController extends AbstractController
                     },
                     "date":1537300010,
                     "text":"' . $m . '"
+                }
+            }');
+            $this->botManager->handle();
+        } catch (TelegramException $ex) {
+            // log telegram errors
+            dump($ex);
+        } catch (\Throwable $ex) {
+            // log telegram errors
+            dump($ex);
+        }
+
+        return new Response();
+    }
+
+    /**
+     * @Route("/hook/fake/inline")
+     */
+    public function inlineMessage(Request $request): Response
+    {
+        try {
+            $m = $request->get('m', '/start');
+
+            $this->botManager->setCustomInput('{
+                "update_id":284751997, 
+                "inline_query":{
+                    "id":"820339762720782670",
+                    "from":{
+                        "id":191000234,
+                        "is_bot":false,
+                        "first_name":"Alexey",
+                        "last_name":"Stepankov",
+                        "username":"alexeystepankov",
+                        "language_code":"en-US"
+                    },
+                    "query":"' . $m . '","offset":""
                 }
             }');
             $this->botManager->handle();

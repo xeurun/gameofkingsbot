@@ -19,7 +19,8 @@
         "symfony/requirements-checker": "^1.1",
         "symfony/translation": "*",
         "symfony/var-dumper": "*",
-        "symfony/yaml": "*"
+        "symfony/yaml": "*",
+        "symfony/twig-bundle": "^4.1.4"
     },
     "minimum-stability": "stable",
     "autoload": {

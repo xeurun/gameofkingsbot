@@ -28,7 +28,7 @@ class HookController extends AbstractController
     /**
      * @Route("/hook")
      */
-    public function hook()
+    public function hook(): Response
     {
         try {
             $this->botManager->handle();
@@ -46,7 +46,7 @@ class HookController extends AbstractController
     /**
      * @Route("/hook/set")
      */
-    public function set()
+    public function set(): Response
     {
         try {
             $hookUrl = getenv('HOOK_URL');
@@ -68,7 +68,7 @@ class HookController extends AbstractController
     /**
      * @Route("/hook/fake/callback")
      */
-    public function fake(Request $request)
+    public function fake(Request $request): Response
     {
         try {
             $m = $request->get('m', '/start');
@@ -127,7 +127,7 @@ class HookController extends AbstractController
     /**
      * @Route("/hook/fake/command")
      */
-    public function fakeCommand(Request $request)
+    public function fakeCommand(Request $request): Response
     {
         try {
             $c = $request->get('m', '/start');
@@ -177,7 +177,7 @@ class HookController extends AbstractController
     /**
      * @Route("/hook/fake/message")
      */
-    public function fakeMessage(Request $request)
+    public function fakeMessage(Request $request): Response
     {
         try {
             $m = $request->get('m', '/start');

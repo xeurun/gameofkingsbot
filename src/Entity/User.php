@@ -47,7 +47,7 @@ class User
     private $state;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Kingdom", mappedBy="user")
+     * @ORM\OneToOne(targetEntity="App\Entity\Kingdom", mappedBy="user", orphanRemoval=true)
      */
     private $kingdom;
 

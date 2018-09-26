@@ -94,12 +94,12 @@ class Kingdom
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="kingdom")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Structure", mappedBy="kingdom", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Structure", mappedBy="kingdom", orphanRemoval=true)
      */
     private $structures;
 

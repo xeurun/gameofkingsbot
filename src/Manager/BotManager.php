@@ -145,18 +145,18 @@ class BotManager extends Telegram
     }
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
     /**
-     * @param User $value
+     * @param User|null $value
      * @return self
      */
-    public function setUser(User $value): self
+    public function setUser(?User $value): self
     {
         $this->user = $value;
         return $this;
@@ -199,9 +199,9 @@ class BotManager extends Telegram
     }
 
     /**
-     * @return InlineQuery
+     * @return InlineQuery|null
      */
-    public function getInlineQuery(): InlineQuery
+    public function getInlineQuery(): ?InlineQuery
     {
         return $this->inlineQuery;
     }

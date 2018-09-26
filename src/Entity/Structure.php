@@ -29,7 +29,7 @@ class Structure
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Kingdom", inversedBy="structures")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $kingdom;
 

@@ -16,6 +16,10 @@ if (!isset($_SERVER['APP_ENV'])) {
 }
 
 $env = $_SERVER['APP_ENV'] ?? 'dev';
+if ($env !== 'dev') {
+    fastcgi_finish_request();
+}
+
 $debug = (bool) ($_SERVER['APP_DEBUG'] ?? ('prod' !== $env));
 
 if ($debug) {

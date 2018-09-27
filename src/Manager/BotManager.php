@@ -97,7 +97,7 @@ class BotManager extends Telegram
         $adminId = (int)getenv('ADMIN_ID');
 
         $this->enableAdmins([$adminId]);
-        //$this->app->enableLimiter();
+        //$this->enableLimiter();
         $this->addCommandsPaths([
             __DIR__ . '/../Commands/System',
             __DIR__ . '/../Commands/User'

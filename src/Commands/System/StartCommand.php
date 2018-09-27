@@ -13,7 +13,6 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
-use Longman\TelegramBot\TelegramLog;
 
 /**
  * @method BotManager getTelegram()

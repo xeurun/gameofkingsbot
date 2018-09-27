@@ -46,6 +46,7 @@ services:
       - mysql
     volumes:
       - .:/app
+      - /etc/letsencrypt:/etc/letsencrypt
   nginx:
     container_name: ${DOCKER_PROJECT_NAME}-nginx
     build:

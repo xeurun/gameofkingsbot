@@ -4,15 +4,20 @@ namespace App\Commands\System;
 
 use App\Commands\BaseCommand;
 use App\Entity\Kingdom;
+use App\Entity\User;
 use App\Factory\ScreenFactory;
+use App\Factory\StateFactory;
 use App\Interfaces\ScreenInterface;
-use App\Interfaces\StateInterface;
 use App\Manager\BotManager;
+use App\Repository\UserRepository;
 use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
-use Symfony\Component\Translation\TranslatorInterface;
+use Longman\TelegramBot\TelegramLog;
 
+/**
+ * @method BotManager getTelegram()
+ */
 class StartCommand extends BaseCommand
 {
     /**
@@ -37,9 +42,6 @@ class StartCommand extends BaseCommand
      */
     public function execute()
     {
-        $message = $this->getMessage();
-        $chatId = $message->getChat()->getId();
-
         /** @var BotManager $botManager */
         $botManager = $this->getTelegram();
         $user = $botManager->getUser();
@@ -47,42 +49,44 @@ class StartCommand extends BaseCommand
         $screen = null;
         $result = Request::emptyResponse();
 
-        $text = $botManager->getTranslator()->trans(
-            \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING,
-            [],
-            \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_KINGDOM
-        );
-
-        $data = [
-            'chat_id' => $chatId,
-            'text' => $text,
-            'parse_mode' => 'Markdown'
-        ];
-
-        if ($user->getState() === StateInterface::STATE_NEW_PLAYER) {
-            $user->setState(StateInterface::STATE_WAIT_KINGDOM_NAME);
-            $result = Request::sendMessage($data);
-            if ($result->getOk()) {
-                $entityManager = $botManager->getEntityManager();
-                $entityManager->persist($user);
-                $entityManager->flush();
-                $result = Request::emptyResponse();
+        $params = explode(' ', $botManager->getMessage()->getText());
+        if (isset($params[1]) && $user instanceof User) {
+            /** @var UserRepository $userRepository */
+            $userRepository = $botManager->getEntityManager()->getRepository(User::class);
+            $refer = $userRepository->find($params[1]);
+            if ($refer instanceof User) {
+                $user->setRefer(
+                    $refer
+                );
+                $botManager->getEntityManager()->persist($user);
+                $botManager->getEntityManager()->flush();
             }
-        } else {
-            if ($user->getState() === StateInterface::STATE_WAIT_KINGDOM_NAME) {
-                $result = Request::sendMessage($data);
-            } else {
-                if ($user->getKingdom() instanceof Kingdom) {
-                    /** @var ScreenFactory $screenFactory */
-                    $screenFactory = $botManager->get(ScreenFactory::class);
-                    if ($screenFactory->isAvailable(ScreenInterface::SCREEN_MAIN_MENU)) {
-                        $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU, $botManager);
-                    }
+        }
 
-                    if (null !== $screen) {
-                        $result = $screen->execute();
-                    }
-                }
+        if (null === $user->getState() && $user->getKingdom() instanceof Kingdom) {
+            /** @var ScreenFactory $screenFactory */
+            $screenFactory = $botManager->get(ScreenFactory::class);
+            if ($screenFactory->isAvailable(ScreenInterface::SCREEN_MAIN_MENU)) {
+                $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU, $botManager);
+            }
+
+            if (null !== $screen) {
+                $result = $screen->execute();
+            }
+        } else if (null !== $user->getState()) {
+            $stateName = $user->getState();
+            $state = null;
+            /** @var StateFactory $stateFactory */
+            $stateFactory = $this->getTelegram()->get(StateFactory::class);
+            if ($stateFactory->isAvailable($stateName)) {
+                $state = $stateFactory->create(
+                    $stateName,
+                    $botManager
+                );
+            }
+
+            if (null !== $state) {
+                $state->getMessage();
             }
         }
 

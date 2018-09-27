@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="ru" target-language="ru" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>choose_lang</source>
+                <target>
+                *Приветствуем нового игрока!*
+
+Выберите желаемый язык
+                </target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>choose_gender</source>
+                <target>
+Вы король или королева?
+                </target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>new_king_gender</source>
+                <target>
+{0} новую королеву|{1} нового короля
+                </target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>new_king</source>
+                <target>
+                *Приветствуем %gender%!*
+
+Пришлите название вашего королевства (позднее вы сможете его изменить)
+                </target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

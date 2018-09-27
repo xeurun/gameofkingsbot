@@ -61,7 +61,6 @@ class BuildingsScreen extends BaseScreen
 `💰 `*{$kingdom->getGold()}* | `🌲 `*{$kingdom->getWood()}*  | `⛏ `*{$kingdom->getStone()}*  | `🔨 `*{$kingdom->getIron()}*
 
 `🏛️ Мест для постройки: `*{$territorySize}*
-`🏛️ Строителей: `*{$kingdom->getOnStructure()}*
 
 
 TEXT;

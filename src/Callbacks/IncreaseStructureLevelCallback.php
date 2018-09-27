@@ -103,7 +103,7 @@ class IncreaseStructureLevelCallback extends BaseCallback
                     $entityManager->persist($kingdom);
                     $entityManager->flush();
                 } else {
-                    $text = 'Нехватает ресурсов!';
+                    $text = 'Недостаточно ресурсов!';
                 }
             }
         }

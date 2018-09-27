@@ -2,6 +2,7 @@
 
 namespace App\Screens;
 
+use App\Entity\User;
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\TranslatorInterface;
 use App\Manager\BotManager;
@@ -38,6 +39,7 @@ class MainMenuScreen extends BaseScreen
      */
     public function execute(): ServerResponse
     {
+        $user = $this->botManager->getUser();
         $kingdom = $this->botManager->getKingdom();
 
         $keyboard = new Keyboard(
@@ -52,13 +54,28 @@ class MainMenuScreen extends BaseScreen
             ->setOneTimeKeyboard(false)
             ->setSelective(false);
 
-        $text = $this->botManager->getTranslator()->trans(
-            TranslatorInterface::TRANSLATOR_MESSAGE_MAIN_MENU_SCREEN_TITLE,
-            [
-                '%name%' => $kingdom->getName()
-            ],
-            TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
-        );
+        $refer = $user->getRefer();
+        if ($refer instanceof User) {
+            $referKingdom = $refer->getKingdom();
+            $text = $this->botManager->getTranslator()->trans(
+                TranslatorInterface::TRANSLATOR_MESSAGE_MAIN_MENU_SCREEN_TITLE,
+                [
+                    '%name%' => $kingdom->getName(),
+                    '%referFirstName%' => $refer->getFirstName(),
+                    '%referLastName%' => $refer->getLastName(),
+                    '%kingdom%' => $referKingdom ? $referKingdom->getName() : 'без названия'
+                ],
+                TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
+            );
+        } else {
+            $text = $this->botManager->getTranslator()->trans(
+                TranslatorInterface::TRANSLATOR_MESSAGE_MAIN_MENU_SCREEN_TITLE,
+                [
+                    '%name%' => $kingdom->getName()
+                ],
+                TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
+            );
+        }
 
         $data = [
             'chat_id' => $kingdom->getUser()->getId(),

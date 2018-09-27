@@ -17,5 +17,6 @@ abstract class BaseState
         $this->botManager = $botManager;
     }
 
+    abstract public function getMessage(): void;
     abstract public function execute(): void;
 }

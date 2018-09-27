@@ -5,7 +5,7 @@ namespace App\Interfaces;
 interface TranslatorInterface
 {
     /** @var string */
-    public const TRANSLATOR_DOMAIN_KINGDOM = 'kingdom';
+    public const TRANSLATOR_DOMAIN_STATE = 'state';
     /** @var string */
     public const TRANSLATOR_DOMAIN_CALLBACK = 'callback';
     /** @var string */
@@ -15,7 +15,13 @@ interface TranslatorInterface
     /** @var string */
     public const TRANSLATOR_DOMAIN_COMMON = 'common';
     /** @var string */
+    public const TRANSLATOR_MESSAGE_CHOOSE_LANG = 'choose_lang';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_CHOOSE_GENDER = 'choose_gender';
+    /** @var string */
     public const TRANSLATOR_MESSAGE_NEW_KING = 'new_king';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_NEW_KING_GENDER = 'new_king_gender';
     /** @var string */
     public const TRANSLATOR_MESSAGE_EVERY_DAY_BONUS_ALREADY_RECEIVED = 'every_day_bonus_already_received';
     /** @var string */

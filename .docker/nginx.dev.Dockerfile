@@ -1,6 +1,8 @@
 FROM nginx:alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
+RUN mkdir -p /etc/nginx/snippets/ && touch /etc/nginx/snippets/letsencrypt-acme-challenge.conf
+
 COPY /etc/nginx/nginx.conf /etc/nginx/
 COPY /etc/nginx/conf.d/dev.conf /etc/nginx/conf.d/
 

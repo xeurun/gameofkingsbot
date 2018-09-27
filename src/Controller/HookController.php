@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Interfaces\CallbackInterface;
 use App\Manager\BotManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Exception\TelegramLogException;
+use Longman\TelegramBot\TelegramLog;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,14 +17,17 @@ class HookController extends AbstractController
 {
     /** @var BotManager */
     protected $botManager;
+    /** @var EntityManagerInterface */
+    protected $entityManager;
 
     /**
      * @param BotManager $botManager
      * @throws TelegramLogException
      */
-    public function __construct(BotManager $botManager)
+    public function __construct(BotManager $botManager, EntityManagerInterface $entityManager)
     {
         $this->botManager = $botManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -31,13 +36,19 @@ class HookController extends AbstractController
     public function hook(): Response
     {
         try {
+            $this->entityManager->beginTransaction();
             $this->botManager->handle();
+            $this->entityManager->commit();
         } catch (TelegramException $ex) {
             // log telegram errors
+            TelegramLog::error($ex->getMessage());
             dump($ex);
+            $this->entityManager->rollback();
         } catch (\Throwable $ex) {
             // log telegram errors
+            TelegramLog::error($ex->getMessage());
             dump($ex);
+            $this->entityManager->rollback();
         }
 
         return new Response();
@@ -50,22 +61,30 @@ class HookController extends AbstractController
     {
         try {
             $hookUrl = getenv('HOOK_URL');
+            $certPath = getenv('CERT_PATH');
+            $data = [
+                'max_connections' => 100,
+                'allowed_updates' => ['message', 'inline_query', 'callback_query']
+            ];
+
+            if (!empty($certPath)) {
+                $data['certificate'] = $certPath;
+            }
+
             $result = $this->botManager->setWebhook(
                 $hookUrl,
-                [
-                    'certificate',
-                    'max_connections' => 100,
-                    'allowed_updates' => ["message", "inline_query", "callback_query"]
-                ]
+                $data
             );
             if ($result->isOk()) {
                 echo $result->getDescription();
             }
         } catch (TelegramException $ex) {
             // log telegram errors
+            TelegramLog::error($ex->getMessage());
             dump($ex);
         } catch (\Throwable $ex) {
             // log telegram errors
+            TelegramLog::error($ex->getMessage());
             dump($ex);
         }
 
@@ -78,6 +97,7 @@ class HookController extends AbstractController
     public function fake(Request $request): Response
     {
         try {
+            $this->entityManager->beginTransaction();
             $m = $request->get('m', '/start');
             $callbackName = $request->get('c', CallbackInterface::CALLBACK_EVERY_DAY_BONUS);
 
@@ -120,12 +140,17 @@ class HookController extends AbstractController
             }');
 
             $this->botManager->handle();
+            $this->entityManager->commit();
         } catch (TelegramException $ex) {
             // log telegram errors
+            TelegramLog::error($ex->getMessage());
             dump($ex);
+            $this->entityManager->rollback();
         } catch (\Throwable $ex) {
             // log telegram errors
+            TelegramLog::error($ex->getMessage());
             dump($ex);
+            $this->entityManager->rollback();
         }
 
         return new Response();
@@ -137,7 +162,8 @@ class HookController extends AbstractController
     public function fakeCommand(Request $request): Response
     {
         try {
-            $c = $request->get('m', '/start');
+            $this->entityManager->beginTransaction();
+            $c = $request->get('с', '/start');
 
             $this->botManager->setCustomInput('{
                 "update_id":119409820, 
@@ -170,12 +196,17 @@ class HookController extends AbstractController
                 }
             }');
             $this->botManager->handle();
+            $this->entityManager->commit();
         } catch (TelegramException $ex) {
             // log telegram errors
+            TelegramLog::error($ex->getMessage());
             dump($ex);
+            $this->entityManager->rollback();
         } catch (\Throwable $ex) {
             // log telegram errors
+            TelegramLog::error($ex->getMessage());
             dump($ex);
+            $this->entityManager->rollback();
         }
 
         return new Response();
@@ -187,6 +218,7 @@ class HookController extends AbstractController
     public function fakeMessage(Request $request): Response
     {
         try {
+            $this->entityManager->beginTransaction();
             $m = $request->get('m', '/start');
 
             $this->botManager->setCustomInput('{
@@ -213,12 +245,17 @@ class HookController extends AbstractController
                 }
             }');
             $this->botManager->handle();
+            $this->entityManager->commit();
         } catch (TelegramException $ex) {
             // log telegram errors
+            TelegramLog::error($ex->getMessage());
             dump($ex);
+            $this->entityManager->rollback();
         } catch (\Throwable $ex) {
             // log telegram errors
+            TelegramLog::error($ex->getMessage());
             dump($ex);
+            $this->entityManager->rollback();
         }
 
         return new Response();
@@ -230,6 +267,7 @@ class HookController extends AbstractController
     public function inlineMessage(Request $request): Response
     {
         try {
+            $this->entityManager->beginTransaction();
             $m = $request->get('m', '/start');
 
             $this->botManager->setCustomInput('{
@@ -248,12 +286,17 @@ class HookController extends AbstractController
                 }
             }');
             $this->botManager->handle();
+            $this->entityManager->commit();
         } catch (TelegramException $ex) {
             // log telegram errors
+            TelegramLog::error($ex->getMessage());
             dump($ex);
+            $this->entityManager->rollback();
         } catch (\Throwable $ex) {
             // log telegram errors
+            TelegramLog::error($ex->getMessage());
             dump($ex);
+            $this->entityManager->rollback();
         }
 
         return new Response();

@@ -54,6 +54,18 @@
                 <source>taxes</source>
                 <target>📜 Налог</target>
             </trans-unit>
+            <trans-unit id="14">
+                <source>ru</source>
+                <target>🇷🇺 Русский</target>
+            </trans-unit>
+            <trans-unit id="15">
+                <source>king</source>
+                <target>🤴 Король</target>
+            </trans-unit>
+            <trans-unit id="16">
+                <source>queen</source>
+                <target>Королева 👸</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

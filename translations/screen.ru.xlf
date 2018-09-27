@@ -5,7 +5,14 @@
             <trans-unit id="1">
                 <source>main_menu_screen_title</source>
                 <target>
-*🤴 Королевство «%name%», вы верховный король 👸*
+*🤴 Королевство «%name%», вы верховный король! 👸*
+                </target>
+            </trans-unit>
+            <trans-unit id="main_menu_screen_title_with_refer">
+                <source>main_menu_screen_title</source>
+                <target>
+*🤴 Королевство «%name%», вы король! 👸*
+`Ваш верховный король: %referFirstName% %referLastName%, королевство: %kingdom%`
                 </target>
             </trans-unit>
             <trans-unit id="2">
@@ -26,7 +33,7 @@
 
 `Еды на `%foodDay%
 
-Проверьте склад!
+Проверьте склад, возможно ваши рабочие уже собрали некоторое количество ресурсов!
                 </target>
             </trans-unit>
             <trans-unit id="3">

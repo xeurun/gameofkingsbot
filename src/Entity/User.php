@@ -10,6 +10,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User
 {
+    /** @var string */
+    public const AVAILABLE_LANG_RU = 'ru';
+    /** @var string */
+    public const AVAILABLE_GENDER_KING = 'king';
+    /** @var string */
+    public const AVAILABLE_GENDER_QUEEN = 'queen';
+
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer")
@@ -17,9 +24,14 @@ class User
     private $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true, length=255)
+     * @ORM\Column(type="string", nullable=true, length=2)
      */
     private $lang;
+
+    /**
+     * @ORM\Column(type="string", nullable=true, length=5)
+     */
+    private $gender;
 
     /**
      * @ORM\Column(type="string", nullable=true, length=255)
@@ -51,14 +63,24 @@ class User
      */
     private $kingdom;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="mainRefer")
+     */
+    private $refers;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="childRefer")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    private $refer;
+
     public function __construct(\Longman\TelegramBot\Entities\User $user)
     {
         $this->id = $user->getId();
-        $this->setLang($user->getLanguageCode());
         $this->setUsername($user->getUsername());
         $this->setFirstName($user->getFirstName());
         $this->setLastName($user->getLastName());
-        $this->setState(StateInterface::STATE_NEW_PLAYER);
+        $this->setState(StateInterface::STATE_WAIT_CHOOSE_LANG);
     }
 
     public function getId(): int
@@ -105,18 +127,29 @@ class User
     /**
      * @return string
      */
-    public function getLang(): ?string
+    public function getLang(): string
     {
         return $this->lang;
     }
 
-    /**
-     * @param string|null $lang
-     * @return self
-     */
-    public function setLang(?string $lang): self
+    public function setLang(?string $value): self
     {
-        $this->lang = $lang;
+        $this->lang = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGender(): string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(?string $value): self
+    {
+        $this->gender = $value;
 
         return $this;
     }
@@ -145,9 +178,9 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return \DateTimeInterface|null
      */
-    public function getBonusDate()
+    public function getBonusDate(): ?\DateTimeInterface
     {
         return $this->bonusDate;
     }
@@ -156,5 +189,21 @@ class User
     {
         $this->bonusDate = $bonusDate;
         return $this;
+    }
+
+    /**
+     * @param User|null $value
+     */
+    public function setRefer(?User $value): void
+    {
+        $this->refer = $value;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRefer()
+    {
+        return $this->refer;
     }
 }

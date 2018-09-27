@@ -99,7 +99,7 @@ class Kingdom
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Structure", mappedBy="kingdom", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Structure", mappedBy="kingdom", cascade={"persist"}, orphanRemoval=true)
      */
     private $structures;
 
@@ -329,9 +329,9 @@ class Kingdom
     }
 
     /**
-     * @return mixed
+     * @return \DateTimeInterface
      */
-    public function getGrabResourcesDate()
+    public function getGrabResourcesDate(): \DateTimeInterface
     {
         return $this->grabResourcesDate;
     }

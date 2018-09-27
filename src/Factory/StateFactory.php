@@ -5,6 +5,8 @@ namespace App\Factory;
 use App\Interfaces\StateInterface;
 use App\Manager\BotManager;
 use App\States\BaseState;
+use App\States\ChooseLangState;
+use App\States\ChooseGenderState;
 use App\States\KingdomNameState;
 use Psr\Log\InvalidArgumentException;
 
@@ -18,6 +20,12 @@ class StateFactory
     public function create(string $stateName, BotManager $botManager): BaseState
     {
         switch ($stateName) {
+            case StateInterface::STATE_WAIT_CHOOSE_LANG:
+                $state = $botManager->get(ChooseLangState::class);
+                break;
+            case StateInterface::STATE_WAIT_CHOOSE_GENDER:
+                $state = $botManager->get(ChooseGenderState::class);
+                break;
             case StateInterface::STATE_WAIT_KINGDOM_NAME:
                 $state = $botManager->get(KingdomNameState::class);
                 break;
@@ -43,8 +51,9 @@ class StateFactory
     protected function getAvailable(): array
     {
         return [
-            StateInterface::STATE_NEW_PLAYER,
-            StateInterface::STATE_WAIT_KINGDOM_NAME
+            StateInterface::STATE_WAIT_CHOOSE_LANG,
+            StateInterface::STATE_WAIT_CHOOSE_GENDER,
+            StateInterface::STATE_WAIT_KINGDOM_NAME,
         ];
     }
 }

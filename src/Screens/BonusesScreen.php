@@ -6,26 +6,35 @@ use App\Interfaces\CallbackInterface;
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\TranslatorInterface;
 use Longman\TelegramBot\Entities\InlineKeyboard;
-use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 class BonusesScreen extends BaseScreen
 {
     /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @inheritdoc
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function execute(): ServerResponse
+    public function execute(): void
+    {
+        $this->sendMessage();
+    }
+
+    /**
+     * @return bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function sendMessage(): bool
     {
         $kingdom = $this->botManager->getKingdom();
-        $title = ScreenInterface::SCREEN_BONUSES;
+
         $text = $this->botManager->getTranslator()->trans(
             TranslatorInterface::TRANSLATOR_MESSAGE_BONUSES_SCREEN_MESSAGE,
             [
-                '%title%' => $title
+                '%title%' => ScreenInterface::SCREEN_BONUSES
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
+
         $inlineKeyboard = new InlineKeyboard(
             [
                 [
@@ -63,6 +72,8 @@ class BonusesScreen extends BaseScreen
             'parse_mode' => 'Markdown',
         ];
 
-        return Request::sendMessage($data);
+        $response = Request::sendMessage($data);
+
+        return $response->isOk();
     }
 }

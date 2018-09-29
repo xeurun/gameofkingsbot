@@ -28,11 +28,6 @@ class Kingdom
     private $name;
 
     /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
-    private $people;
-
-    /**
      * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
     private $food;
@@ -60,6 +55,11 @@ class Kingdom
     /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
+    private $onArmy;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 0})
+     */
     private $onFood;
 
     /**
@@ -76,11 +76,6 @@ class Kingdom
      * @ORM\Column(type="integer", options={"default": 0})
      */
     private $onIron;
-
-    /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
-    private $onStructure;
 
     /**
      * @ORM\Column(type="smallint", options={"default": 0})
@@ -108,19 +103,21 @@ class Kingdom
         $this->name = $kingdomName;
         $this->user = $user;
 
-        $this->setPeople(100);
-        $this->setTax(TaxesInterface::INITIAL_TAXES_LEVEL);
-        $this->setOnFood(WorkInterface::INITIAL_FOOD_WORKER);
-        $this->setOnStructure(WorkInterface::INITIAL_STRUCTURE_WORKER);
-        $this->setOnWood(WorkInterface::INITIAL_WOOD_WORKER);
-        $this->setOnStone(WorkInterface::INITIAL_STONE_WORKER);
-        $this->setOnIron(WorkInterface::INITIAL_IRON_WORKER);
         $this->setFood(ResourceInterface::INITIAL_FOOD);
         $this->setWood(ResourceInterface::INITIAL_WOOD);
         $this->setStone(ResourceInterface::INITIAL_STONE);
         $this->setIron(ResourceInterface::INITIAL_IRON);
         $this->setGold(ResourceInterface::INITIAL_GOLD);
-        $this->setGrabResourcesDate(new \DateTime());
+
+        $this->setTax(TaxesInterface::INITIAL_TAXES_LEVEL);
+
+        $this->setOnArmy(WorkInterface::INITIAL_ON_ARMY);
+        $this->setOnFood(WorkInterface::INITIAL_ON_FOOD);
+        $this->setOnWood(WorkInterface::INITIAL_ON_WOOD);
+        $this->setOnStone(WorkInterface::INITIAL_ON_STONE);
+        $this->setOnIron(WorkInterface::INITIAL_ON_IRON);
+
+        $this->setGrabResourcesDate(new \DateTime('yesterday'));
 
         $this->structures = new ArrayCollection();
     }
@@ -147,18 +144,6 @@ class Kingdom
     public function changeName(string $value): self
     {
         $this->name = $value;
-        return $this;
-    }
-
-    public function getPeople(): int
-    {
-        return $this->people;
-    }
-
-    public function setPeople(int $people): self
-    {
-        $this->people = $people;
-
         return $this;
     }
 
@@ -249,6 +234,22 @@ class Kingdom
     }
 
     /**
+     * @return mixed
+     */
+    public function getOnArmy()
+    {
+        return $this->onArmy;
+    }
+
+    /**
+     * @param mixed $onArmy
+     */
+    public function setOnArmy($onArmy): void
+    {
+        $this->onArmy = $onArmy;
+    }
+
+    /**
      * @return int
      */
     public function getOnFood(): int
@@ -310,22 +311,6 @@ class Kingdom
     public function setOnWood(int $onWood): void
     {
         $this->onWood = $onWood;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOnStructure()
-    {
-        return $this->onStructure;
-    }
-
-    /**
-     * @param mixed $onStructure
-     */
-    public function setOnStructure($onStructure): void
-    {
-        $this->onStructure = $onStructure;
     }
 
     /**

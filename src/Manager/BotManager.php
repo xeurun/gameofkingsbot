@@ -13,8 +13,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Longman\TelegramBot\Entities\CallbackQuery;
 use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Exception\TelegramLogException;
+use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
 use Psr\Container\ContainerInterface;
@@ -22,6 +24,13 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class BotManager extends Telegram
 {
+    /** @var string  */
+    protected const UPDATE_TYPE_MESSAGE = 'message';
+    /** @var string  */
+    protected const UPDATE_TYPE_INLINE_QUERY = 'inline_query';
+    /** @var string  */
+    protected const UPDATE_TYPE_CALLBCK_QUERY = 'callback_query';
+
     /** @var ContainerInterface */
     protected $container;
     /** @var EntityManagerInterface */
@@ -30,11 +39,11 @@ class BotManager extends Telegram
     protected $translator;
     /** @var User */
     protected $user;
-    /** @var Message */
+    /** @var Message|null */
     protected $message;
-    /** @var CallbackQuery */
+    /** @var CallbackQuery|null */
     protected $callbackQuery;
-    /** @var InlineQuery */
+    /** @var InlineQuery|null */
     protected $inlineQuery;
 
     /**
@@ -108,6 +117,105 @@ class BotManager extends Telegram
     }
 
     /**
+     * @inheritdoc
+     */
+    public function processUpdate(Update $update)
+    {
+        $from = null;
+        $updateType = $update->getUpdateType();
+
+        if ($updateType === self::UPDATE_TYPE_CALLBCK_QUERY) {
+            $this->setCallbackQuery($update->getCallbackQuery());
+            $from = $update->getCallbackQuery()->getFrom();
+        } else {
+            if ($updateType === self::UPDATE_TYPE_MESSAGE) {
+                $this->setMessage($update->getMessage());
+                $from = $update->getMessage()->getFrom();
+            } else if ($updateType === self::UPDATE_TYPE_INLINE_QUERY) {
+                $this->setInlineQuery($update->getInlineQuery());
+                $from = $update->getInlineQuery()->getFrom();
+            }
+        }
+
+        $response = Request::emptyResponse();
+
+        if ($from) {
+            $userRepository = $this->entityManager->getRepository(User::class);
+
+            $fromUser = $userRepository->find($from->getId());
+            if (!$fromUser) {
+                $fromUser = new User($from);
+            }
+
+            if (null !== $this->getMessage()) {
+                // Save if this a command
+                $this->entityManager->persist($fromUser);
+                $this->entityManager->flush();
+            }
+
+            $this->user = $fromUser;
+
+            $response = parent::processUpdate($update);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @return CallbackQuery|null
+     */
+    public function getCallbackQuery(): ?CallbackQuery
+    {
+        return $this->callbackQuery;
+    }
+
+    /**
+     * @param CallbackQuery|null $callbackQuery
+     * @return self
+     */
+    public function setCallbackQuery(?CallbackQuery $callbackQuery): self
+    {
+        $this->callbackQuery = $callbackQuery;
+        return $this;
+    }
+
+    /**
+     * @return Message|null
+     */
+    public function getMessage(): ?Message
+    {
+        return $this->message;
+    }
+
+    /**
+     * @param Message|null $value
+     * @return self
+     */
+    public function setMessage(?Message $value): self
+    {
+        $this->message = $value;
+        return $this;
+    }
+
+    /**
+     * @return InlineQuery|null
+     */
+    public function getInlineQuery(): ?InlineQuery
+    {
+        return $this->inlineQuery;
+    }
+
+    /**
+     * @param InlineQuery|null $inlineQuery
+     * @return self
+     */
+    public function setInlineQuery(?InlineQuery $inlineQuery): self
+    {
+        $this->inlineQuery = $inlineQuery;
+        return $this;
+    }
+
+    /**
      * @param string $class
      * @return mixed
      */
@@ -145,74 +253,10 @@ class BotManager extends Telegram
     }
 
     /**
-     * @return User|null
+     * @return User
      */
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
-    }
-
-    /**
-     * @param User|null $value
-     * @return self
-     */
-    public function setUser(?User $value): self
-    {
-        $this->user = $value;
-        return $this;
-    }
-
-    /**
-     * @return Message|null
-     */
-    public function getMessage(): ?Message
-    {
-        return $this->message;
-    }
-
-    /**
-     * @param Message|null $value
-     * @return self
-     */
-    public function setMessage(?Message $value): self
-    {
-        $this->message = $value;
-        return $this;
-    }
-
-    /**
-     * @return CallbackQuery|null
-     */
-    public function getCallbackQuery(): ?CallbackQuery
-    {
-        return $this->callbackQuery;
-    }
-
-    /**
-     * @param CallbackQuery|null $callbackQuery
-     * @return self
-     */
-    public function setCallbackQuery(?CallbackQuery $callbackQuery): self
-    {
-        $this->callbackQuery = $callbackQuery;
-        return $this;
-    }
-
-    /**
-     * @return InlineQuery|null
-     */
-    public function getInlineQuery(): ?InlineQuery
-    {
-        return $this->inlineQuery;
-    }
-
-    /**
-     * @param InlineQuery|null $inlineQuery
-     * @return self
-     */
-    public function setInlineQuery(?InlineQuery $inlineQuery): self
-    {
-        $this->inlineQuery = $inlineQuery;
-        return $this;
     }
 }

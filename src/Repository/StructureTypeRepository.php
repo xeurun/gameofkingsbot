@@ -10,7 +10,6 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method StructureType|null find($id, $lockMode = null, $lockVersion = null)
  * @method StructureType|null findOneByCode(string $code, array $orderBy = null)
  * @method StructureType|null findOneBy(array $criteria, array $orderBy = null)
- * @method StructureType[]    findAll()
  * @method StructureType[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class StructureTypeRepository extends ServiceEntityRepository
@@ -18,6 +17,15 @@ class StructureTypeRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, StructureType::class);
+    }
+
+    /**
+     * @inheritdoc
+     * @return StructureType[]
+     */
+    public function findAll(): array
+    {
+        return $this->findBy([], ['order' => 'ASC']);
     }
 
 //    /**

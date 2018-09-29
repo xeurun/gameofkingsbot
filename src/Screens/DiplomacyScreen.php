@@ -4,17 +4,15 @@ namespace App\Screens;
 
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\TranslatorInterface;
-use Longman\TelegramBot\Entities\Keyboard;
-use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 class DiplomacyScreen extends BaseScreen
 {
     /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @inheritdoc
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function execute(): ServerResponse
+    public function execute(): void
     {
         $kingdom = $this->botManager->getKingdom();
         $title = ScreenInterface::SCREEN_DIPLOMACY;
@@ -27,11 +25,11 @@ class DiplomacyScreen extends BaseScreen
         );
 
         $data = [
-            'chat_id' => $kingdom->getUser()->getId(),
+            'chat_id' => $this->botManager->getUser()->getId(),
             'text' => $text,
             'parse_mode' => 'Markdown'
         ];
 
-        return Request::sendMessage($data);
+        Request::sendMessage($data);
     }
 }

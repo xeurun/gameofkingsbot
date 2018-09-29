@@ -23,6 +23,16 @@ class StructureType
     /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
+    private $order;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"default": 0})
+     */
+    private $maxLevel;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 0})
+     */
     private $goldCost;
 
     /**
@@ -39,11 +49,6 @@ class StructureType
      * @ORM\Column(type="integer", options={"default": 0})
      */
     private $ironCost;
-
-    /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
-    private $timeCost;
 
     /**
      * @param string $structureCode
@@ -118,15 +123,19 @@ class StructureType
         return $this;
     }
 
-    public function getTimeCost(): int
+    /**
+     * @return mixed
+     */
+    public function getMaxLevel()
     {
-        return $this->timeCost;
+        return $this->maxLevel;
     }
 
-    public function setTimeCost(int $value): self
+    /**
+     * @param mixed $maxLevel
+     */
+    public function setMaxLevel($maxLevel): void
     {
-        $this->timeCost = $value;
-
-        return $this;
+        $this->maxLevel = $maxLevel;
     }
 }

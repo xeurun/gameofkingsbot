@@ -2,7 +2,6 @@
 
 namespace App\Commands\System;
 
-use App\Commands\BaseCommand;
 use App\Entity\Kingdom;
 use App\Factory\ScreenFactory;
 use App\Factory\StateFactory;

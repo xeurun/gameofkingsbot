@@ -2,11 +2,9 @@
 
 namespace App\Commands\System;
 
-use App\Commands\BaseCommand;
 use App\Entity\Kingdom;
 use App\Factory\CallbackFactory;
 use App\Manager\BotManager;
-use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 
@@ -21,7 +19,7 @@ class CallbackqueryCommand extends BaseCommand
         $this->description = 'Reply to callback query';
         $this->version = '1.0.0';
 
-        parent::__construct($botManager, $update, true);
+        parent::__construct($botManager, $update);
     }
 
     /**
@@ -46,15 +44,14 @@ class CallbackqueryCommand extends BaseCommand
 
         if ($user->getKingdom() instanceof Kingdom) {
             $callback = null;
-            /** @var CallbackFactory $callbackFactory */
-            $callbackFactory = $botManager->get(CallbackFactory::class);
-            $callbackData = $callbackFactory->getData($callbackQuery);
-            $callbackName = $callbackData['n'] ?? null;
-
+            $callbackData = CallbackFactory::getData($callbackQuery);
+            $callbackName = $callbackData[0] ?? null;
 
             if ($callbackName === 'null') {
                 $data['text'] = '';
             } else {
+                /** @var CallbackFactory $callbackFactory */
+                $callbackFactory = $botManager->get(CallbackFactory::class);
                 if ($callbackFactory->isAvailable($callbackName)) {
                     $callback = $callbackFactory->create(
                         $callbackName,

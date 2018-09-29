@@ -5,35 +5,35 @@ namespace App\States;
 use App\Entity\User;
 use App\Factory\StateFactory;
 use App\Interfaces\StateInterface;
+use App\Interfaces\TranslatorInterface;
 use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Keyboard;
-use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Request;
 
 class ChooseGenderState extends BaseState
 {
-    public function getMessage(): void
+    /**
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function preExecute(): void
     {
-        $message = $this->botManager->getMessage();
-        $chatId = $message->getChat()->getId();
-
         $text = $this->botManager->getTranslator()->trans(
-            \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_CHOOSE_GENDER,
+            TranslatorInterface::TRANSLATOR_MESSAGE_CHOOSE_GENDER,
             [],
-            \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_STATE
+            TranslatorInterface::TRANSLATOR_DOMAIN_STATE
         );
 
         $keyboard = new Keyboard(
             [
                 $this->botManager->getTranslator()->trans(
-                    User::AVAILABLE_GENDER_KING,
+                    TranslatorInterface::TRANSLATOR_MESSAGE_MY_KING,
                     [],
-                    \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+                    TranslatorInterface::TRANSLATOR_DOMAIN_STATE
                 ),
                 $this->botManager->getTranslator()->trans(
-                    User::AVAILABLE_GENDER_QUEEN,
+                    TranslatorInterface::TRANSLATOR_MESSAGE_MY_QUEEN,
                     [],
-                    \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+                    TranslatorInterface::TRANSLATOR_DOMAIN_STATE
                 ),
             ]
         );
@@ -44,7 +44,7 @@ class ChooseGenderState extends BaseState
             ->setSelective(false);
 
         $data = [
-            'chat_id' => $chatId,
+            'chat_id' => $this->botManager->getUser()->getId(),
             'text' => $text,
             'reply_markup' => $keyboard,
             'parse_mode' => 'Markdown'
@@ -60,18 +60,18 @@ class ChooseGenderState extends BaseState
      */
     public function execute(): void
     {
-        $message = $this->botManager->getMessage();
+        $message = $this->getMessage();
 
         $chosenGender = trim($message->getText(true));
         $genderKing = $this->botManager->getTranslator()->trans(
-            User::AVAILABLE_GENDER_KING,
+            TranslatorInterface::TRANSLATOR_MESSAGE_MY_KING,
             [],
-            \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+            TranslatorInterface::TRANSLATOR_DOMAIN_STATE
         );
         $genderQueen = $this->botManager->getTranslator()->trans(
-            User::AVAILABLE_GENDER_QUEEN,
+            TranslatorInterface::TRANSLATOR_MESSAGE_MY_QUEEN,
             [],
-            \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+            TranslatorInterface::TRANSLATOR_DOMAIN_STATE
         );
 
         $gender = null;
@@ -89,7 +89,7 @@ class ChooseGenderState extends BaseState
 
         if (null !== $gender) {
             $entityManager = $this->botManager->getEntityManager();
-            $user->setState(StateInterface::STATE_WAIT_KINGDOM_NAME);
+            $user->setState(StateInterface::STATE_WAIT_INPUT_NAME);
             $user->setGender($gender);
             $entityManager->persist($user);
             $entityManager->flush();
@@ -106,10 +106,10 @@ class ChooseGenderState extends BaseState
             }
 
             if (null !== $state) {
-                $state->getMessage();
+                $state->preExecute();
             }
         } else {
-            $this->getMessage();
+            $this->preExecute();
         }
     }
 }

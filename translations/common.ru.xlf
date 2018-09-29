@@ -2,69 +2,195 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="ru" target-language="ru" datatype="plaintext" original="file.ext">
         <body>
-            <trans-unit id="1">
+            <trans-unit id="peoples">
                 <source>peoples</source>
-                <target>*%count%*` человек`|*%count%*` человека`|*%count%*` людей`</target>
+                <target>*%count%*` человек`|*%count%*` человека`|*%count%*` человек`</target>
             </trans-unit>
-            <trans-unit id="2">
+            <trans-unit id="hours">
                 <source>hours</source>
                 <target>*%count%*` час`|*%count%*` часа`|*%count%*` часов`</target>
             </trans-unit>
-            <trans-unit id="3">
+            <trans-unit id="fire">
                 <source>fire</source>
                 <target>⬇ Уволить</target>
             </trans-unit>
-            <trans-unit id="4">
+            <trans-unit id="hire">
                 <source>hire</source>
                 <target>Нанять ⬆</target>
             </trans-unit>
-            <trans-unit id="5">
+            <trans-unit id="raise">
                 <source>raise</source>
                 <target>Увеличить ⬆</target>
             </trans-unit>
-            <trans-unit id="6">
+            <trans-unit id="lower">
                 <source>lower</source>
                 <target>⬇ Понизить</target>
             </trans-unit>
-            <trans-unit id="7">
-                <source>gold</source>
-                <target>⬇ Понизить</target>
+            <trans-unit id="buy_structure">
+                <source>buy_structure</source>
+                <target>Купить 📝</target>
             </trans-unit>
-            <trans-unit id="8">
+            <trans-unit id="resource_gold">
+                <source>resource_gold</source>
+                <target>💰 Золото</target>
+            </trans-unit>
+            <trans-unit id="resource_food">
+                <source>resource_food</source>
+                <target>🍞 Еда</target>
+            </trans-unit>
+            <trans-unit id="resource_wood">
+                <source>resource_wood</source>
+                <target>🌲 Дерево</target>
+            </trans-unit>
+            <trans-unit id="resource_stone">
+                <source>resource_stone</source>
+                <target>⛏ Камень</target>
+            </trans-unit>
+            <trans-unit id="resource_iron">
+                <source>resource_iron</source>
+                <target>🔨 Железо</target>
+            </trans-unit>
+            <trans-unit id="gold">
+                <source>gold</source>
+                <target>💰 Золото</target>
+            </trans-unit>
+            <trans-unit id="food">
                 <source>food</source>
                 <target>🍞 Еда</target>
             </trans-unit>
-            <trans-unit id="9">
+            <trans-unit id="wood">
                 <source>wood</source>
                 <target>🌲 Дерево</target>
             </trans-unit>
-            <trans-unit id="10">
+            <trans-unit id="stone">
                 <source>stone</source>
                 <target>⛏ Камень</target>
             </trans-unit>
-            <trans-unit id="11">
+            <trans-unit id="iron">
                 <source>iron</source>
                 <target>🔨 Железо</target>
             </trans-unit>
-            <trans-unit id="12">
-                <source>structure</source>
-                <target>🏛️ Строители</target>
-            </trans-unit>
-            <trans-unit id="13">
+            <trans-unit id="taxes">
                 <source>taxes</source>
                 <target>📜 Налог</target>
             </trans-unit>
-            <trans-unit id="14">
+            <trans-unit id="army">
+                <source>army</source>
+                <target>⚔️ Армия</target>
+            </trans-unit>
+            <trans-unit id="work_type_army">
+                <source>work_type_army</source>
+                <target>⚔️ Армия</target>
+            </trans-unit>
+            <trans-unit id="ru">
                 <source>ru</source>
                 <target>🇷🇺 Русский</target>
             </trans-unit>
-            <trans-unit id="15">
+            <trans-unit id="king">
                 <source>king</source>
                 <target>🤴 Король</target>
             </trans-unit>
-            <trans-unit id="16">
+            <trans-unit id="queen">
                 <source>queen</source>
                 <target>Королева 👸</target>
+            </trans-unit>
+            <trans-unit id="gender">
+                <source>gender</source>
+                <target>
+{0} королева 👸|{1} король 🤴
+                 </target>
+            </trans-unit>
+            <trans-unit id="supreme_gender">
+                <source>supreme_gender</source>
+                <target>
+{0} верховная королева 👸|{1} верховный король 🤴
+                 </target>
+            </trans-unit>
+            <trans-unit id=">structure_type_castle">
+                <source>structure_type_castle</source>
+                <target>Замок</target>
+            </trans-unit>
+            <trans-unit id=">structure_type_territory">
+                <source>structure_type_territory</source>
+                <target>Территория</target>
+            </trans-unit>
+            <trans-unit id=">structure_type_lifehouse">
+                <source>structure_type_lifehouse</source>
+                <target>Жилое здание</target>
+            </trans-unit>
+            <trans-unit id=">structure_type_barn">
+                <source>structure_type_barn</source>
+                <target>Амбар</target>
+            </trans-unit>
+            <trans-unit id=">structure_type_sawmill">
+                <source>structure_type_sawmill</source>
+                <target>Лесопилка</target>
+            </trans-unit>
+            <trans-unit id=">structure_type_stonemason">
+                <source>structure_type_stonemason</source>
+                <target>Каменоломня</target>
+            </trans-unit>
+            <trans-unit id=">structure_type_smeltery">
+                <source>structure_type_smeltery</source>
+                <target>Плавильня</target>
+            </trans-unit>
+            <trans-unit id=">structure_type_library">
+                <source>structure_type_library</source>
+                <target>Библиотека</target>
+            </trans-unit>
+            <trans-unit id=">structure_type_market">
+                <source>structure_type_market</source>
+                <target>Рынок</target>
+            </trans-unit>
+            <trans-unit id=">structure_type_garrison">
+                <source>structure_type_garrison</source>
+                <target>Гарнизон</target>
+            </trans-unit>
+            <trans-unit id="castle">
+                <source>castle</source>
+                <target>Замок</target>
+            </trans-unit>
+            <trans-unit id="territory">
+                <source>territory</source>
+                <target>Территория</target>
+            </trans-unit>
+            <trans-unit id="lifehouse">
+                <source>lifehouse</source>
+                <target>Жилое здание</target>
+            </trans-unit>
+            <trans-unit id="barn">
+                <source>barn</source>
+                <target>Амбар</target>
+            </trans-unit>
+            <trans-unit id="sawmill">
+                <source>sawmill</source>
+                <target>Лесопилка</target>
+            </trans-unit>
+            <trans-unit id="stonemason">
+                <source>stonemason</source>
+                <target>Каменоломня</target>
+            </trans-unit>
+            <trans-unit id="smeltery">
+                <source>smeltery</source>
+                <target>Плавильня</target>
+            </trans-unit>
+            <trans-unit id="library">
+                <source>library</source>
+                <target>Библиотека</target>
+            </trans-unit>
+            <trans-unit id="market">
+                <source>market</source>
+                <target>Рынок</target>
+            </trans-unit>
+            <trans-unit id="garrison">
+                <source>garrison</source>
+                <target>Гарнизон</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>what_taxes_level</source>
+                <target>
+{1} Низкого|{2} Среднего|{3}Высокого|]3,Inf[Произвольного
+                </target>
             </trans-unit>
         </body>
     </file>

@@ -20,7 +20,7 @@ use Longman\TelegramBot\Request;
 
 class ChooseLangState extends BaseState
 {
-    public function getMessage(): void
+    public function preExecute(): void
     {
         $message = $this->botManager->getMessage();
         $chatId = $message->getChat()->getId();
@@ -62,7 +62,6 @@ class ChooseLangState extends BaseState
     public function execute(): void
     {
         $message = $this->botManager->getMessage();
-        $chatId = $message->getChat()->getId();
 
         $chosenLang = trim($message->getText(true));
         $langRu = $this->botManager->getTranslator()->trans(
@@ -100,10 +99,10 @@ class ChooseLangState extends BaseState
             }
 
             if (null !== $state) {
-                $state->getMessage();
+                $state->preExecute();
             }
         } else {
-            $this->getMessage();
+            $this->preExecute();
         }
     }
 }

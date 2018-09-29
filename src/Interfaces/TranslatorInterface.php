@@ -19,6 +19,8 @@ interface TranslatorInterface
     /** @var string */
     public const TRANSLATOR_MESSAGE_CHOOSE_GENDER = 'choose_gender';
     /** @var string */
+    public const TRANSLATOR_MESSAGE_CHOOSE_NAME = 'choose_name';
+    /** @var string */
     public const TRANSLATOR_MESSAGE_NEW_KING = 'new_king';
     /** @var string */
     public const TRANSLATOR_MESSAGE_NEW_KING_GENDER = 'new_king_gender';
@@ -34,6 +36,8 @@ interface TranslatorInterface
     public const TRANSLATOR_MESSAGE_LOWER_TAXES = 'lower_taxes';
     /** @var string */
     public const TRANSLATOR_MESSAGE_TAXES_LEVEL = 'taxes_level';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_WHAT_TAXES_LEVEL = 'what_taxes_level';
     /** @var string */
     public const TRANSLATOR_MESSAGE_HIRED_PEOPLE = 'hired_people';
     /** @var string */
@@ -55,6 +59,10 @@ interface TranslatorInterface
     /** @var string */
     public const TRANSLATOR_MESSAGE_BUILDINGS_SCREEN_MESSAGE = 'buildings_screen_message';
     /** @var string */
+    public const TRANSLATOR_MESSAGE_BUILDINGS_SCREEN_MESSAGE_STRUCTURE = 'buildings_screen_message_structure';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_BUILDINGS_SCREEN_MESSAGE_STRUCTURE_CHOOSE = 'buildings_screen_message_structure_choose';
+    /** @var string */
     public const TRANSLATOR_MESSAGE_DIPLOMACY_SCREEN_MESSAGE = 'diplomacy_screen_message';
     /** @var string */
     public const TRANSLATOR_MESSAGE_EDICTS_SCREEN_MESSAGE = 'edicts_screen_message';
@@ -64,6 +72,8 @@ interface TranslatorInterface
     public const TRANSLATOR_MESSAGE_PEOPLE_SCREEN_MESSAGE = 'people_screen_message';
     /** @var string */
     public const TRANSLATOR_MESSAGE_RESEACRH_SCREEN_MESSAGE = 'research_screen_message';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_RESEACRH_SCREEN_MESSAGE_WITHOUT_LIBRARY = 'research_screen_message_without_library';
     /** @var string */
     public const TRANSLATOR_MESSAGE_WAREHOUSE_SCREEN_MESSAGE = 'warehouse_screen_message';
     /** @var string */
@@ -83,11 +93,15 @@ interface TranslatorInterface
     /** @var string */
     public const TRANSLATOR_MESSAGE_LOWER = 'lower';
     /** @var string */
+    public const TRANSLATOR_MESSAGE_BUY_STRUCTURE = 'buy_structure';
+    /** @var string */
     public const TRANSLATOR_MESSAGE_GROUP_BUTTON = 'group_button';
     /** @var string */
     public const TRANSLATOR_MESSAGE_CHANNEL_BUTTON = 'channel_button';
     /** @var string */
     public const TRANSLATOR_MESSAGE_CHANGE_KINGDOM_NAME_BUTTON = 'change_kingdom_name_button';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_CHANGE_USER_NAME_BUTTON = 'change_user_name_button';
     /** @var string */
     public const TRANSLATOR_MESSAGE_ENTER_TO_GROUP_BUTTON = 'enter_to_group_button';
     /** @var string */
@@ -96,4 +110,16 @@ interface TranslatorInterface
     public const TRANSLATOR_MESSAGE_RECEIVE_EVERY_DAY_BONUSES_BUTTON = 'receive_every_day_bonuses_button';
     /** @var string */
     public const TRANSLATOR_MESSAGE_MOVE_EXTRACTED_RESOURCES_TO_WAREHOUSE_BUTTON = 'move_extracted_resources_to_warehouse';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_MY_QUEEN = 'my_queen';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_MY_KING = 'my_king';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_SUPREME_GENDER = 'supreme_gender';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_GENDER = 'gender';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_REFER_KINGDOM = 'refer_kingdom';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_REFER_SUPREME_GENDER = 'refer_supreme_gender';
 }

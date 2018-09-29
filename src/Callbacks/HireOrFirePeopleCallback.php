@@ -6,7 +6,7 @@ use App\Factory\CallbackFactory;
 use App\Manager\BotManager;
 use App\Manager\PeopleManager;
 use App\Manager\WorkManager;
-use App\Screens\PeopleScreen;
+use App\Screens\Edicts\PeopleScreen;
 use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -15,8 +15,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class HireOrFirePeopleCallback extends BaseCallback
 {
-    /** @var CallbackFactory */
-    protected $callbackFactory;
     /** @var PeopleScreen */
     protected $peopleScreen;
     /** @var PeopleManager */
@@ -26,18 +24,15 @@ class HireOrFirePeopleCallback extends BaseCallback
 
     public function __construct(
         BotManager $botManager,
-        TranslatorInterface $translator,
         PeopleManager $peopleManager,
         WorkManager $workManager,
-        PeopleScreen $peopleScreen,
-        CallbackFactory $callbackFactory
+        PeopleScreen $peopleScreen
     ) {
-        $this->callbackFactory = $callbackFactory;
         $this->peopleManager = $peopleManager;
         $this->workManager = $workManager;
         $this->peopleScreen = $peopleScreen;
 
-        parent::__construct($botManager, $translator);
+        parent::__construct($botManager);
     }
 
     /**
@@ -59,10 +54,10 @@ class HireOrFirePeopleCallback extends BaseCallback
     {
         $kingdom = $this->botManager->getKingdom();
 
-        $callbackData = $this->callbackFactory->getData($this->callbackQuery);
-        $workType = $callbackData['t'];
-        if ($callbackData['v'] === '+') {
-            if ($this->workManager->free($kingdom) > 0) {
+        $callbackData = CallbackFactory::getData($this->callbackQuery);
+        $workType = $callbackData[1];
+        if ($callbackData[2] === '1') {
+            if ($this->workManager->free() > 0 && $this->workManager->checkLimit($workType)) {
                 $text = $this->botManager->getTranslator()->trans(
                     \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_HIRED_PEOPLE,
                     [],

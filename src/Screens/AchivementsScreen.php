@@ -4,16 +4,15 @@ namespace App\Screens;
 
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\TranslatorInterface;
-use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 class AchivementsScreen extends BaseScreen
 {
     /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @inheritdoc
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function execute(): ServerResponse
+    public function execute(): void
     {
         $kingdom = $this->botManager->getKingdom();
         $title = ScreenInterface::SCREEN_ACHIEVEMENTS;
@@ -31,6 +30,6 @@ class AchivementsScreen extends BaseScreen
             'parse_mode' => 'Markdown',
         ];
 
-        return Request::sendMessage($data);
+        Request::sendMessage($data);
     }
 }

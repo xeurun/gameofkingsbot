@@ -12,21 +12,11 @@ use Longman\TelegramBot\Request;
 
 class EventScreen extends BaseScreen
 {
-    protected $workManager;
-    protected $peopleManager;
-
-    public function __construct(BotManager $botManager, WorkManager $workManager, PeopleManager $peopleManager)
-    {
-        $this->workManager = $workManager;
-        $this->peopleManager = $peopleManager;
-        parent::__construct($botManager);
-    }
-
     /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @inheritdoc
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function execute(): ServerResponse
+    public function execute(): void
     {
         $kingdom = $this->botManager->getKingdom();
         $title = ScreenInterface::SCREEN_EVENT;
@@ -46,6 +36,6 @@ class EventScreen extends BaseScreen
             'parse_mode' => 'Markdown',
         ];
 
-        return Request::sendMessage($data);
+        Request::sendMessage($data);
     }
 }

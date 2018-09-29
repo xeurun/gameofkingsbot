@@ -10,10 +10,18 @@ use App\Interfaces\StructureInterface;
 
 class ResourceManager
 {
+    /** @var BotManager  */
     protected $botManager;
+    /** @var WorkManager  */
     protected $workManager;
+    /** @var PeopleManager  */
     protected $peopleManager;
 
+    /**
+     * @param BotManager $botManager
+     * @param WorkManager $workManager
+     * @param PeopleManager $peopleManager
+     */
     public function __construct(BotManager $botManager, WorkManager $workManager, PeopleManager $peopleManager)
     {
         $this->botManager = $botManager;
@@ -21,8 +29,12 @@ class ResourceManager
         $this->peopleManager = $peopleManager;
     }
 
-    public function addEveryDayBonus(Kingdom $kingdom): void
+    /**
+     *
+     */
+    public function addEveryDayBonus(): void
     {
+        $kingdom = $this->botManager->getKingdom();
         $kingdom->setFood($kingdom->getFood() + ResourceInterface::EVERY_DAY_FOOD_BONUS);
         $kingdom->setGold($kingdom->getGold() + ResourceInterface::EVERY_DAY_GOLD_BONUS);
         $kingdom->setWood($kingdom->getWood() + ResourceInterface::EVERY_DAY_WOOD_BONUS);
@@ -31,10 +43,11 @@ class ResourceManager
     }
 
     /**
-     * @param Kingdom $kingdom
+     *
      */
-    public function moveExtractedResourcesToWarehouse(Kingdom $kingdom)
+    public function moveExtractedResourcesToWarehouse(): void
     {
+        $kingdom = $this->botManager->getKingdom();
         $today = new \DateTime();
 
         $extractedGold = $this->getExtractedCountByResourceName(ResourceInterface::RESOURCE_GOLD);

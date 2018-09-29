@@ -99,7 +99,7 @@ class HookController extends AbstractController
         try {
             $this->entityManager->beginTransaction();
             $m = $request->get('m', '/start');
-            $callbackName = $request->get('c', CallbackInterface::CALLBACK_EVERY_DAY_BONUS);
+            $callbackName = $request->get('c', '{callback_get_info@structure_type_barn');
 
             $this->botManager->setCustomInput('{
                 "update_id":119409613, 
@@ -135,7 +135,7 @@ class HookController extends AbstractController
                         ]
                     },
                     "chat_instance":"-1983157652211501556",
-                    "data":"{\"n\":\"' . $callbackName . '\",\"c\":\"barn\",\"v\":\"+\"}"
+                    "data":"' . $callbackName . '"
                 }
             }');
 

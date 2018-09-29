@@ -8,25 +8,42 @@ use App\Interfaces\TaxesInterface;
 
 class PeopleManager
 {
+    /** @var BotManager */
+    protected $botManager;
+    /** @var KingdomManager */
+    protected $kingdomManager;
+
+    /**
+     * @param BotManager $botManager
+     * @param KingdomManager $kingdomManager
+     */
+    public function __construct(BotManager $botManager, KingdomManager $kingdomManager)
+    {
+        $this->botManager = $botManager;
+        $this->kingdomManager = $kingdomManager;
+    }
+
     /**
      * 1 people eat food unit
      * If tax low, people eat lower
-     * @param Kingdom $kingdom
      * @return float
      */
-    public function eat(Kingdom $kingdom): float
+    public function eat(): float
     {
-        return round($kingdom->getPeople() * (ResourceInterface::INITIAL_EAT_FOOD / $kingdom->getTax()));
+        $kingdom = $this->botManager->getKingdom();
+        $people = $this->kingdomManager->getPeople();
+        return round($people * (ResourceInterface::INITIAL_EAT_FOOD / $kingdom->getTax()));
     }
 
     /**
      * 1 people pay gold unit
      * If tax big, people pay more
-     * @param Kingdom $kingdom
      * @return float
      */
-    public function pay(Kingdom $kingdom): float
+    public function pay(): float
     {
-        return round($kingdom->getPeople() * (TaxesInterface::INITIAL_TAXES_SIZE * $kingdom->getTax()));
+        $kingdom = $this->botManager->getKingdom();
+        $people = $this->kingdomManager->getPeople();
+        return round($people * (TaxesInterface::INITIAL_TAXES_SIZE * $kingdom->getTax()));
     }
 }

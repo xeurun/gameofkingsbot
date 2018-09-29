@@ -3,12 +3,14 @@
 namespace App\Factory;
 
 use App\Callbacks\BaseCallback;
-use App\Callbacks\ChangeKingdomNameCallback;
+use App\Callbacks\ChangeStateCallback;
 use App\Callbacks\EveryDayBonusCallback;
+use App\Callbacks\GetInfoCallback;
 use App\Callbacks\HireOrFirePeopleCallback;
 use App\Callbacks\IncreaseStructureLevelCallback;
 use App\Callbacks\MoveResourcesToWarehouseCallback;
 use App\Callbacks\RiseOrLowerTaxesCallback;
+use App\Callbacks\TutorialCallback;
 use App\Interfaces\CallbackInterface;
 use App\Manager\BotManager;
 use Longman\TelegramBot\Entities\CallbackQuery;
@@ -39,8 +41,14 @@ class CallbackFactory
             case CallbackInterface::CALLBACK_INCREASE_STRUCTURE_LEVEL:
                 $state = $botManager->get(IncreaseStructureLevelCallback::class);
                 break;
-            case CallbackInterface::CALLBACK_CHANGE_KINGDOM_NAME:
-                $state = $botManager->get(ChangeKingdomNameCallback::class);
+            case CallbackInterface::CALLBACK_CHANGE_STATE:
+                $state = $botManager->get(ChangeStateCallback::class);
+                break;
+            case CallbackInterface::CALLBACK_TUTORIAL:
+                $state = $botManager->get(TutorialCallback::class);
+                break;
+            case CallbackInterface::CALLBACK_GET_INFO:
+                $state = $botManager->get(GetInfoCallback::class);
                 break;
             default:
                 throw new InvalidArgumentException('Incorrect state name: ' . $callbackName);
@@ -49,18 +57,28 @@ class CallbackFactory
         return $state;
     }
 
+
+    /**
+     * @param mixed $args
+     * @return false|string
+     */
+    public static function pack(...$args)
+    {
+        return '{' . implode('@', $args);
+    }
+
     /**
      * @param CallbackQuery $callbackQuery
      * @return mixed|string
      */
-    public function getData(CallbackQuery $callbackQuery)
+    public static function getData(CallbackQuery $callbackQuery)
     {
         $callbackData = $callbackQuery->getData();
         if (strpos($callbackData, '{') === 0) {
-            $callbackData = json_decode($callbackData, true);
+            $callbackData = explode('@', mb_substr($callbackData, 1));
         } else {
             $callbackData = [
-                'n' => $callbackData
+                $callbackData
             ];
         }
 
@@ -86,8 +104,10 @@ class CallbackFactory
             CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES,
             CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
             CallbackInterface::CALLBACK_MOVE_RESOURCES_TO_WAREHOUSE,
-            CallbackInterface::CALLBACK_CHANGE_KINGDOM_NAME,
-            CallbackInterface::CALLBACK_INCREASE_STRUCTURE_LEVEL
+            CallbackInterface::CALLBACK_CHANGE_STATE,
+            CallbackInterface::CALLBACK_INCREASE_STRUCTURE_LEVEL,
+            CallbackInterface::CALLBACK_TUTORIAL,
+            CallbackInterface::CALLBACK_GET_INFO
         ];
     }
 }

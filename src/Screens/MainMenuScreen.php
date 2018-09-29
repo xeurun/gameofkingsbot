@@ -3,7 +3,11 @@
 namespace App\Screens;
 
 use App\Entity\User;
+use App\Factory\CallbackFactory;
+use App\Helper\CurrencyHelper;
+use App\Interfaces\CallbackInterface;
 use App\Interfaces\ScreenInterface;
+use App\Interfaces\StructureInterface;
 use App\Interfaces\TranslatorInterface;
 use App\Manager\BotManager;
 use App\Manager\KingdomManager;
@@ -34,63 +38,59 @@ class MainMenuScreen extends BaseScreen
     }
 
     /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @inheritdoc
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function execute(): ServerResponse
+    public function execute(): void
     {
-        $user = $this->botManager->getUser();
-        $kingdom = $this->botManager->getKingdom();
+        $this->sendTitle();
+        $this->sendMessage();
+        $this->sendAdvice();
+    }
 
-        $keyboard = new Keyboard(
-            [ScreenInterface::SCREEN_EVENT, ScreenInterface::SCREEN_TREASURE, ScreenInterface::SCREEN_EDICTS],
-            [ScreenInterface::SCREEN_RESEARCH, ScreenInterface::SCREEN_DIPLOMACY],
-            [ScreenInterface::SCREEN_BONUSES, ScreenInterface::SCREEN_ACHIEVEMENTS, ScreenInterface::SCREEN_SETTINGS]
-        );
-
-        //Return a random keyboard.
-        $keyboard = $keyboard
-            ->setResizeKeyboard(true)
-            ->setOneTimeKeyboard(false)
-            ->setSelective(false);
-
-        $refer = $user->getRefer();
-        if ($refer instanceof User) {
-            $referKingdom = $refer->getKingdom();
-            $text = $this->botManager->getTranslator()->trans(
-                TranslatorInterface::TRANSLATOR_MESSAGE_MAIN_MENU_SCREEN_TITLE,
-                [
-                    '%name%' => $kingdom->getName(),
-                    '%referFirstName%' => $refer->getFirstName(),
-                    '%referLastName%' => $refer->getLastName(),
-                    '%kingdom%' => $referKingdom ? $referKingdom->getName() : 'без названия'
-                ],
-                TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
-            );
-        } else {
-            $text = $this->botManager->getTranslator()->trans(
-                TranslatorInterface::TRANSLATOR_MESSAGE_MAIN_MENU_SCREEN_TITLE,
-                [
-                    '%name%' => $kingdom->getName()
-                ],
-                TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
-            );
-        }
+    /**
+     * @return bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function sendAdvice(): bool
+    {
+        $inlineKeyboard = new InlineKeyboard([
+            [
+                'text' => '✅ Да',
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_TUTORIAL, 1)
+            ],
+            [
+                'text' => 'Нет ❌',
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_TUTORIAL, 0)
+            ],
+        ]);
 
         $data = [
-            'chat_id' => $kingdom->getUser()->getId(),
-            'text' => $text,
-            'reply_markup' => $keyboard,
-            'parse_mode' => 'Markdown'
+            'chat_id' => $this->botManager->getUser()->getId(),
+            'text' => '*Советник*: хочешь чтобы я подробно рассказал как управлять королевством?',
+            'reply_markup' => $inlineKeyboard,
+            'parse_mode' => 'Markdown',
         ];
 
-        Request::sendMessage($data);
+        $response = Request::sendMessage($data);
+
+        return $response->isOk();
+    }
+
+    /**
+     * @return bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function sendMessage(): bool
+    {
+        $kingdom = $this->botManager->getKingdom();
 
         $eatHourly = $this->peopleManager->eat($kingdom);
         $foodDay = round($kingdom->getFood() / $eatHourly);
 
-        $level = $this->kingdomManager->level($kingdom);
-        $territory = $this->kingdomManager->level($kingdom);
+        $level = $this->kingdomManager->level($kingdom, StructureInterface::STRUCTURE_TYPE_CASTLE);
+        $territory = $this->kingdomManager->level($kingdom, StructureInterface::STRUCTURE_TYPE_TERRITORY);
+        $people = $this->kingdomManager->getPeople();
 
         $text = $this->botManager->getTranslator()->trans(
             TranslatorInterface::TRANSLATOR_MESSAGE_MAIN_MENU_SCREEN_MESSAGE,
@@ -100,23 +100,25 @@ class MainMenuScreen extends BaseScreen
                 '%territorySize%' => $this->kingdomManager->getTerritorySize($kingdom),
                 '%people%' => $this->botManager->getTranslator()->transChoice(
                     TranslatorInterface::TRANSLATOR_MESSAGE_PEOPLES,
-                    $kingdom->getPeople(),
+                    $people,
                     [
-                        '%count%' => $kingdom->getPeople()
+                        'count' => CurrencyHelper::costFormat($people)
                     ],
                     TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                 ),
-                '%tax%' => $this->botManager->getTranslator()->transChoice(
-                    TranslatorInterface::TRANSLATOR_MESSAGE_TAXES_LEVEL,
-                    $kingdom->getTax(),
-                    [],
-                    TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+                '%tax%' => mb_strtolower(
+                    $this->botManager->getTranslator()->transChoice(
+                        TranslatorInterface::TRANSLATOR_MESSAGE_TAXES_LEVEL,
+                        $kingdom->getTax(),
+                        [],
+                        TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+                    )
                 ),
-                '%gold%' => $kingdom->getGold(),
-                '%food%' => $kingdom->getFood(),
-                '%wood%' => $kingdom->getWood(),
-                '%stone%' => $kingdom->getStone(),
-                '%iron%' => $kingdom->getIron(),
+                '%gold%' => CurrencyHelper::costFormat($kingdom->getGold()),
+                '%food%' => CurrencyHelper::costFormat($kingdom->getFood()),
+                '%wood%' => CurrencyHelper::costFormat($kingdom->getWood()),
+                '%stone%' => CurrencyHelper::costFormat($kingdom->getStone()),
+                '%iron%' => CurrencyHelper::costFormat($kingdom->getIron()),
                 '%foodDay%' => $this->botManager->getTranslator()->transChoice(
                     TranslatorInterface::TRANSLATOR_MESSAGE_HOURS,
                     $foodDay,
@@ -159,6 +161,55 @@ class MainMenuScreen extends BaseScreen
             'parse_mode' => 'Markdown',
         ];
 
-        return Request::sendMessage($data);
+        $response = Request::sendMessage($data);
+
+        return $response->isOk();
+    }
+
+    /**
+     * @return bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function sendTitle(): bool
+    {
+        $user = $this->botManager->getUser();
+
+        $keyboard = new Keyboard(
+            [ScreenInterface::SCREEN_EVENT, ScreenInterface::SCREEN_TREASURE, ScreenInterface::SCREEN_EDICTS],
+            [ScreenInterface::SCREEN_RESEARCH, ScreenInterface::SCREEN_DIPLOMACY],
+            [ScreenInterface::SCREEN_BONUSES, ScreenInterface::SCREEN_ACHIEVEMENTS, ScreenInterface::SCREEN_SETTINGS]
+        );
+
+        //Return a random keyboard.
+        $keyboard = $keyboard
+            ->setResizeKeyboard(true)
+            ->setOneTimeKeyboard(false)
+            ->setSelective(false);
+
+        $text = $this->botManager->getTranslator()->trans(
+            TranslatorInterface::TRANSLATOR_MESSAGE_MAIN_MENU_SCREEN_TITLE,
+            [
+                '%kingdomName%' => $this->botManager->getKingdom()->getName(),
+                '%name%' => $this->botManager->getUser()->getName(),
+                '%supreme_gender%' => $this->botManager->getTranslator()->transChoice(
+                    TranslatorInterface::TRANSLATOR_MESSAGE_SUPREME_GENDER,
+                    $user->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+                    [],
+                    TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+                )
+            ],
+            TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
+        );
+
+        $data = [
+            'chat_id' => $user->getId(),
+            'text' => $text,
+            'reply_markup' => $keyboard,
+            'parse_mode' => 'Markdown'
+        ];
+
+        $response = Request::sendMessage($data);
+
+        return $response->isOk();
     }
 }

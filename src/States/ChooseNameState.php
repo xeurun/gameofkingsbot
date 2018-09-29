@@ -6,7 +6,9 @@ use App\Entity\Kingdom;
 use App\Entity\StructureType;
 use App\Entity\User;
 use App\Factory\ScreenFactory;
+use App\Factory\StateFactory;
 use App\Interfaces\ScreenInterface;
+use App\Interfaces\StateInterface;
 use App\Interfaces\StructureInterface;
 use App\Interfaces\TranslatorInterface;
 use App\Manager\BotManager;
@@ -17,30 +19,18 @@ use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Request;
 
-class KingdomNameState extends BaseState
+class ChooseNameState extends BaseState
 {
-    /** @var KingdomManager  */
-    protected $kingdomManager;
-
-    /**
-     * @param BotManager $botManager
-     * @param KingdomManager $kingdomManager
-     */
-    public function __construct(BotManager $botManager, KingdomManager $kingdomManager)
-    {
-        $this->kingdomManager = $kingdomManager;
-        parent::__construct($botManager);
-    }
-
     /**
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function preExecute(): void
     {
         $user = $this->botManager->getUser();
+        $chatId = $this->message->getChat()->getId();
 
         $text = $this->botManager->getTranslator()->trans(
-            TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING,
+            \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_CHOOSE_NAME,
             [
                 '%gender%' => $this->botManager->getTranslator()->transChoice(
                     TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
@@ -49,17 +39,15 @@ class KingdomNameState extends BaseState
                     TranslatorInterface::TRANSLATOR_DOMAIN_STATE
                 )
             ],
-            TranslatorInterface::TRANSLATOR_DOMAIN_STATE
+            \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_STATE
         );
 
-        $data = [
-            'chat_id' => $user->getId(),
+        Request::sendMessage([
+            'chat_id' => $chatId,
             'text' => $text,
             'reply_markup' => Keyboard::remove(),
             'parse_mode' => 'Markdown'
-        ];
-
-        Request::sendMessage($data);
+        ]);
     }
 
     /**
@@ -70,30 +58,44 @@ class KingdomNameState extends BaseState
     public function execute(): void
     {
         $user = $this->botManager->getUser();
-        $kingdomName = trim($this->message->getText(true));
-        if (!empty($kingdomName)) {
+        $name = trim($this->message->getText(true));
+        if (!empty($name)) {
             $entityManager = $this->botManager->getEntityManager();
-            $kingdom = $user->getKingdom();
-            if (!$kingdom) {
-                $kingdom = $this->kingdomManager->createNewKingdom($kingdomName);
-                $user->setKingdom($kingdom);
+            if ($user->getKingdom() === null) {
+                $user->setState(StateInterface::STATE_WAIT_INPUT_KINGDOM_NAME);
             } else {
-                $kingdom->changeName($kingdomName);
+                $user->setState(null);
             }
-            $entityManager->persist($kingdom);
-            $user->setState(null);
+            $user->setName($name);
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $screen = null;
-            /** @var ScreenFactory $screenFactory */
-            $screenFactory = $this->botManager->get(ScreenFactory::class);
-            if ($screenFactory->isAvailable(ScreenInterface::SCREEN_MAIN_MENU)) {
-                $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU, $this->botManager);
-            }
+            if ($user->getKingdom() === null) {
+                $stateName = $user->getState();
+                $state = null;
+                /** @var StateFactory $stateFactory */
+                $stateFactory = $this->botManager->get(StateFactory::class);
+                if ($stateFactory->isAvailable($stateName)) {
+                    $state = $stateFactory->create(
+                        $stateName,
+                        $this->botManager
+                    );
+                }
 
-            if (null !== $screen) {
-                $screen->execute();
+                if (null !== $state) {
+                    $state->preExecute();
+                }
+            } else {
+                $screen = null;
+                /** @var ScreenFactory $screenFactory */
+                $screenFactory = $this->botManager->get(ScreenFactory::class);
+                if ($screenFactory->isAvailable(ScreenInterface::SCREEN_MAIN_MENU)) {
+                    $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU, $this->botManager);
+                }
+
+                if (null !== $screen) {
+                    $screen->execute();
+                }
             }
         } else {
             $this->preExecute();

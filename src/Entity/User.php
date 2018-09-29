@@ -36,12 +36,7 @@ class User
     /**
      * @ORM\Column(type="string", nullable=true, length=255)
      */
-    private $first_name;
-
-    /**
-     * @ORM\Column(type="string", nullable=true, length=255)
-     */
-    private $last_name;
+    private $name;
 
     /**
      * @ORM\Column(type="string", nullable=true, length=255)
@@ -77,10 +72,10 @@ class User
     public function __construct(\Longman\TelegramBot\Entities\User $user)
     {
         $this->id = $user->getId();
-        $this->setUsername($user->getUsername());
-        $this->setFirstName($user->getFirstName());
-        $this->setLastName($user->getLastName());
-        $this->setState(StateInterface::STATE_WAIT_CHOOSE_LANG);
+        $this->setLang(self::AVAILABLE_LANG_RU);
+        $this->username = $user->getUsername();
+        $this->name = $user->getFirstName();
+        $this->setState(StateInterface::STATE_WAIT_CHOOSE_GENDER);
     }
 
     public function getId(): int
@@ -88,40 +83,22 @@ class User
         return $this->id;
     }
 
-    public function getFirstName(): ?string
+    public function getName(): ?string
     {
-        return $this->first_name;
+        return $this->name;
     }
 
-    public function setFirstName(?string $first_name): self
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
     {
-        $this->first_name = $first_name;
-
-        return $this;
-    }
-
-    public function getLastName(): ?string
-    {
-        return $this->last_name;
-    }
-
-    public function setLastName(?string $last_name): self
-    {
-        $this->last_name = $last_name;
-
-        return $this;
+        $this->name = $name;
     }
 
     public function getUsername(): ?string
     {
         return $this->username;
-    }
-
-    public function setUsername(?string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
     }
 
     /**

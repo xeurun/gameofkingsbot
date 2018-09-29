@@ -13,93 +13,83 @@ final class Version20180923001401 extends AbstractMigration
     protected static $buildTypes = [
         [
             "'castle'",
-            "'Замок'",
             100000,
             100000,
             100000,
             100000,
-            10,
+            1
         ],
         [
             "'territory'",
-            "'Территория'",
             5000,
             100000,
             5000,
             3500,
-            10,
+            2
         ],
         [
             "'lifehouse'",
-            "'Жилое здание'",
             1000,
             20000,
             500,
             50,
-            10,
+            3
         ],
         [
             "'barn'",
-            "'Амбар'",
             10000,
             10000,
             10000,
             10000,
-            10,
+            4
         ],
         [
             "'sawmill'",
-            "'Лесопилка'",
             10000,
             10000,
             10000,
             10000,
-            10,
+            5
         ],
         [
             "'stonemason'",
-            "'Каменоломня'",
             10000,
             10000,
             10000,
             10000,
-            10,
+            6
         ],
         [
             "'smeltery'",
-            "'Плавильня'",
             10000,
             10000,
             10000,
             10000,
-            10,
+            7
         ],
         [
             "'library'",
-            "'Библиотека'",
             10000,
             10000,
             10000,
             10000,
-            10,
+            8
         ],
         [
             "'market'",
-            "'Рынок'",
             10000,
             10000,
             10000,
             10000,
-            10,
+            9
         ],
         [
             "'garrison'",
-            "'Гарнизон'",
             10000,
             10000,
             10000,
             10000,
-            10,
+            10
         ]
     ];
 
@@ -114,7 +104,7 @@ final class Version20180923001401 extends AbstractMigration
         }
 
         $this->addSql(
-            'INSERT IGNORE INTO structure_type (code, name, gold_cost, wood_cost, stone_cost, iron_cost, time_cost) VALUES '
+            'INSERT IGNORE INTO structure_type (code, gold_cost, wood_cost, stone_cost, iron_cost, order) VALUES '
             . implode(',', $values)
         );
     }

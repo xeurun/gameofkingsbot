@@ -11,10 +11,10 @@ use Longman\TelegramBot\Request;
 class EdictsScreen extends BaseScreen
 {
     /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @inheritdoc
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function execute(): ServerResponse
+    public function execute(): void
     {
         $kingdom = $this->botManager->getKingdom();
         $title = ScreenInterface::SCREEN_EDICTS;
@@ -45,6 +45,6 @@ class EdictsScreen extends BaseScreen
             'parse_mode' => 'Markdown'
         ];
 
-        return Request::sendMessage($data);
+        Request::sendMessage($data);
     }
 }

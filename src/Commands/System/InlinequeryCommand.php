@@ -2,7 +2,6 @@
 
 namespace App\Commands\System;
 
-use App\Commands\BaseCommand;
 use App\Manager\BotManager;
 use Longman\TelegramBot\Entities\InlineQuery\InlineQueryResultArticle;
 use Longman\TelegramBot\Entities\Update;
@@ -44,7 +43,7 @@ class InlinequeryCommand extends BaseCommand
         $user = $botManager->getUser();
         $botName = $botManager->getBotUsername();
         $text = <<<TEXT
-*{$user->getFirstName()} {$user->getLastName()} ({$user->getUsername()})*
+*{$user->getName()} ({$user->getUsername()})*
 Приглашает вас присоедениться к нему в игре «Мое собственное королевство»
 https://t.me/{$botName}?start={$user->getId()}
 Начните создавать свое собственное королевство уже сейчас!
@@ -53,7 +52,10 @@ TEXT;
         $articles[] = [
             'id' => 'sendRequest',
             'title' => 'Пригласить в игру',
-            'description' => 'Пригласите кого нибудь в игру и если он начнет играть вы получите приятные бонусы',
+            'description' => <<<TEXT
+Отправьте приглашение и получайте бонусы (используется ваше игровое имя и ваш никнейм)
+TEXT
+            ,
             'message_text' => $text,
             'parse_mode' => 'Markdown'
         ];

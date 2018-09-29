@@ -2,7 +2,6 @@
 
 namespace App\Commands\System;
 
-use App\Commands\BaseCommand;
 use App\Entity\Kingdom;
 use App\Entity\User;
 use App\Factory\ScreenFactory;
@@ -29,7 +28,7 @@ class StartCommand extends BaseCommand
         $this->usage = '/start';
         $this->version = '1.0.0';
 
-        parent::__construct($botManager, $update, true);
+        parent::__construct($botManager, $update);
     }
 
     /**
@@ -85,7 +84,7 @@ class StartCommand extends BaseCommand
             }
 
             if (null !== $state) {
-                $state->getMessage();
+                $state->preExecute();
             }
         }
 

@@ -7,45 +7,42 @@ use App\Factory\CallbackFactory;
 use App\Interfaces\StructureInterface;
 use App\Manager\BotManager;
 use App\Manager\KingdomManager;
-use App\Manager\PeopleManager;
-use App\Manager\ResourceManager;
-use App\Manager\WorkManager;
+use App\Manager\StructureManager;
 use App\Repository\StructureTypeRepository;
-use App\Screens\BuildingsScreen;
+use App\Screens\Edicts\BuildingsScreen;
 use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class IncreaseStructureLevelCallback extends BaseCallback
 {
-    /** @var CallbackFactory */
-    protected $callbackFactory;
     /** @var BuildingsScreen */
     protected $buildingsScreen;
     /** @var KingdomManager */
     protected $kingdomManager;
+    /** @var StructureManager */
+    protected $structureManager;
     /** @var StructureTypeRepository */
     protected $buildTypeRepository;
 
     /**
      * @param BotManager $botManager
      * @param KingdomManager $kingdomManager
+     * @param StructureManager $structureManager
      * @param BuildingsScreen $buildingsScreen
      * @param StructureTypeRepository $buildTypeRepository
-     * @param CallbackFactory $callbackFactory
      */
     public function __construct(
         BotManager $botManager,
         KingdomManager $kingdomManager,
+        StructureManager $structureManager,
         BuildingsScreen $buildingsScreen,
-        StructureTypeRepository $buildTypeRepository,
-        CallbackFactory $callbackFactory
+        StructureTypeRepository $buildTypeRepository
     ) {
         $this->buildTypeRepository = $buildTypeRepository;
-        $this->callbackFactory = $callbackFactory;
         $this->kingdomManager = $kingdomManager;
+        $this->structureManager = $structureManager;
         $this->buildingsScreen = $buildingsScreen;
 
         parent::__construct($botManager);
@@ -72,8 +69,8 @@ class IncreaseStructureLevelCallback extends BaseCallback
         $entityManager = $this->botManager->getEntityManager();
         $kingdom = $this->botManager->getKingdom();
         if ($kingdom) {
-            $callbackData = $this->callbackFactory->getData($this->callbackQuery);
-            $code = $callbackData['c'];
+            $callbackData = CallbackFactory::getData($this->callbackQuery);
+            $code = $callbackData[1];
             $build = $kingdom->getStructure($code);
             if (!$build) {
                 $buildType = $this->buildTypeRepository->findOneByCode($code);
@@ -86,8 +83,8 @@ class IncreaseStructureLevelCallback extends BaseCallback
             }
 
             if ($build) {
-                if ($this->kingdomManager->checkAvailableResourceForBuyStructure($kingdom, $buildType)) {
-                    $this->kingdomManager->processBuyStructure($kingdom, $build);
+                if ($this->structureManager->checkAvailableResourceForBuyStructure($kingdom, $buildType)) {
+                    $this->structureManager->processBuyStructure($kingdom, $build);
                     switch ($code) {
                         case StructureInterface::STRUCTURE_TYPE_CASTLE:
                             $text = 'Вы улучшили свою крепость!';
@@ -103,7 +100,7 @@ class IncreaseStructureLevelCallback extends BaseCallback
                     $entityManager->persist($kingdom);
                     $entityManager->flush();
                 } else {
-                    $text = 'Недостаточно ресурсов!';
+                    $text = 'Недостаточно ресурсов или свободного места!';
                 }
             }
         }

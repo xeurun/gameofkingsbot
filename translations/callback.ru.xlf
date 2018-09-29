@@ -11,15 +11,15 @@
                 </target>
             </trans-unit>
             <trans-unit id="2">
-                <source>every_day_bonus</source>
+                <source>callback_every_day_bonus</source>
                 <target>
 `Спасибо что остаетесь с нами, вот ваша награда!`
 
-`💰 Золота   - `*%gold%*` ед.`
-`🍞 Еды      - `*%food%*` ед.`
-`🌲 Дерева   - `*%wood%*` ед.`
-`⛏ Камней   - `*%stone%*` ед.`
-`🔨 Железа   - `*%iron%*` ед.`
+`💰 Золота   - `*%gold%*
+`🍞 Еды      - `*%food%*
+`🌲 Дерева   - `*%wood%*
+`⛏ Камней   - `*%stone%*
+`🔨 Железа   - `*%iron%*
                 </target>
             </trans-unit>
             <trans-unit id="3">
@@ -29,15 +29,15 @@
                 </target>
             </trans-unit>
             <trans-unit id="4">
-                <source>move_resources_to_warehouse</source>
+                <source>callback_move_resources_to_warehouse</source>
                 <target>
 `Пополнение склада!`
 
-`💰 Золота    - `*%gold%*` ед.`
-`🍞 Еды       - `*%food%*` ед.`
-`🌲 Дерева    - `*%wood%*` ед.`
-`⛏ Камней    - `*%stone%*` ед.`
-`🔨 Железа    - `*%iron%*` ед.`
+`💰 Золота    - `*%gold%*
+`🍞 Еды       - `*%food%*
+`🌲 Дерева    - `*%wood%*
+`⛏ Камней    - `*%stone%*
+`🔨 Железа    - `*%iron%*
                 </target>
             </trans-unit>
             <trans-unit id="5">
@@ -49,7 +49,7 @@
                 <target>уменьшены</target>
             </trans-unit>
             <trans-unit id="7">
-                <source>raise_or_lower_taxes</source>
+                <source>callback_raise_or_lower_taxes</source>
                 <target>
 Налоги %status% до уровня %level%
                 </target>
@@ -62,15 +62,15 @@
             </trans-unit>
             <trans-unit id="9">
                 <source>hired_people</source>
-                <target>Нанят рабочий</target>
+                <target>+ 1</target>
             </trans-unit>
             <trans-unit id="10">
                 <source>fired_people</source>
-                <target>Уволен рабочий</target>
+                <target>- 1</target>
             </trans-unit>
             <trans-unit id="11">
                 <source>no_hired_people</source>
-                <target>Некого нанимать!</target>
+                <target>Некого нанимать или превышен лимит!</target>
             </trans-unit>
             <trans-unit id="12">
                 <source>no_fired_people</source>
@@ -78,7 +78,7 @@
             </trans-unit>
             <trans-unit id="13">
                 <source>every_day_bonus_received</source>
-                <target>Ежедневный бонус добавлен на ваш склад!</target>
+                <target>❤ Ежедневный бонус добавлен на ваш склад!</target>
             </trans-unit>
             <trans-unit id="14">
                 <source>extracted_resources_received</source>

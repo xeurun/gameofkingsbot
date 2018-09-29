@@ -7,6 +7,7 @@ use App\Manager\BotManager;
 use App\States\BaseState;
 use App\States\ChooseLangState;
 use App\States\ChooseGenderState;
+use App\States\ChooseNameState;
 use App\States\KingdomNameState;
 use Psr\Log\InvalidArgumentException;
 
@@ -26,7 +27,10 @@ class StateFactory
             case StateInterface::STATE_WAIT_CHOOSE_GENDER:
                 $state = $botManager->get(ChooseGenderState::class);
                 break;
-            case StateInterface::STATE_WAIT_KINGDOM_NAME:
+            case StateInterface::STATE_WAIT_INPUT_NAME:
+                $state = $botManager->get(ChooseNameState::class);
+                break;
+            case StateInterface::STATE_WAIT_INPUT_KINGDOM_NAME:
                 $state = $botManager->get(KingdomNameState::class);
                 break;
             default:
@@ -53,7 +57,8 @@ class StateFactory
         return [
             StateInterface::STATE_WAIT_CHOOSE_LANG,
             StateInterface::STATE_WAIT_CHOOSE_GENDER,
-            StateInterface::STATE_WAIT_KINGDOM_NAME,
+            StateInterface::STATE_WAIT_INPUT_NAME,
+            StateInterface::STATE_WAIT_INPUT_KINGDOM_NAME,
         ];
     }
 }

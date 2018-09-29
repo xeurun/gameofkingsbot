@@ -2,6 +2,7 @@
 
 namespace App\Callbacks;
 
+use App\Helper\CurrencyHelper;
 use App\Interfaces\CallbackInterface;
 use App\Interfaces\ResourceInterface;
 use App\Manager\BotManager;
@@ -22,12 +23,11 @@ class MoveResourcesToWarehouseCallback extends BaseCallback
     public function __construct(
         BotManager $botManager,
         ResourceManager $resourceManager,
-        TranslatorInterface $translator,
         WarehouseScreen $warehouseScreen
     ) {
         $this->resourceManager = $resourceManager;
         $this->warehouseScreen = $warehouseScreen;
-        parent::__construct($botManager, $translator);
+        parent::__construct($botManager);
     }
 
     /**
@@ -54,7 +54,7 @@ class MoveResourcesToWarehouseCallback extends BaseCallback
         $currentStone = $kingdom->getStone();
         $currentIron = $kingdom->getIron();
 
-        $this->resourceManager->moveExtractedResourcesToWarehouse($kingdom);
+        $this->resourceManager->moveExtractedResourcesToWarehouse();
 
         $foodDiff = $kingdom->getFood() - $currentFood;
         $goldDiff = $kingdom->getGold() - $currentGold;
@@ -65,11 +65,11 @@ class MoveResourcesToWarehouseCallback extends BaseCallback
         $subText = $this->botManager->getTranslator()->trans(
             CallbackInterface::CALLBACK_MOVE_RESOURCES_TO_WAREHOUSE,
             [
-                '%' . ResourceInterface::RESOURCE_GOLD . '%' => $goldDiff,
-                '%' . ResourceInterface::RESOURCE_FOOD . '%' => $foodDiff,
-                '%' . ResourceInterface::RESOURCE_WOOD . '%' => $woodDiff,
-                '%' . ResourceInterface::RESOURCE_STONE . '%' => $stoneDiff,
-                '%' . ResourceInterface::RESOURCE_IRON . '%' => $ironDiff
+                '%gold%' => CurrencyHelper::costFormat($goldDiff),
+                '%food%' => CurrencyHelper::costFormat($foodDiff),
+                '%wood%' => CurrencyHelper::costFormat($woodDiff),
+                '%stone%' => CurrencyHelper::costFormat($stoneDiff),
+                '%iron%' => CurrencyHelper::costFormat($ironDiff)
             ],
             \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
         );

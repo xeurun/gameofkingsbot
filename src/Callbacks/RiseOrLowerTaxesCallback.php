@@ -5,20 +5,18 @@ namespace App\Callbacks;
 use App\Factory\CallbackFactory;
 use App\Interfaces\CallbackInterface;
 use App\Interfaces\TaxesInterface;
+use App\Interfaces\TranslatorInterface;
 use App\Manager\BotManager;
 use App\Manager\KingdomManager;
 use App\Manager\PeopleManager;
-use App\Screens\PeopleScreen;
+use App\Screens\Edicts\PeopleScreen;
 use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class RiseOrLowerTaxesCallback extends BaseCallback
 {
-    /** @var CallbackFactory */
-    protected $callbackFactory;
     /** @var PeopleScreen */
     protected $peopleScreen;
     /** @var KingdomManager */
@@ -28,17 +26,14 @@ class RiseOrLowerTaxesCallback extends BaseCallback
 
     public function __construct(
         BotManager $botManager,
-        TranslatorInterface $translator,
         PeopleManager $peopleManager,
         KingdomManager $kingdomManager,
-        PeopleScreen $peopleScreen,
-        CallbackFactory $callbackFactory
+        PeopleScreen $peopleScreen
     ) {
-        $this->callbackFactory = $callbackFactory;
         $this->peopleManager = $peopleManager;
         $this->peopleScreen = $peopleScreen;
         $this->kingdomManager = $kingdomManager;
-        parent::__construct($botManager, $translator);
+        parent::__construct($botManager);
     }
 
     /**
@@ -59,12 +54,12 @@ class RiseOrLowerTaxesCallback extends BaseCallback
     public function changeTaxLevel(): array
     {
         $kingdom = $this->botManager->getKingdom();
-        $callbackData = $this->callbackFactory->getData($this->callbackQuery);
-        if ($callbackData['v'] === '+') {
+        $callbackData = CallbackFactory::getData($this->callbackQuery);
+        if ($callbackData[1] === '1') {
             $taxStatus = $this->botManager->getTranslator()->trans(
-                \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_RAISE_TAXES,
+                TranslatorInterface::TRANSLATOR_MESSAGE_RAISE_TAXES,
                 [],
-                \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+                TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
             );
 
             $newTax = TaxesInterface::TAXES_LEVEL_HIGH;
@@ -73,9 +68,9 @@ class RiseOrLowerTaxesCallback extends BaseCallback
             }
         } else {
             $taxStatus = $this->botManager->getTranslator()->trans(
-                \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_LOWER_TAXES,
+                TranslatorInterface::TRANSLATOR_MESSAGE_LOWER_TAXES,
                 [],
-                \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+                TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
             );
             $newTax = TaxesInterface::TAXES_LEVEL_LOW;
             if ($kingdom->getTax() === TaxesInterface::TAXES_LEVEL_HIGH) {
@@ -96,10 +91,10 @@ class RiseOrLowerTaxesCallback extends BaseCallback
         }
 
         $taxLevel = $this->botManager->getTranslator()->transChoice(
-            \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_TAXES_LEVEL,
+            TranslatorInterface::TRANSLATOR_MESSAGE_TAXES_LEVEL,
             $kingdom->getTax(),
             [],
-            \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+            TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
         );
 
         $text = $this->botManager->getTranslator()->trans(
@@ -108,7 +103,7 @@ class RiseOrLowerTaxesCallback extends BaseCallback
                 '%status%' => $taxStatus,
                 '%level%' => mb_strtolower($taxLevel)
             ],
-            \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+            TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
         );
 
         return [

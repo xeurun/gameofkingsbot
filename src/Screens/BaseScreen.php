@@ -3,7 +3,6 @@
 namespace App\Screens;
 
 use App\Manager\BotManager;
-use Longman\TelegramBot\Entities\ServerResponse;
 
 abstract class BaseScreen
 {
@@ -18,5 +17,8 @@ abstract class BaseScreen
         $this->botManager = $botManager;
     }
 
-    abstract public function execute(): ServerResponse;
+    /**
+     * @return void
+     */
+    abstract public function execute(): void;
 }

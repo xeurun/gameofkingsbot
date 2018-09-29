@@ -1,40 +1,51 @@
 <?php
 
-namespace App\Screens;
+namespace App\Screens\Edicts;
 
+use App\Factory\CallbackFactory;
+use App\Helper\CurrencyHelper;
 use App\Interfaces\CallbackInterface;
 use App\Interfaces\ResourceInterface;
 use App\Interfaces\ScreenInterface;
-use App\Interfaces\StructureInterface;
 use App\Interfaces\TaxesInterface;
 use App\Interfaces\TranslatorInterface;
 use App\Interfaces\WorkInterface;
 use App\Manager\BotManager;
+use App\Manager\KingdomManager;
 use App\Manager\PeopleManager;
 use App\Manager\WorkManager;
+use App\Screens\BaseScreen;
 use Longman\TelegramBot\Entities\InlineKeyboard;
-use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 class PeopleScreen extends BaseScreen
 {
+    /** @var WorkManager  */
     protected $workManager;
+    /** @var KingdomManager */
+    protected $kingdomManager;
+    /** @var PeopleManager  */
     protected $peopleManager;
 
-    public function __construct(BotManager $botManager, WorkManager $workManager, PeopleManager $peopleManager)
-    {
+    public function __construct(
+        BotManager $botManager,
+        KingdomManager $kingdomManager,
+        WorkManager $workManager,
+        PeopleManager $peopleManager
+    ) {
         $this->workManager = $workManager;
+        $this->kingdomManager = $kingdomManager;
         $this->peopleManager = $peopleManager;
         parent::__construct($botManager);
     }
 
     /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @inheritdoc
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function execute(): ServerResponse
+    public function execute(): void
     {
-        return Request::sendMessage($this->getMessageData());
+        Request::sendMessage($this->getMessageData());
     }
 
     /**
@@ -47,15 +58,23 @@ class PeopleScreen extends BaseScreen
 
         $title = ScreenInterface::SCREEN_PEOPLE;
 
-        $eatHourly = $this->peopleManager->eat($kingdom);
-        $payHourly = $this->peopleManager->pay($kingdom);
+        $eatHourly = $this->peopleManager->eat();
+        $payHourly = $this->peopleManager->pay();
 
-        $foodHourly = $this->workManager->food($kingdom);
-        $woodHourly = $this->workManager->wood($kingdom);
-        $stoneHourly = $this->workManager->stone($kingdom);
-        $ironHourly = $this->workManager->iron($kingdom);
+        $foodHourly = $this->workManager->food();
+        $woodHourly = $this->workManager->wood();
+        $stoneHourly = $this->workManager->stone();
+        $ironHourly = $this->workManager->iron();
 
-        $free = $this->workManager->free($kingdom);
+
+        $maxOnArmy = $this->kingdomManager->getMaxOn(WorkInterface::WORK_TYPE_ARMY);
+        $maxOnFood = $this->kingdomManager->getMaxOn(WorkInterface::WORK_TYPE_FOOD);
+        $maxOnWood = $this->kingdomManager->getMaxOn(WorkInterface::WORK_TYPE_WOOD);
+        $maxOnStone = $this->kingdomManager->getMaxOn(WorkInterface::WORK_TYPE_STONE);
+        $maxOnIron = $this->kingdomManager->getMaxOn(WorkInterface::WORK_TYPE_IRON);
+
+        $free = $this->workManager->free();
+        $people = $this->kingdomManager->getPeople();
 
         $text = $this->botManager->getTranslator()->trans(
             TranslatorInterface::TRANSLATOR_MESSAGE_PEOPLE_SCREEN_MESSAGE,
@@ -63,9 +82,9 @@ class PeopleScreen extends BaseScreen
                 '%title%' => $title,
                 '%people%' => $this->botManager->getTranslator()->transChoice(
                     TranslatorInterface::TRANSLATOR_MESSAGE_PEOPLES,
-                    $kingdom->getPeople(),
+                    $people,
                     [
-                        '%count%' => $kingdom->getPeople()
+                        '%count%' => $people
                     ],
                     TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                 ),
@@ -79,15 +98,20 @@ class PeopleScreen extends BaseScreen
                     )
                 ),
                 '%payHourly%' => $payHourly,
-                '%onStructure%' => $kingdom->getOnStructure(),
+                '%onArmy%' => $kingdom->getOnArmy(),
                 '%onFood%' => $kingdom->getOnFood(),
                 '%onWood%' => $kingdom->getOnWood(),
                 '%onStone%' => $kingdom->getOnStone(),
                 '%onIron%' => $kingdom->getOnIron(),
-                '%foodHourly%' => $foodHourly,
-                '%woodHourly%' => $woodHourly,
-                '%stoneHourly%' => $stoneHourly,
-                '%ironHourly%' => $ironHourly,
+                '%maxOnArmy%' => $maxOnArmy,
+                '%maxOnFood%' => $maxOnFood,
+                '%maxOnWood%' => $maxOnWood,
+                '%maxOnStone%' => $maxOnStone,
+                '%maxOnIron%' => $maxOnIron,
+                '%foodHourly%' => CurrencyHelper::costFormat($foodHourly),
+                '%woodHourly%' => CurrencyHelper::costFormat($woodHourly),
+                '%stoneHourly%' => CurrencyHelper::costFormat($stoneHourly),
+                '%ironHourly%' => CurrencyHelper::costFormat($ironHourly),
                 '%free%' => $this->botManager->getTranslator()->transChoice(
                     TranslatorInterface::TRANSLATOR_MESSAGE_PEOPLES,
                     $free,
@@ -100,11 +124,6 @@ class PeopleScreen extends BaseScreen
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
 
-        $pack = function ($name, $data) {
-            $data['n'] = $name;
-            return json_encode($data);
-        };
-
         $inlineKeyboard = new InlineKeyboard(
             [
                 [
@@ -113,7 +132,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_GET_INFO, ['t' => TaxesInterface::TAXES])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_GET_INFO, TaxesInterface::TAXES)
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -121,7 +140,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES, ['v' => '-'])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES, 0)
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -129,35 +148,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES, ['v' => '+'])
-                ],
-            ],
-            [
-                [
-                    'text' => $this->botManager->getTranslator()->trans(
-                        WorkInterface::WORK_TYPE_STRUCTURE,
-                        [],
-                        TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
-                    ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_GET_INFO, ['t' => WorkInterface::WORK_TYPE_STRUCTURE])
-                ],
-                [
-                    'text' => $this->botManager->getTranslator()->trans(
-                        TranslatorInterface::TRANSLATOR_MESSAGE_FIRE,
-                        [],
-                        TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
-                    ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => WorkInterface::WORK_TYPE_STRUCTURE, 'v' => '-'])
-                ],
-                [
-                    'text' => $this->botManager->getTranslator()->trans(
-                        TranslatorInterface::TRANSLATOR_MESSAGE_HIRE,
-                        [],
-                        TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
-                    ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' =>  WorkInterface::WORK_TYPE_STRUCTURE, 'v' => '+'])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES, 1)
                 ],
             ],
             [
@@ -167,7 +158,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_GET_INFO, ['t' => WorkInterface::WORK_TYPE_FOOD])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_GET_INFO, WorkInterface::WORK_TYPE_FOOD)
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -175,8 +166,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => WorkInterface::WORK_TYPE_FOOD, 'v' => '-'])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE, WorkInterface::WORK_TYPE_FOOD, 0)
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -184,8 +174,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => WorkInterface::WORK_TYPE_FOOD, 'v' => '+'])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE, WorkInterface::WORK_TYPE_FOOD, 1)
                 ],
             ],
             [
@@ -195,7 +184,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_GET_INFO, ['t' => WorkInterface::WORK_TYPE_WOOD])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_GET_INFO, WorkInterface::WORK_TYPE_WOOD)
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -203,8 +192,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => WorkInterface::WORK_TYPE_WOOD, 'v' => '-'])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE, WorkInterface::WORK_TYPE_WOOD, 0)
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -212,8 +200,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => WorkInterface::WORK_TYPE_WOOD, 'v' => '+'])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE, WorkInterface::WORK_TYPE_WOOD, 1)
                 ],
             ],
             [
@@ -223,7 +210,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_GET_INFO, ['t' => WorkInterface::WORK_TYPE_STONE])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_GET_INFO, WorkInterface::WORK_TYPE_STONE)
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -231,8 +218,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => WorkInterface::WORK_TYPE_STONE, 'v' => '-'])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE, WorkInterface::WORK_TYPE_STONE, 0)
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -240,8 +226,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => WorkInterface::WORK_TYPE_STONE, 'v' => '+'])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE, WorkInterface::WORK_TYPE_STONE, 1)
                 ],
             ],
             [
@@ -251,7 +236,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_GET_INFO, ['t' => WorkInterface::WORK_TYPE_IRON])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_GET_INFO, WorkInterface::WORK_TYPE_IRON)
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -259,8 +244,7 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => WorkInterface::WORK_TYPE_IRON, 'v' => '-'])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE, WorkInterface::WORK_TYPE_IRON, 0)
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -268,8 +252,33 @@ class PeopleScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => $pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
-                        ['t' => WorkInterface::WORK_TYPE_IRON, 'v' => '+'])
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE, WorkInterface::WORK_TYPE_IRON, 1)
+                ],
+            ],
+            [
+                [
+                    'text' => $this->botManager->getTranslator()->trans(
+                        WorkInterface::WORK_TYPE_ARMY,
+                        [],
+                        TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+                    ),
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_GET_INFO, WorkInterface::WORK_TYPE_ARMY)
+                ],
+                [
+                    'text' => $this->botManager->getTranslator()->trans(
+                        TranslatorInterface::TRANSLATOR_MESSAGE_FIRE,
+                        [],
+                        TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+                    ),
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE, WorkInterface::WORK_TYPE_ARMY, 0)
+                ],
+                [
+                    'text' => $this->botManager->getTranslator()->trans(
+                        TranslatorInterface::TRANSLATOR_MESSAGE_HIRE,
+                        [],
+                        TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+                    ),
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE, WorkInterface::WORK_TYPE_ARMY, 1)
                 ],
             ]
         );

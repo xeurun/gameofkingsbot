@@ -2,11 +2,13 @@
 
 namespace App\Screens;
 
+use App\Helper\CurrencyHelper;
 use App\Interfaces\CallbackInterface;
 use App\Interfaces\ResourceInterface;
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\TranslatorInterface;
 use App\Manager\BotManager;
+use App\Manager\KingdomManager;
 use App\Manager\PeopleManager;
 use App\Manager\ResourceManager;
 use App\Manager\WorkManager;
@@ -16,16 +18,30 @@ use Longman\TelegramBot\Request;
 
 class WarehouseScreen extends BaseScreen
 {
+    /** @var KingdomManager */
+    protected $kingdomManager;
+    /** @var WorkManager  */
     protected $workManager;
+    /** @var PeopleManager  */
     protected $peopleManager;
+    /** @var ResourceManager  */
     protected $resourceManager;
 
+    /**
+     * @param BotManager $botManager
+     * @param KingdomManager $kingdomManager
+     * @param WorkManager $workManager
+     * @param PeopleManager $peopleManager
+     * @param ResourceManager $resourceManager
+     */
     public function __construct(
         BotManager $botManager,
+        KingdomManager $kingdomManager,
         WorkManager $workManager,
         PeopleManager $peopleManager,
         ResourceManager $resourceManager
     ) {
+        $this->kingdomManager = $kingdomManager;
         $this->workManager = $workManager;
         $this->peopleManager = $peopleManager;
         $this->resourceManager = $resourceManager;
@@ -33,12 +49,12 @@ class WarehouseScreen extends BaseScreen
     }
 
     /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
+     * @inheritdoc
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function execute(): ServerResponse
+    public function execute(): void
     {
-        return Request::sendMessage($this->getMessageData());
+        Request::sendMessage($this->getMessageData());
     }
 
     /**
@@ -63,15 +79,26 @@ class WarehouseScreen extends BaseScreen
 
         $hours = $this->workManager->workedHours($kingdom);
 
+        $maxGold = $this->kingdomManager->getMax(ResourceInterface::RESOURCE_GOLD);
+        $maxFood = $this->kingdomManager->getMax(ResourceInterface::RESOURCE_FOOD);
+        $maxWood = $this->kingdomManager->getMax(ResourceInterface::RESOURCE_WOOD);
+        $maxStone = $this->kingdomManager->getMax(ResourceInterface::RESOURCE_STONE);
+        $maxIron = $this->kingdomManager->getMax(ResourceInterface::RESOURCE_IRON);
+
         $text = $this->botManager->getTranslator()->trans(
             TranslatorInterface::TRANSLATOR_MESSAGE_WAREHOUSE_SCREEN_MESSAGE,
             [
                 '%title%' => $title,
-                '%gold%' => $kingdom->getGold(),
-                '%food%' => $kingdom->getFood(),
-                '%wood%' => $kingdom->getWood(),
-                '%stone%' => $kingdom->getStone(),
-                '%iron%' => $kingdom->getIron()
+                '%gold%' => CurrencyHelper::costFormat($kingdom->getGold()),
+                '%food%' => CurrencyHelper::costFormat($kingdom->getFood()),
+                '%wood%' => CurrencyHelper::costFormat($kingdom->getWood()),
+                '%stone%' => CurrencyHelper::costFormat($kingdom->getStone()),
+                '%iron%' => CurrencyHelper::costFormat($kingdom->getIron()),
+                '%maxGold%' => CurrencyHelper::costFormat($maxGold),
+                '%maxFood%' => CurrencyHelper::costFormat($maxFood),
+                '%maxWood%' => CurrencyHelper::costFormat($maxWood),
+                '%maxStone%' => CurrencyHelper::costFormat($maxStone),
+                '%maxIron%' => CurrencyHelper::costFormat($maxIron),
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
@@ -88,11 +115,11 @@ class WarehouseScreen extends BaseScreen
                         ],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    '%gold%' => $newGold,
-                    '%food%' => $newFood,
-                    '%wood%' => $newWood,
-                    '%stone%' => $newStone,
-                    '%iron%' => $newIron
+                    '%gold%' => CurrencyHelper::costFormat($newGold),
+                    '%food%' => CurrencyHelper::costFormat($newFood),
+                    '%wood%' => CurrencyHelper::costFormat($newWood),
+                    '%stone%' => CurrencyHelper::costFormat($newStone),
+                    '%iron%' => CurrencyHelper::costFormat($newIron),
                 ],
                 TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
             );

@@ -2,17 +2,16 @@
 
 namespace App\Callbacks;
 
-use App\Entity\Kingdom;
-use App\Entity\User;
+use App\Helper\CurrencyHelper;
 use App\Interfaces\CallbackInterface;
 use App\Interfaces\ResourceInterface;
+use App\Interfaces\TranslatorInterface;
 use App\Manager\BotManager;
 use App\Manager\ResourceManager;
 use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class EveryDayBonusCallback extends BaseCallback
 {
@@ -21,11 +20,10 @@ class EveryDayBonusCallback extends BaseCallback
 
     public function __construct(
         BotManager $botManager,
-        TranslatorInterface $translator,
         ResourceManager $resourceManager
     ) {
         $this->resourceManager = $resourceManager;
-        parent::__construct($botManager, $translator);
+        parent::__construct($botManager);
     }
 
     /**
@@ -65,7 +63,7 @@ class EveryDayBonusCallback extends BaseCallback
             $currentStone = $kingdom->getStone();
             $currentIron = $kingdom->getIron();
 
-            $this->resourceManager->addEveryDayBonus($kingdom);
+            $this->resourceManager->addEveryDayBonus();
 
             $foodDiff = $kingdom->getFood() - $currentFood;
             $goldDiff = $kingdom->getGold() - $currentGold;
@@ -76,13 +74,13 @@ class EveryDayBonusCallback extends BaseCallback
             $subText = $this->botManager->getTranslator()->trans(
                 CallbackInterface::CALLBACK_EVERY_DAY_BONUS,
                 [
-                    '%' . ResourceInterface::RESOURCE_GOLD . '%' => $goldDiff,
-                    '%' . ResourceInterface::RESOURCE_FOOD . '%' => $foodDiff,
-                    '%' . ResourceInterface::RESOURCE_WOOD . '%' => $woodDiff,
-                    '%' . ResourceInterface::RESOURCE_STONE . '%' => $stoneDiff,
-                    '%' . ResourceInterface::RESOURCE_IRON . '%' => $ironDiff
+                    '%gold%' => CurrencyHelper::costFormat($goldDiff),
+                    '%food%' => CurrencyHelper::costFormat($foodDiff),
+                    '%wood%' => CurrencyHelper::costFormat($woodDiff),
+                    '%stone%' => CurrencyHelper::costFormat($stoneDiff),
+                    '%iron%' => CurrencyHelper::costFormat($ironDiff)
                 ],
-                \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+                TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
             );
 
             Request::sendMessage([
@@ -92,9 +90,9 @@ class EveryDayBonusCallback extends BaseCallback
             ]);
 
             $text = $this->botManager->getTranslator()->trans(
-                \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_EVERY_DAY_BONUS_RECEIVED,
+                TranslatorInterface::TRANSLATOR_MESSAGE_EVERY_DAY_BONUS_RECEIVED,
                 [],
-                \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+                TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
             );
 
             $entityManager = $this->botManager->getEntityManager();
@@ -104,9 +102,9 @@ class EveryDayBonusCallback extends BaseCallback
             $entityManager->flush();
         } else {
             $text = $this->botManager->getTranslator()->trans(
-                \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_EVERY_DAY_BONUS_ALREADY_RECEIVED,
+                TranslatorInterface::TRANSLATOR_MESSAGE_EVERY_DAY_BONUS_ALREADY_RECEIVED,
                 [],
-                \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+                TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
             );
         }
 

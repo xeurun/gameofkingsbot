@@ -5,15 +5,21 @@ namespace App\Manager;
 use App\Entity\Kingdom;
 use App\Entity\Structure;
 use App\Entity\StructureType;
+use App\Interfaces\ResourceInterface;
 use App\Interfaces\StructureInterface;
 use App\Interfaces\TaxesInterface;
+use App\Interfaces\WorkInterface;
 use App\Repository\StructureTypeRepository;
 use Symfony\Bundle\MakerBundle\Str;
 
 class KingdomManager
 {
+    /** @var BotManager  */
     protected $botManager;
 
+    /**
+     * @param BotManager $botManager
+     */
     public function __construct(BotManager $botManager)
     {
         $this->botManager = $botManager;
@@ -44,42 +50,36 @@ class KingdomManager
         return $kingdom;
     }
 
-    public function getTerritorySize(Kingdom $kingdom)
+    /**
+     * @return int
+     */
+    public function getStructureCount(): int
     {
-        return $this->territory($kingdom) * StructureInterface::STRUCTURE_TYPE_TERRITORY_ADD_SIZE;
-    }
-
-    public function checkAvailableResourceForBuyStructure(Kingdom $kingdom, StructureType $buildType)
-    {
-        return $kingdom->getGold() >= $buildType->getGoldCost() &&
-            $kingdom->getWood() >= $buildType->getWoodCost() &&
-            $kingdom->getStone() >= $buildType->getStoneCost() &&
-            $kingdom->getIron() >= $buildType->getIronCost();
-    }
-
-    public function processBuyStructure(Kingdom $kingdom, Structure $build)
-    {
-        $structureType = $build->getType();
-        $kingdom->setGold($kingdom->getGold() - $structureType->getGoldCost());
-        $kingdom->setWood($kingdom->getWood() - $structureType->getWoodCost());
-        $kingdom->setStone($kingdom->getStone() - $structureType->getStoneCost());
-        $kingdom->setIron($kingdom->getIron() - $structureType->getIronCost());
-
-        $build->setLevel($build->getLevel() + 1);
-
-        switch ($structureType->getCode()) {
-            case StructureInterface::STRUCTURE_TYPE_LIFE_HOUSE:
-                $kingdom->setPeople($kingdom->getPeople() + StructureInterface::STRUCTURE_TYPE_LIFE_HOUSE_ADD_PEOPLE);
-                break;
+        $kingdom = $this->botManager->getKingdom();
+        $count = 0;
+        foreach ($kingdom->getStructures() as $structure) {
+            $count += $structure->getLevel();
         }
+
+        return $count;
     }
 
     /**
-     * @param Kingdom $kingdom
+     * @return float|int
+     */
+    public function getTerritorySize()
+    {
+        $kingdom = $this->botManager->getKingdom();
+        return $this->level($kingdom, StructureInterface::STRUCTURE_TYPE_TERRITORY) * StructureInterface::STRUCTURE_TYPE_TERRITORY_ADD_SIZE;
+    }
+
+    /**
      * @return string
      */
-    public function getTax(Kingdom $kingdom): string
+    public function getTax(): string
     {
+        $kingdom = $this->botManager->getKingdom();
+
         switch ($kingdom->getTax()) {
             case TaxesInterface::TAXES_LEVEL_LOW:
                 $taxes = TaxesInterface::TAXES_LOW;
@@ -123,15 +123,24 @@ class KingdomManager
         }
     }
 
+    public function getPeople()
+    {
+        $kingdom = $this->botManager->getKingdom();
+        $level = $this->level($kingdom, StructureInterface::STRUCTURE_TYPE_LIFE_HOUSE);
+
+        return ResourceInterface::INITIAL_PEOPLE + ($level * StructureInterface::STRUCTURE_TYPE_LIFE_HOUSE_ADD_PEOPLE);
+    }
+
     /**
      * @param Kingdom $kingdom
+     * @param string $structureType
      * @return float
      */
-    public function territory(Kingdom $kingdom): float
+    public function level(Kingdom $kingdom, string $structureType): float
     {
-        $territory = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_TERRITORY);
-        if ($territory) {
-            $level = $territory->getLevel();
+        $castle = $kingdom->getStructure($structureType);
+        if ($castle) {
+            $level = $castle->getLevel();
         } else {
             $level = 0;
         }
@@ -140,18 +149,115 @@ class KingdomManager
     }
 
     /**
-     * @param Kingdom $kingdom
+     * @param string $resourceType
      * @return float
      */
-    public function level(Kingdom $kingdom): float
+    public function getMax(string $resourceType): float
     {
-        $castle = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_CASTLE);
-        if ($castle) {
-            $level = $castle->getLevel();
-        } else {
-            $level = 0;
+        $kingdom = $this->botManager->getKingdom();
+
+        $level = 1;
+
+        switch($resourceType) {
+            case ResourceInterface::RESOURCE_PEOPLE:
+                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_LIFE_HOUSE);
+                if ($structure) {
+                    $level = $structure->getLevel();
+                }
+                $initialCount = ResourceInterface::INITIAL_PEOPLE_MAX;
+                break;
+            case ResourceInterface::RESOURCE_GOLD:
+                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_SMELTERY);
+                if ($structure) {
+                    $level = $structure->getLevel();
+                }
+                $initialCount = ResourceInterface::INITIAL_GOLD_MAX;
+                break;
+            case ResourceInterface::RESOURCE_FOOD:
+                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_BARN);
+                if ($structure) {
+                    $level = $structure->getLevel();
+                }
+                $initialCount = ResourceInterface::INITIAL_FOOD_MAX;
+                break;
+            case ResourceInterface::RESOURCE_WOOD:
+                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_SAWMILL);
+                if ($structure) {
+                    $level = $structure->getLevel();
+                }
+                $initialCount = ResourceInterface::INITIAL_WOOD_MAX;
+                break;
+            case ResourceInterface::RESOURCE_STONE:
+                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_STONEMASON);
+                if ($structure) {
+                    $level = $structure->getLevel();
+                }
+                $initialCount = ResourceInterface::INITIAL_STONE_MAX;
+                break;
+            case ResourceInterface::RESOURCE_IRON:
+                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_SMELTERY);
+                if ($structure) {
+                    $level = $structure->getLevel();
+                }
+                $initialCount = ResourceInterface::INITIAL_IRON_MAX;
+                break;
+            default:
+                throw new \InvalidArgumentException('Incorrect resource type: ' . $resourceType);
         }
 
-        return $level;
+        return (float)($initialCount * $level);
+    }
+
+    /**
+     * @param string $workType
+     * @return float
+     */
+    public function getMaxOn(string $workType): int
+    {
+        $kingdom = $this->botManager->getKingdom();
+
+        $level = 1;
+
+        switch($workType) {
+            case WorkInterface::WORK_TYPE_ARMY:
+                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_GARRISON);
+                if ($structure) {
+                    $level = $structure->getLevel();
+                }
+                $initialCount = WorkInterface::INITIAL_ON_ARMY;
+                break;
+            case WorkInterface::WORK_TYPE_FOOD:
+                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_BARN);
+                if ($structure) {
+                    $level = $structure->getLevel();
+                }
+                $initialCount = WorkInterface::INITIAL_ON_FOOD;
+                break;
+            case WorkInterface::WORK_TYPE_WOOD:
+                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_SAWMILL);
+                if ($structure) {
+                    $level = $structure->getLevel();
+                }
+                $initialCount = WorkInterface::INITIAL_ON_WOOD;
+                break;
+            case WorkInterface::WORK_TYPE_STONE:
+                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_STONEMASON);
+                if ($structure) {
+                    $level = $structure->getLevel();
+                }
+                $initialCount = WorkInterface::INITIAL_ON_STONE;
+                break;
+            case WorkInterface::WORK_TYPE_IRON:
+                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_SMELTERY);
+                if ($structure) {
+                    $level = $structure->getLevel();
+                }
+                $initialCount = WorkInterface::INITIAL_ON_IRON;
+                break;
+            default:
+                throw new \InvalidArgumentException('Incorrect work type: ' . $workType);
+        }
+
+        return round($initialCount * $level);
     }
 }

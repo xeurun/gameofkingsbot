@@ -114,7 +114,7 @@ final class Version20180923001401 extends AbstractMigration
         }
 
         $this->addSql(
-            'INSERT IGNORE INTO structure_type (code, order, max_level, gold_cost, wood_cost, stone_cost, iron_cost) VALUES '
+            'INSERT IGNORE INTO structure_type (`code`, `order`, `max_level`, `gold_cost`, `wood_cost`, `stone_cost`, `iron_cost`) VALUES '
             . implode(',', $values)
         );
     }

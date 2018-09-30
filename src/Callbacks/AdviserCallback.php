@@ -53,7 +53,7 @@ TEXT;
                 case AdviserInterface::ADVISER_SHOW_WAREHOUSE_TUTORIAL:
                     $name = ScreenInterface::SCREEN_EDICTS;
                     $data['text'] = <<<TEXT
-*Советник*: теперь давайте давайте перейдем к «{$name}»
+*Советник*: теперь давайте перейдем к «{$name}»
 
 _(сделать это вы можете нажав соответствующую кнопку ниже)_
 TEXT;

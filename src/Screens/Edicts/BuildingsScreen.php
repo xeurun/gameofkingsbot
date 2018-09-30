@@ -151,15 +151,15 @@ _(для более подробной информации о каждом ст
             if ($goldCost > 0) {
                 $cost[] = CurrencyHelper::costFormat($goldCost) . ' 💰';
             }
-            $woodCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_GOLD);
+            $woodCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_WOOD);
             if ($woodCost > 0) {
                 $cost[] = CurrencyHelper::costFormat($woodCost) . ' 🌲';
             }
-            $stoneCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_GOLD);
+            $stoneCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_STONE);
             if ($stoneCost > 0) {
                 $cost[] = CurrencyHelper::costFormat($stoneCost) . ' ⛏';
             }
-            $ironCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_GOLD);
+            $ironCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_IRON);
             if ($ironCost > 0) {
                 $cost[] = CurrencyHelper::costFormat($ironCost) . ' 🔨';
             }

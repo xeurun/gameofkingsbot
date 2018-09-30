@@ -2,7 +2,6 @@
 
 namespace App\Manager;
 
-use App\Entity\Kingdom;
 use App\Interfaces\ResourceInterface;
 use App\Interfaces\TaxesInterface;
 
@@ -32,6 +31,7 @@ class PeopleManager
     {
         $kingdom = $this->botManager->getKingdom();
         $people = $this->kingdomManager->getPeople();
+
         return round($people * (ResourceInterface::INITIAL_EAT_FOOD / $kingdom->getTax()));
     }
 
@@ -44,6 +44,7 @@ class PeopleManager
     {
         $kingdom = $this->botManager->getKingdom();
         $people = $this->kingdomManager->getPeople();
+
         return round($people * (TaxesInterface::INITIAL_TAXES_SIZE * $kingdom->getTax()));
     }
 }

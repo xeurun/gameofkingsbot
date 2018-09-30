@@ -2,11 +2,9 @@
 
 namespace App\Controller;
 
-use App\Interfaces\CallbackInterface;
 use App\Manager\BotManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Exception\TelegramLogException;
 use Longman\TelegramBot\TelegramLog;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +20,7 @@ class HookController extends AbstractController
 
     /**
      * @param BotManager $botManager
-     * @throws TelegramLogException
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(BotManager $botManager, EntityManagerInterface $entityManager)
     {

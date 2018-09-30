@@ -24,6 +24,12 @@ class RiseOrLowerTaxesCallback extends BaseCallback
     /** @var PeopleManager */
     protected $peopleManager;
 
+    /**
+     * @param BotManager $botManager
+     * @param PeopleManager $peopleManager
+     * @param KingdomManager $kingdomManager
+     * @param PeopleScreen $peopleScreen
+     */
     public function __construct(
         BotManager $botManager,
         PeopleManager $peopleManager,

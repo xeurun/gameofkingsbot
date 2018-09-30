@@ -2,11 +2,8 @@
 
 namespace App\Manager;
 
-use App\Entity\Kingdom;
-use App\Entity\Structure;
-use App\Entity\StructureType;
 use App\Interfaces\ResourceInterface;
-use App\Interfaces\StructureInterface;
+use App\Interfaces\WorkInterface;
 
 class ResourceManager
 {
@@ -35,11 +32,20 @@ class ResourceManager
     public function addEveryDayBonus(): void
     {
         $kingdom = $this->botManager->getKingdom();
-        $kingdom->setFood($kingdom->getFood() + ResourceInterface::EVERY_DAY_FOOD_BONUS);
-        $kingdom->setGold($kingdom->getGold() + ResourceInterface::EVERY_DAY_GOLD_BONUS);
-        $kingdom->setWood($kingdom->getWood() + ResourceInterface::EVERY_DAY_WOOD_BONUS);
-        $kingdom->setStone($kingdom->getStone() + ResourceInterface::EVERY_DAY_STONE_BONUS);
-        $kingdom->setIron($kingdom->getIron() + ResourceInterface::EVERY_DAY_IRON_BONUS);
+        $bonus = [
+            ResourceInterface::RESOURCE_GOLD => ResourceInterface::EVERY_DAY_GOLD_BONUS,
+            ResourceInterface::RESOURCE_FOOD => ResourceInterface::EVERY_DAY_FOOD_BONUS,
+            ResourceInterface::RESOURCE_WOOD => ResourceInterface::EVERY_DAY_WOOD_BONUS,
+            ResourceInterface::RESOURCE_STONE => ResourceInterface::EVERY_DAY_STONE_BONUS,
+            ResourceInterface::RESOURCE_IRON => ResourceInterface::EVERY_DAY_IRON_BONUS,
+        ];
+
+        foreach ($bonus as $resourceType => $bonusValue) {
+            $kingdom->setResource(
+                $resourceType,
+                $kingdom->getResource($resourceType) + $bonusValue
+            );
+        }
     }
 
     /**
@@ -56,11 +62,20 @@ class ResourceManager
         $extractedStone = $this->getExtractedCountByResourceName(ResourceInterface::RESOURCE_STONE);
         $extractedIron = $this->getExtractedCountByResourceName(ResourceInterface::RESOURCE_IRON);
 
-        $kingdom->setFood($kingdom->getFood() + $extractedFood);
-        $kingdom->setGold($kingdom->getGold() + $extractedGold);
-        $kingdom->setWood($kingdom->getWood() + $extractedWood);
-        $kingdom->setStone($kingdom->getStone() + $extractedStone);
-        $kingdom->setIron($kingdom->getIron() + $extractedIron);
+        $bonus = [
+            ResourceInterface::RESOURCE_GOLD => $extractedGold,
+            ResourceInterface::RESOURCE_FOOD => $extractedFood,
+            ResourceInterface::RESOURCE_WOOD => $extractedWood,
+            ResourceInterface::RESOURCE_STONE => $extractedStone,
+            ResourceInterface::RESOURCE_IRON => $extractedIron,
+        ];
+
+        foreach ($bonus as $resourceType => $bonusValue) {
+            $kingdom->setResource(
+                $resourceType,
+                $kingdom->getResource($resourceType) + $bonusValue
+            );
+        }
 
         $kingdom->setGrabResourcesDate($today);
     }
@@ -72,14 +87,13 @@ class ResourceManager
      */
     public function getExtractedCountByResourceName(string $resourceName)
     {
-        $kingdom = $this->botManager->getKingdom();
-        $goldHourly = $this->peopleManager->pay($kingdom);
-        $foodHourly = $this->workManager->food($kingdom);
-        $woodHourly = $this->workManager->wood($kingdom);
-        $stoneHourly = $this->workManager->stone($kingdom);
-        $ironHourly = $this->workManager->iron($kingdom);
+        $goldHourly = $this->peopleManager->pay();
+        $foodHourly = $this->workManager->getSalary(WorkInterface::WORK_TYPE_FOOD);
+        $woodHourly = $this->workManager->getSalary(WorkInterface::WORK_TYPE_WOOD);
+        $stoneHourly = $this->workManager->getSalary(WorkInterface::WORK_TYPE_STONE);
+        $ironHourly = $this->workManager->getSalary(WorkInterface::WORK_TYPE_IRON);
 
-        $hours = $this->workManager->workedHours($kingdom);
+        $hours = $this->workManager->workedHours();
 
         $stack = null;
         switch ($resourceName) {

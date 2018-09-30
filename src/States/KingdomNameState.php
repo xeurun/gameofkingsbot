@@ -2,19 +2,14 @@
 
 namespace App\States;
 
-use App\Entity\Kingdom;
-use App\Entity\StructureType;
 use App\Entity\User;
 use App\Factory\ScreenFactory;
 use App\Interfaces\ScreenInterface;
-use App\Interfaces\StructureInterface;
 use App\Interfaces\TranslatorInterface;
 use App\Manager\BotManager;
 use App\Manager\KingdomManager;
-use App\Repository\StructureTypeRepository;
 use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Keyboard;
-use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Request;
 
 class KingdomNameState extends BaseState
@@ -63,9 +58,7 @@ class KingdomNameState extends BaseState
     }
 
     /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
-     * @throws ORMException
      */
     public function execute(): void
     {

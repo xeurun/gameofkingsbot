@@ -2,7 +2,10 @@
 
 namespace App\Screens;
 
+use App\Entity\User;
+use App\Factory\CallbackFactory;
 use App\Helper\CurrencyHelper;
+use App\Interfaces\AdviserInterface;
 use App\Interfaces\CallbackInterface;
 use App\Interfaces\ResourceInterface;
 use App\Interfaces\ScreenInterface;
@@ -49,12 +52,53 @@ class WarehouseScreen extends BaseScreen
     }
 
     /**
+     * @return bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function sendAdvice(): bool
+    {
+        $inlineKeyboard = new InlineKeyboard([
+            [
+                'text' => '✅ Продолжить',
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1)
+            ],
+            [
+                'text' => 'Достаточно ❌',
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0)
+            ],
+        ]);
+
+        $user = $this->botManager->getUser();
+        $gender = $this->botManager->getTranslator()->transChoice(
+            TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
+            $user->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+            [],
+            TranslatorInterface::TRANSLATOR_DOMAIN_STATE
+        );
+
+        $name = ScreenInterface::SCREEN_TREASURE;
+        $data = [
+            'chat_id' => $this->botManager->getUser()->getId(),
+            'text' => '*Советник*: ' . $gender . " «{$name}» " . ' нужен для хранения ресурсов вашего королевства, а также в него поступают все добытые ресурсы, но для того чтобы перенести их на склад нужно ваше личное присутствие, поэтому заглядывайте изредка и переносите добытые ресурсы',
+            'reply_markup' => $inlineKeyboard,
+            'parse_mode' => 'Markdown',
+        ];
+
+        $response = Request::sendMessage($data);
+
+        return $response->isOk();
+    }
+
+    /**
      * @inheritdoc
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
     {
         Request::sendMessage($this->getMessageData());
+        if ($this->botManager->getKingdom()->getAdviserState() === AdviserInterface::ADVISER_SHOW_WAREHOUSE_TUTORIAL) {
+            $this->sendAdvice();
+        }
     }
 
     /**
@@ -77,7 +121,7 @@ class WarehouseScreen extends BaseScreen
         $newStone = $this->resourceManager->getExtractedCountByResourceName(ResourceInterface::RESOURCE_STONE);
         $newIron = $this->resourceManager->getExtractedCountByResourceName(ResourceInterface::RESOURCE_IRON);
 
-        $hours = $this->workManager->workedHours($kingdom);
+        $hours = $this->workManager->workedHours();
 
         $maxGold = $this->kingdomManager->getMax(ResourceInterface::RESOURCE_GOLD);
         $maxFood = $this->kingdomManager->getMax(ResourceInterface::RESOURCE_FOOD);
@@ -89,11 +133,21 @@ class WarehouseScreen extends BaseScreen
             TranslatorInterface::TRANSLATOR_MESSAGE_WAREHOUSE_SCREEN_MESSAGE,
             [
                 '%title%' => $title,
-                '%gold%' => CurrencyHelper::costFormat($kingdom->getGold()),
-                '%food%' => CurrencyHelper::costFormat($kingdom->getFood()),
-                '%wood%' => CurrencyHelper::costFormat($kingdom->getWood()),
-                '%stone%' => CurrencyHelper::costFormat($kingdom->getStone()),
-                '%iron%' => CurrencyHelper::costFormat($kingdom->getIron()),
+                '%gold%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_GOLD)
+                ),
+                '%food%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_FOOD)
+                ),
+                '%wood%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_WOOD)
+                ),
+                '%stone%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_STONE)
+                ),
+                '%iron%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_IRON)
+                ),
                 '%maxGold%' => CurrencyHelper::costFormat($maxGold),
                 '%maxFood%' => CurrencyHelper::costFormat($maxFood),
                 '%maxWood%' => CurrencyHelper::costFormat($maxWood),

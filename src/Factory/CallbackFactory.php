@@ -10,7 +10,7 @@ use App\Callbacks\HireOrFirePeopleCallback;
 use App\Callbacks\IncreaseStructureLevelCallback;
 use App\Callbacks\MoveResourcesToWarehouseCallback;
 use App\Callbacks\RiseOrLowerTaxesCallback;
-use App\Callbacks\TutorialCallback;
+use App\Callbacks\AdviserCallback;
 use App\Interfaces\CallbackInterface;
 use App\Manager\BotManager;
 use Longman\TelegramBot\Entities\CallbackQuery;
@@ -44,8 +44,8 @@ class CallbackFactory
             case CallbackInterface::CALLBACK_CHANGE_STATE:
                 $state = $botManager->get(ChangeStateCallback::class);
                 break;
-            case CallbackInterface::CALLBACK_TUTORIAL:
-                $state = $botManager->get(TutorialCallback::class);
+            case CallbackInterface::CALLBACK_ADVISER:
+                $state = $botManager->get(AdviserCallback::class);
                 break;
             case CallbackInterface::CALLBACK_GET_INFO:
                 $state = $botManager->get(GetInfoCallback::class);
@@ -106,7 +106,7 @@ class CallbackFactory
             CallbackInterface::CALLBACK_MOVE_RESOURCES_TO_WAREHOUSE,
             CallbackInterface::CALLBACK_CHANGE_STATE,
             CallbackInterface::CALLBACK_INCREASE_STRUCTURE_LEVEL,
-            CallbackInterface::CALLBACK_TUTORIAL,
+            CallbackInterface::CALLBACK_ADVISER,
             CallbackInterface::CALLBACK_GET_INFO
         ];
     }

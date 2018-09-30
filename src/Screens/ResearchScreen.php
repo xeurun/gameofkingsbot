@@ -7,9 +7,7 @@ use App\Interfaces\CallbackInterface;
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\StructureInterface;
 use App\Interfaces\TranslatorInterface;
-use App\Responses\BackResponse;
 use Longman\TelegramBot\Entities\InlineKeyboard;
-use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 class ResearchScreen extends BaseScreen

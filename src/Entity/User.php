@@ -22,37 +22,30 @@ class User
      * @ORM\Column(type="integer")
      */
     private $id;
-
     /**
      * @ORM\Column(type="string", nullable=true, length=2)
      */
     private $lang;
-
     /**
      * @ORM\Column(type="string", nullable=true, length=5)
      */
     private $gender;
-
     /**
      * @ORM\Column(type="string", nullable=true, length=255)
      */
     private $name;
-
     /**
      * @ORM\Column(type="string", nullable=true, length=255)
      */
     private $username;
-
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $bonusDate;
-
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $state;
-
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Kingdom", mappedBy="user", orphanRemoval=true)
      */
@@ -62,7 +55,6 @@ class User
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="mainRefer")
      */
     private $refers;
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="childRefer")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")

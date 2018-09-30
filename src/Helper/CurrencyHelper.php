@@ -4,7 +4,11 @@ namespace App\Helper;
 
 class CurrencyHelper
 {
-    public static function costFormat($value)
+    /**
+     * @param $value
+     * @return string
+     */
+    public static function costFormat($value): string
     {
         if ($value >= 1000) {
             $x = round($value);

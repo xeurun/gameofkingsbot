@@ -45,8 +45,8 @@ interface CallbackInterface
      */
     public const CALLBACK_CHANGE_STATE = 'callback_change_state';
     /**
-     * Tutorial
+     * Adviser
      * @var string
      */
-    public const CALLBACK_TUTORIAL = 'callback_tutorial';
+    public const CALLBACK_ADVISER = 'callback_adviser';
 }

@@ -2,28 +2,18 @@
 
 namespace App\Callbacks;
 
-use App\Entity\Kingdom;
-use App\Entity\User;
 use App\Factory\CallbackFactory;
-use App\Interfaces\CallbackInterface;
 use App\Interfaces\ResourceInterface;
 use App\Interfaces\StructureInterface;
 use App\Interfaces\TaxesInterface;
 use App\Interfaces\WorkInterface;
-use App\Manager\BotManager;
-use App\Manager\ResourceManager;
-use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class GetInfoCallback extends BaseCallback
 {
     /**
      * @return ServerResponse
-     * @throws TelegramException
-     * @throws ORMException
      */
     public function execute(): ServerResponse
     {

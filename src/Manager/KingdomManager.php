@@ -10,7 +10,6 @@ use App\Interfaces\StructureInterface;
 use App\Interfaces\TaxesInterface;
 use App\Interfaces\WorkInterface;
 use App\Repository\StructureTypeRepository;
-use Symfony\Bundle\MakerBundle\Str;
 
 class KingdomManager
 {
@@ -58,7 +57,9 @@ class KingdomManager
         $kingdom = $this->botManager->getKingdom();
         $count = 0;
         foreach ($kingdom->getStructures() as $structure) {
-            $count += $structure->getLevel();
+            if ($structure->getType()->getCode() !== StructureInterface::STRUCTURE_TYPE_TERRITORY) {
+                $count += $structure->getLevel();
+            }
         }
 
         return $count;
@@ -70,7 +71,9 @@ class KingdomManager
     public function getTerritorySize()
     {
         $kingdom = $this->botManager->getKingdom();
-        return $this->level($kingdom, StructureInterface::STRUCTURE_TYPE_TERRITORY) * StructureInterface::STRUCTURE_TYPE_TERRITORY_ADD_SIZE;
+
+        return $this->level($kingdom, StructureInterface::STRUCTURE_TYPE_TERRITORY)
+            * StructureInterface::STRUCTURE_TYPE_TERRITORY_ADD_SIZE;
     }
 
     /**

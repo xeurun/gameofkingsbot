@@ -69,7 +69,7 @@ class GenericmessageCommand extends BaseCommand
                 }
 
                 if (null !== $screen) {
-                    $result = $screen->execute();
+                    $screen->execute();
                 }
             }
         }

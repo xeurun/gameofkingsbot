@@ -83,8 +83,8 @@ class IncreaseStructureLevelCallback extends BaseCallback
             }
 
             if ($build) {
-                if ($this->structureManager->checkAvailableResourceForBuyStructure($kingdom, $buildType)) {
-                    $this->structureManager->processBuyStructure($kingdom, $build);
+                if ($this->structureManager->checkAvailableResourceForBuyStructure($buildType)) {
+                    $this->structureManager->processBuyStructure( $build);
                     switch ($code) {
                         case StructureInterface::STRUCTURE_TYPE_CASTLE:
                             $text = 'Вы улучшили свою крепость!';

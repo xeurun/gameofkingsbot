@@ -2,24 +2,18 @@
 
 namespace App\States;
 
-use App\Entity\Kingdom;
-use App\Entity\StructureType;
 use App\Entity\User;
-use App\Factory\ScreenFactory;
 use App\Factory\StateFactory;
-use App\Interfaces\ScreenInterface;
 use App\Interfaces\StateInterface;
-use App\Interfaces\StructureInterface;
-use App\Manager\BotManager;
-use App\Manager\KingdomManager;
-use App\Repository\StructureTypeRepository;
 use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Keyboard;
-use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Request;
 
 class ChooseLangState extends BaseState
 {
+    /**
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
     public function preExecute(): void
     {
         $message = $this->botManager->getMessage();
@@ -55,9 +49,7 @@ class ChooseLangState extends BaseState
     }
 
     /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
-     * @throws ORMException
      */
     public function execute(): void
     {

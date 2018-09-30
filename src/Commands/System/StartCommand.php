@@ -69,7 +69,7 @@ class StartCommand extends BaseCommand
             }
 
             if (null !== $screen) {
-                $result = $screen->execute();
+                $screen->execute();
             }
         } else if (null !== $user->getState()) {
             $stateName = $user->getState();

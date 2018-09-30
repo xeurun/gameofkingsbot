@@ -13,83 +13,93 @@ final class Version20180923001401 extends AbstractMigration
     protected static $buildTypes = [
         [
             "'castle'",
-            100000,
-            100000,
-            100000,
-            100000,
-            1
+            1,
+            0,
+            10000,
+            15000,
+            100,
+            100
         ],
         [
             "'territory'",
+            2,
+            0,
             5000,
-            100000,
-            5000,
-            3500,
-            2
+            10000,
+            50,
+            50
         ],
         [
             "'lifehouse'",
-            1000,
-            20000,
-            500,
+            3,
+            0,
+            3000,
+            10000,
             50,
-            3
+            50
         ],
         [
             "'barn'",
+            4,
+            0,
+            3000,
             10000,
-            10000,
-            10000,
-            10000,
-            4
+            50,
+            50
         ],
         [
             "'sawmill'",
+            5,
+            0,
+            3000,
             10000,
-            10000,
-            10000,
-            10000,
-            5
+            50,
+            50
         ],
         [
             "'stonemason'",
+            6,
+            0,
+            3000,
             10000,
-            10000,
-            10000,
-            10000,
-            6
+            50,
+            50
         ],
         [
             "'smeltery'",
+            7,
+            0,
+            3000,
             10000,
-            10000,
-            10000,
-            10000,
-            7
-        ],
-        [
-            "'library'",
-            10000,
-            10000,
-            10000,
-            10000,
-            8
-        ],
-        [
-            "'market'",
-            10000,
-            10000,
-            10000,
-            10000,
-            9
+            50,
+            50
         ],
         [
             "'garrison'",
+            8,
+            0,
+            3000,
             10000,
-            10000,
-            10000,
-            10000,
-            10
+            50,
+            50
+        ],
+        [
+            "'library'",
+            9,
+            1,
+            100000,
+            100000,
+            100000,
+            100000
+        ],
+        [
+            "'market'",
+            10,
+            1,
+            100000,
+            100000,
+            100000,
+            100000,
         ]
     ];
 
@@ -104,7 +114,7 @@ final class Version20180923001401 extends AbstractMigration
         }
 
         $this->addSql(
-            'INSERT IGNORE INTO structure_type (code, gold_cost, wood_cost, stone_cost, iron_cost, order) VALUES '
+            'INSERT IGNORE INTO structure_type (code, order, max_level, gold_cost, wood_cost, stone_cost, iron_cost) VALUES '
             . implode(',', $values)
         );
     }

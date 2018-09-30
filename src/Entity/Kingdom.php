@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Interfaces\AdviserInterface;
 use App\Interfaces\ResourceInterface;
-use App\Interfaces\StructureInterface;
 use App\Interfaces\TaxesInterface;
 use App\Interfaces\WorkInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,78 +21,67 @@ class Kingdom
      * @ORM\Column(type="integer")
      */
     private $id;
-
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $name;
-
     /**
      * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
     private $food;
-
     /**
      * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
     private $wood;
-
     /**
      * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
     private $gold;
-
     /**
      * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
     private $stone;
-
     /**
      * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
     private $iron;
-
     /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
     private $onArmy;
-
     /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
     private $onFood;
-
     /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
     private $onWood;
-
     /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
     private $onStone;
-
     /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
     private $onIron;
-
     /**
      * @ORM\Column(type="smallint", options={"default": 0})
      */
     private $tax;
-
     /**
      * @ORM\Column(type="datetime", options={"default"="CURRENT_TIMESTAMP"})
      */
     private $grabResourcesDate;
-
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $adviserState;
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="kingdom")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $user;
-
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Structure", mappedBy="kingdom", cascade={"persist"}, orphanRemoval=true)
      */
@@ -103,21 +92,22 @@ class Kingdom
         $this->name = $kingdomName;
         $this->user = $user;
 
-        $this->setFood(ResourceInterface::INITIAL_FOOD);
-        $this->setWood(ResourceInterface::INITIAL_WOOD);
-        $this->setStone(ResourceInterface::INITIAL_STONE);
-        $this->setIron(ResourceInterface::INITIAL_IRON);
-        $this->setGold(ResourceInterface::INITIAL_GOLD);
+        $this->setResource(ResourceInterface::RESOURCE_FOOD, ResourceInterface::INITIAL_FOOD);
+        $this->setResource(ResourceInterface::RESOURCE_WOOD, ResourceInterface::INITIAL_WOOD);
+        $this->setResource(ResourceInterface::RESOURCE_STONE, ResourceInterface::INITIAL_STONE);
+        $this->setResource(ResourceInterface::RESOURCE_IRON, ResourceInterface::INITIAL_IRON);
+        $this->setResource(ResourceInterface::RESOURCE_GOLD, ResourceInterface::INITIAL_GOLD);
 
         $this->setTax(TaxesInterface::INITIAL_TAXES_LEVEL);
 
-        $this->setOnArmy(WorkInterface::INITIAL_ON_ARMY);
-        $this->setOnFood(WorkInterface::INITIAL_ON_FOOD);
-        $this->setOnWood(WorkInterface::INITIAL_ON_WOOD);
-        $this->setOnStone(WorkInterface::INITIAL_ON_STONE);
-        $this->setOnIron(WorkInterface::INITIAL_ON_IRON);
+        $this->setWorkerCount(WorkInterface::WORK_TYPE_ARMY, WorkInterface::INITIAL_ON_ARMY);
+        $this->setWorkerCount(WorkInterface::WORK_TYPE_FOOD, WorkInterface::INITIAL_ON_FOOD);
+        $this->setWorkerCount(WorkInterface::WORK_TYPE_WOOD, WorkInterface::INITIAL_ON_WOOD);
+        $this->setWorkerCount(WorkInterface::WORK_TYPE_STONE, WorkInterface::INITIAL_ON_STONE);
+        $this->setWorkerCount(WorkInterface::WORK_TYPE_IRON, WorkInterface::INITIAL_ON_IRON);
 
         $this->setGrabResourcesDate(new \DateTime('yesterday'));
+        $this->setAdviserState(AdviserInterface::ADVISER_SHOW_INITIAL_TUTORIAL);
 
         $this->structures = new ArrayCollection();
     }
@@ -147,62 +137,121 @@ class Kingdom
         return $this;
     }
 
-    public function getWood(): int
+    /**
+     * @param string $resourceType
+     * @return mixed
+     */
+    public function getResource(string $resourceType)
     {
-        return $this->wood;
+        switch ($resourceType) {
+            case ResourceInterface::RESOURCE_GOLD:
+                $value = $this->gold;
+                break;
+            case ResourceInterface::RESOURCE_FOOD:
+                $value = $this->food;
+                break;
+            case ResourceInterface::RESOURCE_WOOD:
+                $value = $this->wood;
+                break;
+            case ResourceInterface::RESOURCE_STONE:
+                $value = $this->stone;
+                break;
+            case ResourceInterface::RESOURCE_IRON:
+                $value = $this->iron;
+                break;
+            default:
+                throw new \InvalidArgumentException('Undefined resource type: ' . $resourceType);
+        }
+
+        return $value;
     }
 
-    public function setWood(int $wood): self
+    /**
+     * @param string $resourceType
+     * @param mixed $value
+     * @return self
+     */
+    public function setResource(string $resourceType, $value): self
     {
-        $this->wood = $wood;
+        switch ($resourceType) {
+            case ResourceInterface::RESOURCE_GOLD:
+                $this->gold = $value;
+                break;
+            case ResourceInterface::RESOURCE_FOOD:
+                $this->food = $value;
+                break;
+            case ResourceInterface::RESOURCE_WOOD:
+                $this->wood = $value;
+                break;
+            case ResourceInterface::RESOURCE_STONE:
+                $this->stone = $value;
+                break;
+            case ResourceInterface::RESOURCE_IRON:
+                $this->iron = $value;
+                break;
+            default:
+                throw new \InvalidArgumentException('Undefined resource type: ' . $resourceType);
+        }
 
         return $this;
     }
 
-    public function getFood(): int
+    /**
+     * @param string $workType
+     * @return int
+     */
+    public function getWorkerCount(string $workType): int
     {
-        return $this->food;
+        switch ($workType) {
+            case WorkInterface::WORK_TYPE_FOOD:
+                $value = $this->onFood;
+                break;
+            case WorkInterface::WORK_TYPE_WOOD:
+                $value = $this->onWood;
+                break;
+            case WorkInterface::WORK_TYPE_STONE:
+                $value = $this->onStone;
+                break;
+            case WorkInterface::WORK_TYPE_IRON:
+                $value = $this->onIron;
+                break;
+            case WorkInterface::WORK_TYPE_ARMY:
+                $value = $this->onArmy;
+                break;
+            default:
+                throw new \InvalidArgumentException('Undefined resource type: ' . $workType);
+        }
+
+        return $value;
     }
 
-    public function setFood(int $value): self
+    /**
+     * @param string $workType
+     * @param int $value
+     * @return self
+     */
+    public function setWorkerCount(string $workType, int $value): self
     {
-        $this->food = $value;
+        switch ($workType) {
+            case WorkInterface::WORK_TYPE_FOOD:
+                $this->onFood = $value;
+                break;
+            case WorkInterface::WORK_TYPE_WOOD:
+                $this->onWood = $value;
+                break;
+            case WorkInterface::WORK_TYPE_STONE:
+                $this->onStone = $value;
+                break;
+            case WorkInterface::WORK_TYPE_IRON:
+                $this->onIron = $value;
+                break;
+            case WorkInterface::WORK_TYPE_ARMY:
+                $this->onArmy = $value;
+                break;
+            default:
+                throw new \InvalidArgumentException('Undefined work type: ' . $workType);
+        }
 
-        return $this;
-    }
-
-    public function getGold(): int
-    {
-        return $this->gold;
-    }
-
-    public function setGold(int $gold): self
-    {
-        $this->gold = $gold;
-
-        return $this;
-    }
-
-    public function getStone(): int
-    {
-        return $this->stone;
-    }
-
-    public function setStone(int $stone): self
-    {
-        $this->stone = $stone;
-
-        return $this;
-    }
-
-    public function getIron(): int
-    {
-        return $this->iron;
-    }
-
-    public function setIron(int $value): self
-    {
-        $this->iron = $value;
         return $this;
     }
 
@@ -236,81 +285,17 @@ class Kingdom
     /**
      * @return mixed
      */
-    public function getOnArmy()
+    public function getAdviserState()
     {
-        return $this->onArmy;
+        return $this->adviserState;
     }
 
     /**
-     * @param mixed $onArmy
+     * @param mixed $adviserState
      */
-    public function setOnArmy($onArmy): void
+    public function setAdviserState($adviserState): void
     {
-        $this->onArmy = $onArmy;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOnFood(): int
-    {
-        return $this->onFood;
-    }
-
-    /**
-     * @param int $onFood
-     */
-    public function setOnFood(int $onFood): void
-    {
-        $this->onFood = $onFood;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOnIron(): int
-    {
-        return $this->onIron;
-    }
-
-    /**
-     * @param int $onIron
-     */
-    public function setOnIron(int $onIron): void
-    {
-        $this->onIron = $onIron;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOnStone(): int
-    {
-        return $this->onStone;
-    }
-
-    /**
-     * @param int $onStone
-     */
-    public function setOnStone(int $onStone): void
-    {
-        $this->onStone = $onStone;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOnWood(): int
-    {
-        return $this->onWood;
-    }
-
-    /**
-     * @param int $onWood
-     */
-    public function setOnWood(int $onWood): void
-    {
-        $this->onWood = $onWood;
+        $this->adviserState = $adviserState;
     }
 
     /**

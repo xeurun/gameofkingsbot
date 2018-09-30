@@ -11,7 +11,6 @@ use App\Screens\WarehouseScreen;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class MoveResourcesToWarehouseCallback extends BaseCallback
 {
@@ -48,19 +47,19 @@ class MoveResourcesToWarehouseCallback extends BaseCallback
     {
         $kingdom = $this->botManager->getKingdom();
 
-        $currentFood = $kingdom->getFood();
-        $currentGold = $kingdom->getGold();
-        $currentWood = $kingdom->getWood();
-        $currentStone = $kingdom->getStone();
-        $currentIron = $kingdom->getIron();
+        $currentFood = $kingdom->getResource(ResourceInterface::RESOURCE_FOOD);
+        $currentGold = $kingdom->getResource(ResourceInterface::RESOURCE_GOLD);
+        $currentWood = $kingdom->getResource(ResourceInterface::RESOURCE_WOOD);
+        $currentStone = $kingdom->getResource(ResourceInterface::RESOURCE_STONE);
+        $currentIron = $kingdom->getResource(ResourceInterface::RESOURCE_IRON);
 
         $this->resourceManager->moveExtractedResourcesToWarehouse();
 
-        $foodDiff = $kingdom->getFood() - $currentFood;
-        $goldDiff = $kingdom->getGold() - $currentGold;
-        $woodDiff = $kingdom->getWood() - $currentWood;
-        $stoneDiff = $kingdom->getStone() - $currentStone;
-        $ironDiff = $kingdom->getIron() - $currentIron;
+        $foodDiff = $kingdom->getResource(ResourceInterface::RESOURCE_FOOD) - $currentFood;
+        $goldDiff = $kingdom->getResource(ResourceInterface::RESOURCE_GOLD) - $currentGold;
+        $woodDiff = $kingdom->getResource(ResourceInterface::RESOURCE_WOOD) - $currentWood;
+        $stoneDiff = $kingdom->getResource(ResourceInterface::RESOURCE_STONE) - $currentStone;
+        $ironDiff = $kingdom->getResource(ResourceInterface::RESOURCE_IRON) - $currentIron;
 
         $subText = $this->botManager->getTranslator()->trans(
             CallbackInterface::CALLBACK_MOVE_RESOURCES_TO_WAREHOUSE,

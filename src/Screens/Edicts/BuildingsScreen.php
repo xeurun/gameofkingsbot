@@ -2,9 +2,12 @@
 
 namespace App\Screens\Edicts;
 
+use App\Entity\User;
 use App\Factory\CallbackFactory;
 use App\Helper\CurrencyHelper;
+use App\Interfaces\AdviserInterface;
 use App\Interfaces\CallbackInterface;
+use App\Interfaces\ResourceInterface;
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\TaxesInterface;
 use App\Interfaces\TranslatorInterface;
@@ -51,12 +54,54 @@ class BuildingsScreen extends BaseScreen
     }
 
     /**
+     * @return bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function sendAdvice(): bool
+    {
+        $inlineKeyboard = new InlineKeyboard([
+            [
+                'text' => '✅ Продолжить',
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1)
+            ],
+            [
+                'text' => 'Достаточно ❌',
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0)
+            ],
+        ]);
+
+        $user = $this->botManager->getUser();
+        $gender = $this->botManager->getTranslator()->transChoice(
+            TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
+            $user->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+            [],
+            TranslatorInterface::TRANSLATOR_DOMAIN_STATE
+        );
+
+        $name = ScreenInterface::SCREEN_BUILDINGS;
+        $data = [
+            'chat_id' => $this->botManager->getUser()->getId(),
+            'text' => '*Советник*: ' . $gender . " «{$name}» " . ' очень важная часть управления королевством, они влияют на размер вашего королевства, его уровень, количество ресурсов которые вмещает склад. 
+_(для более подробной информации о каждом строении нажмите на его название)_',
+            'reply_markup' => $inlineKeyboard,
+            'parse_mode' => 'Markdown',
+        ];
+
+        $response = Request::sendMessage($data);
+
+        return $response->isOk();
+    }
+
+    /**
      * @inheritdoc
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
     {
         Request::sendMessage($this->getMessageData());
+        if ($this->botManager->getKingdom()->getAdviserState() === AdviserInterface::ADVISER_SHOW_BUILDINGS_TUTORIAL) {
+            $this->sendAdvice();
+        }
     }
 
     /**
@@ -75,10 +120,18 @@ class BuildingsScreen extends BaseScreen
             TranslatorInterface::TRANSLATOR_MESSAGE_BUILDINGS_SCREEN_MESSAGE,
             [
                 '%title%' => $title,
-                '%gold%' => CurrencyHelper::costFormat($kingdom->getGold()),
-                '%wood%' => CurrencyHelper::costFormat($kingdom->getWood()),
-                '%stone%' => CurrencyHelper::costFormat($kingdom->getStone()),
-                '%iron%' => CurrencyHelper::costFormat($kingdom->getIron()),
+                '%gold%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_GOLD)
+                ),
+                '%wood%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_WOOD)
+                ),
+                '%stone%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_STONE)
+                ),
+                '%iron%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_IRON)
+                ),
                 '%size%' => $freeTerritorySize
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
@@ -94,17 +147,21 @@ class BuildingsScreen extends BaseScreen
             }
 
             $cost = [];
-            if ($buildType->getGoldCost() > 0) {
-                $cost[] = CurrencyHelper::costFormat($buildType->getGoldCost()) . ' 💰';
+            $goldCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_GOLD);
+            if ($goldCost > 0) {
+                $cost[] = CurrencyHelper::costFormat($goldCost) . ' 💰';
             }
-            if ($buildType->getWoodCost() > 0) {
-                $cost[] = CurrencyHelper::costFormat($buildType->getWoodCost()) . ' 🌲';
+            $woodCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_GOLD);
+            if ($woodCost > 0) {
+                $cost[] = CurrencyHelper::costFormat($woodCost) . ' 🌲';
             }
-            if ($buildType->getStoneCost() > 0) {
-                $cost[] = CurrencyHelper::costFormat($buildType->getStoneCost()) . ' ⛏';
+            $stoneCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_GOLD);
+            if ($stoneCost > 0) {
+                $cost[] = CurrencyHelper::costFormat($stoneCost) . ' ⛏';
             }
-            if ($buildType->getIronCost() > 0) {
-                $cost[] = CurrencyHelper::costFormat($buildType->getIronCost()) . ' 🔨';
+            $ironCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_GOLD);
+            if ($ironCost > 0) {
+                $cost[] = CurrencyHelper::costFormat($ironCost) . ' 🔨';
             }
 
             $costText = implode(', ', $cost);

@@ -14,7 +14,6 @@ class DiplomacyScreen extends BaseScreen
      */
     public function execute(): void
     {
-        $kingdom = $this->botManager->getKingdom();
         $title = ScreenInterface::SCREEN_DIPLOMACY;
         $text = $this->botManager->getTranslator()->trans(
             TranslatorInterface::TRANSLATOR_MESSAGE_DIPLOMACY_SCREEN_MESSAGE,

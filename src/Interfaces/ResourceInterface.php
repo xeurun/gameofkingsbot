@@ -34,15 +34,15 @@ interface ResourceInterface
     public const INITIAL_IRON_MAX = self::INITIAL_IRON * 5;
 
     /** @var int  */
-    public const EVERY_DAY_FOOD_BONUS = 500;
+    public const EVERY_DAY_FOOD_BONUS = 5000;
     /** @var int  */
-    public const EVERY_DAY_GOLD_BONUS = 500;
+    public const EVERY_DAY_GOLD_BONUS = 5000;
     /** @var int  */
     public const EVERY_DAY_WOOD_BONUS = 4000;
     /** @var int  */
-    public const EVERY_DAY_STONE_BONUS = 75;
+    public const EVERY_DAY_STONE_BONUS = 7500;
     /** @var int  */
-    public const EVERY_DAY_IRON_BONUS = 45;
+    public const EVERY_DAY_IRON_BONUS = 4500;
 
     /** @var string */
     public const RESOURCE_PEOPLE = 'resource_people';

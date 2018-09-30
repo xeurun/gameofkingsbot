@@ -17,7 +17,7 @@ interface ScreenInterface
     /** @var string */
     public const SCREEN_DIPLOMACY = '🔜 🤝 Дипломатия ⚔';
     /** @var string */
-    public const SCREEN_RESEARCH = '💡 Исследования';
+    public const SCREEN_RESEARCH = '🔜 💡 Исследования';
     /** @var string */
     public const SCREEN_BONUSES = '💎 Бонусы';
     /** @var string */

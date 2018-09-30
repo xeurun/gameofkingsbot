@@ -5,7 +5,9 @@ namespace App\Screens;
 use App\Entity\User;
 use App\Factory\CallbackFactory;
 use App\Helper\CurrencyHelper;
+use App\Interfaces\AdviserInterface;
 use App\Interfaces\CallbackInterface;
+use App\Interfaces\ResourceInterface;
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\StructureInterface;
 use App\Interfaces\TranslatorInterface;
@@ -15,15 +17,23 @@ use App\Manager\PeopleManager;
 use App\Manager\WorkManager;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\Keyboard;
-use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 class MainMenuScreen extends BaseScreen
 {
+    /** @var WorkManager  */
     protected $workManager;
+    /** @var PeopleManager  */
     protected $peopleManager;
+    /** @var KingdomManager  */
     protected $kingdomManager;
 
+    /**
+     * @param BotManager $botManager
+     * @param WorkManager $workManager
+     * @param PeopleManager $peopleManager
+     * @param KingdomManager $kingdomManager
+     */
     public function __construct(
         BotManager $botManager,
         WorkManager $workManager,
@@ -45,7 +55,9 @@ class MainMenuScreen extends BaseScreen
     {
         $this->sendTitle();
         $this->sendMessage();
-        $this->sendAdvice();
+        if ($this->botManager->getKingdom()->getAdviserState() === AdviserInterface::ADVISER_SHOW_INITIAL_TUTORIAL) {
+            $this->sendAdvice();
+        }
     }
 
     /**
@@ -57,17 +69,25 @@ class MainMenuScreen extends BaseScreen
         $inlineKeyboard = new InlineKeyboard([
             [
                 'text' => '✅ Да',
-                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_TUTORIAL, 1)
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1)
             ],
             [
                 'text' => 'Нет ❌',
-                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_TUTORIAL, 0)
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0)
             ],
         ]);
 
+        $user = $this->botManager->getUser();
+        $gender = $this->botManager->getTranslator()->transChoice(
+            TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
+            $user->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+            [],
+            TranslatorInterface::TRANSLATOR_DOMAIN_STATE
+        );
+
         $data = [
             'chat_id' => $this->botManager->getUser()->getId(),
-            'text' => '*Советник*: хочешь чтобы я подробно рассказал как управлять королевством?',
+            'text' => '*Советник*: ' . $gender . ' хотите чтобы я подробно рассказал как управлять королевством?',
             'reply_markup' => $inlineKeyboard,
             'parse_mode' => 'Markdown',
         ];
@@ -83,10 +103,21 @@ class MainMenuScreen extends BaseScreen
      */
     protected function sendMessage(): bool
     {
+        $response = Request::sendMessage($this->getMessageData());
+
+        return $response->isOk();
+    }
+
+    /**
+     * @return array
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function getMessageData(): array
+    {
         $kingdom = $this->botManager->getKingdom();
 
-        $eatHourly = $this->peopleManager->eat($kingdom);
-        $foodDay = round($kingdom->getFood() / $eatHourly);
+        $eatHourly = $this->peopleManager->eat();
+        $foodDay = round($kingdom->getResource(ResourceInterface::RESOURCE_FOOD) / $eatHourly);
 
         $level = $this->kingdomManager->level($kingdom, StructureInterface::STRUCTURE_TYPE_CASTLE);
         $territory = $this->kingdomManager->level($kingdom, StructureInterface::STRUCTURE_TYPE_TERRITORY);
@@ -97,7 +128,7 @@ class MainMenuScreen extends BaseScreen
             [
                 '%level%' => $level,
                 '%territory%' => $territory,
-                '%territorySize%' => $this->kingdomManager->getTerritorySize($kingdom),
+                '%territorySize%' => $this->kingdomManager->getTerritorySize(),
                 '%people%' => $this->botManager->getTranslator()->transChoice(
                     TranslatorInterface::TRANSLATOR_MESSAGE_PEOPLES,
                     $people,
@@ -114,11 +145,21 @@ class MainMenuScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
                     )
                 ),
-                '%gold%' => CurrencyHelper::costFormat($kingdom->getGold()),
-                '%food%' => CurrencyHelper::costFormat($kingdom->getFood()),
-                '%wood%' => CurrencyHelper::costFormat($kingdom->getWood()),
-                '%stone%' => CurrencyHelper::costFormat($kingdom->getStone()),
-                '%iron%' => CurrencyHelper::costFormat($kingdom->getIron()),
+                '%gold%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_GOLD)
+                ),
+                '%food%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_FOOD)
+                ),
+                '%wood%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_WOOD)
+                ),
+                '%stone%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_STONE)
+                ),
+                '%iron%' => CurrencyHelper::costFormat(
+                    $kingdom->getResource(ResourceInterface::RESOURCE_IRON)
+                ),
                 '%foodDay%' => $this->botManager->getTranslator()->transChoice(
                     TranslatorInterface::TRANSLATOR_MESSAGE_HOURS,
                     $foodDay,
@@ -154,16 +195,12 @@ class MainMenuScreen extends BaseScreen
             ],
         ]);
 
-        $data = [
+        return [
             'chat_id' => $kingdom->getUser()->getId(),
             'text' => $text,
             'reply_markup' => $inlineKeyboard,
             'parse_mode' => 'Markdown',
         ];
-
-        $response = Request::sendMessage($data);
-
-        return $response->isOk();
     }
 
     /**

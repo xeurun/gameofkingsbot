@@ -2,6 +2,9 @@
 
 namespace App\Screens;
 
+use App\Entity\User;
+use App\Factory\CallbackFactory;
+use App\Interfaces\AdviserInterface;
 use App\Interfaces\CallbackInterface;
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\TranslatorInterface;
@@ -11,12 +14,45 @@ use Longman\TelegramBot\Request;
 class BonusesScreen extends BaseScreen
 {
     /**
+     * @return bool
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function sendAdvice(): bool
+    {
+        $inlineKeyboard = new InlineKeyboard([
+            [
+                'text' => '✅ Продолжить',
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1)
+            ],
+            [
+                'text' => 'Достаточно ❌',
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0)
+            ],
+        ]);
+
+        $data = [
+            'chat_id' => $this->botManager->getUser()->getId(),
+            'text' => ' _Нам нравится делать подарки своим игрокам, поэтому каждый день к вашим услугам доступен наш вам подарок в виде игровых бонусов, приходите и забирайте!_ ',
+            'reply_markup' => $inlineKeyboard,
+            'parse_mode' => 'Markdown',
+        ];
+
+        $response = Request::sendMessage($data);
+
+        return $response->isOk();
+    }
+
+    /**
      * @inheritdoc
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
     {
         $this->sendMessage();
+
+        if ($this->botManager->getKingdom()->getAdviserState() === AdviserInterface::ADVISER_SHOW_BONUSES_TUTORIAL) {
+            $this->sendAdvice();
+        }
     }
 
     /**

@@ -11,7 +11,6 @@ use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class HireOrFirePeopleCallback extends BaseCallback
 {
@@ -22,6 +21,12 @@ class HireOrFirePeopleCallback extends BaseCallback
     /** @var WorkManager */
     protected $workManager;
 
+    /**
+     * @param BotManager $botManager
+     * @param PeopleManager $peopleManager
+     * @param WorkManager $workManager
+     * @param PeopleScreen $peopleScreen
+     */
     public function __construct(
         BotManager $botManager,
         PeopleManager $peopleManager,
@@ -63,7 +68,7 @@ class HireOrFirePeopleCallback extends BaseCallback
                     [],
                     \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
                 );
-                $this->workManager->hire($kingdom, $workType);
+                $kingdom->setWorkerCount($workType, $kingdom->getWorkerCount($workType) + 1);
             } else {
                 $text = $this->botManager->getTranslator()->trans(
                     \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_NO_HIRED_PEOPLE,
@@ -72,14 +77,14 @@ class HireOrFirePeopleCallback extends BaseCallback
                 );
             }
         } else {
-            $workerCount = $this->workManager->workerCount($kingdom, $workType);
+            $workerCount = $kingdom->getWorkerCount($workType);
             if ($workerCount > 0) {
                 $text = $this->botManager->getTranslator()->trans(
                     \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_FIRED_PEOPLE,
                     [],
                     \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
                 );
-                $this->workManager->fire($kingdom, $workType);
+                $kingdom->setWorkerCount($workType, $kingdom->getWorkerCount($workType) - 1);
             } else {
                 $text = $this->botManager->getTranslator()->trans(
                     \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_NO_FIRED_PEOPLE,

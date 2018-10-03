@@ -60,7 +60,7 @@ class StructureManager
 
         if (!\in_array($buildType->getCode(), [StructureInterface::STRUCTURE_TYPE_TERRITORY], true)
         ) {
-            $result = $freeTerritorySpace > $count;
+            $result = $freeTerritorySpace >= $count;
         } else {
             $result = true;
         }

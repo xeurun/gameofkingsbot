@@ -7,7 +7,7 @@
                 <target>*%count%*` человек`|*%count%*` человека`|*%count%*` человек`</target>
             </trans-unit>
             <trans-unit id="peoples_raw">
-                <source>peoples</source>
+                <source>peoples_raw</source>
                 <target>*%count%* человек|*%count%* человека|*%count%* человек</target>
             </trans-unit>
             <trans-unit id="hours">

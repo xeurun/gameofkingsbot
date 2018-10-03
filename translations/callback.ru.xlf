@@ -70,23 +70,23 @@
             </trans-unit>
             <trans-unit id="no_hired_people">
                 <source>no_hired_people</source>
-                <target>*Советник*: Нет свободных людей для работы *%gender%*</target>
+                <target>*Советник*: Нет свободных людей для работы *%gender%* постройте больше жилых домов</target>
             </trans-unit>
             <trans-unit id="has_not_free_space">
                 <source>has_not_free_space</source>
-                <target>*Советник*: Нет места для рабочих, постройте новые здания *%gender%*</target>
+                <target>*Советник*: Нет места для рабочих, постройте новые рабочие здания *%gender%*</target>
             </trans-unit>
             <trans-unit id="no_fired_people">
                 <source>no_fired_people</source>
-                <target>*Советник*: Некого увольнять %gender%!</target>
+                <target>*Советник*: Некого увольнять %gender%</target>
             </trans-unit>
             <trans-unit id="no_count_for_fire_people">
                 <source>no_count_for_fire_people</source>
-                <target>*Советник*: Нет такого количества рабочих чтобы их уволить %gender%!</target>
+                <target>*Советник*: Нет такого количества рабочих чтобы их уволить %gender%</target>
             </trans-unit>
             <trans-unit id="no_count_for_hire_people">
                 <source>no_count_for_hire_people</source>
-                <target>*Советник*: Нет такого количества свободных людей чтобы их нанять %gender%!</target>
+                <target>*Советник*: Нет такого количества свободных людей чтобы их нанять %gender% постройте больше жилых домов</target>
             </trans-unit>
             <trans-unit id="every_day_bonus_received">
                 <source>every_day_bonus_received</source>

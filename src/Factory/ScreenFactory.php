@@ -20,47 +20,67 @@ use Psr\Log\InvalidArgumentException;
 
 class ScreenFactory
 {
+    /** @var BotManager */
+    protected $botManager;
+
     /**
-     * @param string $screenName
-     * @param BotManager $botManager
-     * @return BaseScreen
+     * StateFactory constructor.
      */
-    public function create(string $screenName, BotManager $botManager): BaseScreen
+    public function __construct(BotManager $botManager)
+    {
+        $this->botManager = $botManager;
+    }
+
+    /**
+     * Create.
+     */
+    public function create(string $screenName): BaseScreen
     {
         switch ($screenName) {
             case ScreenInterface::SCREEN_MAIN_MENU:
             case ScreenInterface::SCREEN_BACK:
-                $screen = $botManager->get(MainMenuScreen::class);
+                $screen = $this->botManager->get(MainMenuScreen::class);
+
                 break;
             case ScreenInterface::SCREEN_EVENT:
-                $screen = $botManager->get(EventScreen::class);
+                $screen = $this->botManager->get(EventScreen::class);
+
                 break;
             case ScreenInterface::SCREEN_EDICTS:
-                $screen = $botManager->get(EdictsScreen::class);
+                $screen = $this->botManager->get(EdictsScreen::class);
+
                 break;
             case ScreenInterface::SCREEN_TREASURE:
-                $screen = $botManager->get(WarehouseScreen::class);
+                $screen = $this->botManager->get(WarehouseScreen::class);
+
                 break;
             case ScreenInterface::SCREEN_DIPLOMACY:
-                $screen = $botManager->get(DiplomacyScreen::class);
+                $screen = $this->botManager->get(DiplomacyScreen::class);
+
                 break;
             case ScreenInterface::SCREEN_RESEARCH:
-                $screen = $botManager->get(ResearchScreen::class);
+                $screen = $this->botManager->get(ResearchScreen::class);
+
                 break;
             case ScreenInterface::SCREEN_BONUSES:
-                $screen = $botManager->get(BonusesScreen::class);
+                $screen = $this->botManager->get(BonusesScreen::class);
+
                 break;
             case ScreenInterface::SCREEN_ACHIEVEMENTS:
-                $screen = $botManager->get(AchivementsScreen::class);
+                $screen = $this->botManager->get(AchivementsScreen::class);
+
                 break;
             case ScreenInterface::SCREEN_SETTINGS:
-                $screen = $botManager->get(SettingsScreen::class);
+                $screen = $this->botManager->get(SettingsScreen::class);
+
                 break;
             case ScreenInterface::SCREEN_BUILDINGS:
-                $screen = $botManager->get(BuildingsScreen::class);
+                $screen = $this->botManager->get(BuildingsScreen::class);
+
                 break;
             case ScreenInterface::SCREEN_PEOPLE:
-                $screen = $botManager->get(PeopleScreen::class);
+                $screen = $this->botManager->get(PeopleScreen::class);
+
                 break;
             default:
                 throw new InvalidArgumentException('Incorrect screen name: ' . $screenName);
@@ -70,8 +90,7 @@ class ScreenFactory
     }
 
     /**
-     * @param string $screenName
-     * @return bool
+     * Check type is available.
      */
     public function isAvailable(string $screenName): bool
     {
@@ -79,7 +98,7 @@ class ScreenFactory
     }
 
     /**
-     * @return array
+     * Get available type.
      */
     protected function getAvailable(): array
     {
@@ -95,7 +114,7 @@ class ScreenFactory
             ScreenInterface::SCREEN_ACHIEVEMENTS,
             ScreenInterface::SCREEN_SETTINGS,
             ScreenInterface::SCREEN_BUILDINGS,
-            ScreenInterface::SCREEN_PEOPLE
+            ScreenInterface::SCREEN_PEOPLE,
         ];
     }
 }

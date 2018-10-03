@@ -16,6 +16,10 @@ class User
     public const AVAILABLE_GENDER_KING = 'king';
     /** @var string */
     public const AVAILABLE_GENDER_QUEEN = 'queen';
+    /** @var string */
+    public const STATE_NAME_KEY = 'name';
+    /** @var string */
+    public const STATE_DATA_KEY = 'data';
 
     /**
      * @ORM\Id()
@@ -43,7 +47,7 @@ class User
      */
     private $bonusDate;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
     private $state;
     /**
@@ -61,6 +65,9 @@ class User
      */
     private $refer;
 
+    /**
+     * User constructor.
+     */
     public function __construct(\Longman\TelegramBot\Entities\User $user)
     {
         $this->id = $user->getId();
@@ -80,9 +87,6 @@ class User
         return $this->name;
     }
 
-    /**
-     * @param mixed $name
-     */
     public function setName($name): void
     {
         $this->name = $name;
@@ -93,9 +97,6 @@ class User
         return $this->username;
     }
 
-    /**
-     * @return string
-     */
     public function getLang(): string
     {
         return $this->lang;
@@ -108,9 +109,6 @@ class User
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getGender(): string
     {
         return $this->gender;
@@ -123,14 +121,24 @@ class User
         return $this;
     }
 
-    public function getState(): ?string
+    public function getState(): array
     {
-        return $this->state;
+        return $this->state ?? [];
     }
 
-    public function setState(?string $state): self
+    public function setState(?string $state, array $data = []): self
     {
-        $this->state = $state;
+        if (null !== $state) {
+            $this->state = [
+                self::STATE_NAME_KEY => $state,
+            ];
+
+            if (!empty($data)) {
+                $this->state[self::STATE_DATA_KEY] = $data;
+            }
+        } else {
+            $this->state = $state;
+        }
 
         return $this;
     }
@@ -143,12 +151,10 @@ class User
     public function setKingdom(Kingdom $kingdom): self
     {
         $this->kingdom = $kingdom;
+
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface|null
-     */
     public function getBonusDate(): ?\DateTimeInterface
     {
         return $this->bonusDate;
@@ -157,20 +163,15 @@ class User
     public function setBonusDate($bonusDate): self
     {
         $this->bonusDate = $bonusDate;
+
         return $this;
     }
 
-    /**
-     * @param User|null $value
-     */
     public function setRefer(?User $value): void
     {
         $this->refer = $value;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRefer()
     {
         return $this->refer;

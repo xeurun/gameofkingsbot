@@ -2,7 +2,7 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="ru" target-language="ru" datatype="plaintext" original="file.ext">
         <body>
-            <trans-unit id="1">
+            <trans-unit id="change_kingdom_name">
                 <source>change_kingdom_name</source>
                 <target>
 *Ваше желание - закон!*
@@ -10,7 +10,7 @@
 Пришлите новое название вашего королевства
                 </target>
             </trans-unit>
-            <trans-unit id="2">
+            <trans-unit id="callback_every_day_bonus">
                 <source>callback_every_day_bonus</source>
                 <target>
 `Спасибо что остаетесь с нами, вот ваша награда!`
@@ -22,13 +22,13 @@
 `🔨 Железа   - `*%iron%*
                 </target>
             </trans-unit>
-            <trans-unit id="3">
+            <trans-unit id="every_day_bonus_already_received">
                 <source>every_day_bonus_already_received</source>
                 <target>
 Сегодня вы уже получали ежедневный бонус!
                 </target>
             </trans-unit>
-            <trans-unit id="4">
+            <trans-unit id="callback_move_resources_to_warehouse">
                 <source>callback_move_resources_to_warehouse</source>
                 <target>
 `Пополнение склада!`
@@ -40,47 +40,59 @@
 `🔨 Железа    - `*%iron%*
                 </target>
             </trans-unit>
-            <trans-unit id="5">
+            <trans-unit id="raise_taxes">
                 <source>raise_taxes</source>
                 <target>увеличены</target>
             </trans-unit>
-            <trans-unit id="6">
+            <trans-unit id="lower_taxes">
                 <source>lower_taxes</source>
                 <target>уменьшены</target>
             </trans-unit>
-            <trans-unit id="7">
+            <trans-unit id="callback_raise_or_lower_taxes">
                 <source>callback_raise_or_lower_taxes</source>
                 <target>
 Налоги %status% до уровня %level%
                 </target>
             </trans-unit>
-            <trans-unit id="8">
+            <trans-unit id="taxes_level">
                 <source>taxes_level</source>
                 <target>
 {1} Низкий|{2} Средний|{3}Высокий|]3,Inf[Произвольный
                 </target>
             </trans-unit>
-            <trans-unit id="9">
+            <trans-unit id="hired_people">
                 <source>hired_people</source>
-                <target>+ 1</target>
+                <target>*Советник*: вы наняли %people% %workType% *%gender%*</target>
             </trans-unit>
-            <trans-unit id="10">
+            <trans-unit id="fired_people">
                 <source>fired_people</source>
-                <target>- 1</target>
+                <target>*Советник*: вы уволили %people% %workType% *%gender%*</target>
             </trans-unit>
-            <trans-unit id="11">
+            <trans-unit id="no_hired_people">
                 <source>no_hired_people</source>
-                <target>Некого нанимать или превышен лимит!</target>
+                <target>*Советник*: Нет свободных людей для работы *%gender%*</target>
             </trans-unit>
-            <trans-unit id="12">
+            <trans-unit id="has_not_free_space">
+                <source>has_not_free_space</source>
+                <target>*Советник*: Нет места для рабочих, постройте новые здания *%gender%*</target>
+            </trans-unit>
+            <trans-unit id="no_fired_people">
                 <source>no_fired_people</source>
-                <target>Некого увольнять!</target>
+                <target>*Советник*: Некого увольнять %gender%!</target>
             </trans-unit>
-            <trans-unit id="13">
+            <trans-unit id="no_count_for_fire_people">
+                <source>no_count_for_fire_people</source>
+                <target>*Советник*: Нет такого количества рабочих чтобы их уволить %gender%!</target>
+            </trans-unit>
+            <trans-unit id="no_count_for_hire_people">
+                <source>no_count_for_hire_people</source>
+                <target>*Советник*: Нет такого количества свободных людей чтобы их нанять %gender%!</target>
+            </trans-unit>
+            <trans-unit id="every_day_bonus_received">
                 <source>every_day_bonus_received</source>
                 <target>❤ Ежедневный бонус добавлен на ваш склад!</target>
             </trans-unit>
-            <trans-unit id="14">
+            <trans-unit id="extracted_resources_received">
                 <source>extracted_resources_received</source>
                 <target>Добытые ресурсы добавлены на склад!</target>
             </trans-unit>

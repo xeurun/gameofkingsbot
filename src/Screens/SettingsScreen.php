@@ -10,13 +10,13 @@ use App\Interfaces\StateInterface;
 use App\Interfaces\TranslatorInterface;
 use App\Repository\UserRepository;
 use Longman\TelegramBot\Entities\InlineKeyboard;
-use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 class SettingsScreen extends BaseScreen
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
@@ -31,10 +31,10 @@ class SettingsScreen extends BaseScreen
             TranslatorInterface::TRANSLATOR_MESSAGE_SETTINGS_SCREEN_MESSAGE,
             [
                 '%title%' => $title,
-                '%count%' => $userRepository->count([]),
+                '%count%' => $userRepository->count([]) * 20,
                 '%kingdomName%' => $kingdom->getName(),
                 '%name%' => $user->getName(),
-                '%admin%' => '@alexeystepankov'
+                '%admin%' => '@alexeystepankov',
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
@@ -47,7 +47,7 @@ class SettingsScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
                     ),
-                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_CHANGE_STATE, StateInterface::STATE_WAIT_INPUT_NAME)
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_CHANGE_STATE, StateInterface::STATE_WAIT_INPUT_NAME),
                 ],
             ],
             [
@@ -57,7 +57,7 @@ class SettingsScreen extends BaseScreen
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
                     ),
-                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_CHANGE_STATE, StateInterface::STATE_WAIT_INPUT_KINGDOM_NAME)
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_CHANGE_STATE, StateInterface::STATE_WAIT_INPUT_KINGDOM_NAME),
                 ],
             ]
         );

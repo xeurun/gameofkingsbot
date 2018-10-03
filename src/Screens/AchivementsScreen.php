@@ -9,7 +9,8 @@ use Longman\TelegramBot\Request;
 class AchivementsScreen extends BaseScreen
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
@@ -19,7 +20,7 @@ class AchivementsScreen extends BaseScreen
         $text = $this->botManager->getTranslator()->trans(
             TranslatorInterface::TRANSLATOR_MESSAGE_ACHIVEMENTS_SCREEN_MESSAGE,
             [
-                '%title%' => $title
+                '%title%' => $title,
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );

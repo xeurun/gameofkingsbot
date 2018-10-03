@@ -18,10 +18,6 @@ class EveryDayBonusCallback extends BaseCallback
     /** @var ResourceManager */
     protected $resourceManager;
 
-    /**
-     * @param BotManager $botManager
-     * @param ResourceManager $resourceManager
-     */
     public function __construct(
         BotManager $botManager,
         ResourceManager $resourceManager
@@ -31,7 +27,6 @@ class EveryDayBonusCallback extends BaseCallback
     }
 
     /**
-     * @return ServerResponse
      * @throws TelegramException
      * @throws ORMException
      */
@@ -43,7 +38,6 @@ class EveryDayBonusCallback extends BaseCallback
     }
 
     /**
-     * @return array
      * @throws
      */
     public function requestEveryDayBonus(): array
@@ -55,7 +49,7 @@ class EveryDayBonusCallback extends BaseCallback
 
         $data = [
             'callback_query_id' => $this->callbackQuery->getId(),
-            'show_alert' => false
+            'show_alert' => false,
         ];
 
         if (!$user->getBonusDate() ||
@@ -82,7 +76,7 @@ class EveryDayBonusCallback extends BaseCallback
                     '%food%' => CurrencyHelper::costFormat($foodDiff),
                     '%wood%' => CurrencyHelper::costFormat($woodDiff),
                     '%stone%' => CurrencyHelper::costFormat($stoneDiff),
-                    '%iron%' => CurrencyHelper::costFormat($ironDiff)
+                    '%iron%' => CurrencyHelper::costFormat($ironDiff),
                 ],
                 TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
             );

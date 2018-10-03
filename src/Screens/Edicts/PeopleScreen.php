@@ -22,11 +22,11 @@ use Longman\TelegramBot\Request;
 
 class PeopleScreen extends BaseScreen
 {
-    /** @var WorkManager  */
+    /** @var WorkManager */
     protected $workManager;
     /** @var KingdomManager */
     protected $kingdomManager;
-    /** @var PeopleManager  */
+    /** @var PeopleManager */
     protected $peopleManager;
 
     public function __construct(
@@ -40,8 +40,8 @@ class PeopleScreen extends BaseScreen
         $this->peopleManager = $peopleManager;
         parent::__construct($botManager);
     }
+
     /**
-     * @return bool
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected function sendAdvice(): bool
@@ -49,18 +49,18 @@ class PeopleScreen extends BaseScreen
         $inlineKeyboard = new InlineKeyboard([
             [
                 'text' => '✅ Продолжить',
-                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1)
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1),
             ],
             [
                 'text' => 'Достаточно ❌',
-                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0)
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0),
             ],
         ]);
 
         $user = $this->botManager->getUser();
         $gender = $this->botManager->getTranslator()->transChoice(
             TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
-            $user->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+            User::AVAILABLE_GENDER_KING === $user->getGender() ? 1 : 0,
             [],
             TranslatorInterface::TRANSLATOR_DOMAIN_STATE
         );
@@ -80,19 +80,19 @@ _(для более подробной информации о каждом ти
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
     {
         Request::sendMessage($this->getMessageData());
-        if ($this->botManager->getKingdom()->getAdviserState() === AdviserInterface::ADVISER_SHOW_PEOPLE_TUTORIAL) {
+        if (AdviserInterface::ADVISER_SHOW_PEOPLE_TUTORIAL === $this->botManager->getKingdom()->getAdviserState()) {
             $this->sendAdvice();
         }
     }
 
     /**
-     * @return array
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function getMessageData(): array
@@ -108,7 +108,6 @@ _(для более подробной информации о каждом ти
         $woodHourly = $this->workManager->getSalary(WorkInterface::WORK_TYPE_WOOD);
         $stoneHourly = $this->workManager->getSalary(WorkInterface::WORK_TYPE_STONE);
         $ironHourly = $this->workManager->getSalary(WorkInterface::WORK_TYPE_IRON);
-
 
         $maxOnArmy = $this->kingdomManager->getMaxOn(WorkInterface::WORK_TYPE_ARMY);
         $maxOnFood = $this->kingdomManager->getMaxOn(WorkInterface::WORK_TYPE_FOOD);
@@ -127,7 +126,7 @@ _(для более подробной информации о каждом ти
                     TranslatorInterface::TRANSLATOR_MESSAGE_PEOPLES,
                     $people,
                     [
-                        '%count%' => $people
+                        '%count%' => $people,
                     ],
                     TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                 ),
@@ -159,10 +158,10 @@ _(для более подробной информации о каждом ти
                     TranslatorInterface::TRANSLATOR_MESSAGE_PEOPLES,
                     $free,
                     [
-                        '%count%' => $free
+                        '%count%' => $free,
                     ],
                     TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
-                )
+                ),
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
@@ -178,7 +177,7 @@ _(для более подробной информации о каждом ти
                     'callback_data' => CallbackFactory::pack(
                         CallbackInterface::CALLBACK_GET_INFO,
                         TaxesInterface::TAXES
-                    )
+                    ),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -189,7 +188,7 @@ _(для более подробной информации о каждом ти
                     'callback_data' => CallbackFactory::pack(
                         CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES,
                         0
-                    )
+                    ),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -200,7 +199,7 @@ _(для более подробной информации о каждом ти
                     'callback_data' => CallbackFactory::pack(
                         CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES,
                         1
-                    )
+                    ),
                 ],
             ],
             [
@@ -213,7 +212,7 @@ _(для более подробной информации о каждом ти
                     'callback_data' => CallbackFactory::pack(
                         CallbackInterface::CALLBACK_GET_INFO,
                         WorkInterface::WORK_TYPE_FOOD
-                    )
+                    ),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -225,7 +224,7 @@ _(для более подробной информации о каждом ти
                         CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
                         WorkInterface::WORK_TYPE_FOOD,
                         0
-                    )
+                    ),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -237,7 +236,7 @@ _(для более подробной информации о каждом ти
                         CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
                         WorkInterface::WORK_TYPE_FOOD,
                         1
-                    )
+                    ),
                 ],
             ],
             [
@@ -250,7 +249,7 @@ _(для более подробной информации о каждом ти
                     'callback_data' => CallbackFactory::pack(
                         CallbackInterface::CALLBACK_GET_INFO,
                         WorkInterface::WORK_TYPE_WOOD
-                    )
+                    ),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -262,7 +261,7 @@ _(для более подробной информации о каждом ти
                         CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
                         WorkInterface::WORK_TYPE_WOOD,
                         0
-                    )
+                    ),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -274,7 +273,7 @@ _(для более подробной информации о каждом ти
                         CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
                         WorkInterface::WORK_TYPE_WOOD,
                         1
-                    )
+                    ),
                 ],
             ],
             [
@@ -287,7 +286,7 @@ _(для более подробной информации о каждом ти
                     'callback_data' => CallbackFactory::pack(
                         CallbackInterface::CALLBACK_GET_INFO,
                         WorkInterface::WORK_TYPE_STONE
-                    )
+                    ),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -299,7 +298,7 @@ _(для более подробной информации о каждом ти
                         CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
                         WorkInterface::WORK_TYPE_STONE,
                         0
-                    )
+                    ),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -311,7 +310,7 @@ _(для более подробной информации о каждом ти
                         CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
                         WorkInterface::WORK_TYPE_STONE,
                         1
-                    )
+                    ),
                 ],
             ],
             [
@@ -324,7 +323,7 @@ _(для более подробной информации о каждом ти
                     'callback_data' => CallbackFactory::pack(
                         CallbackInterface::CALLBACK_GET_INFO,
                         WorkInterface::WORK_TYPE_IRON
-                    )
+                    ),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -336,7 +335,7 @@ _(для более подробной информации о каждом ти
                         CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
                         WorkInterface::WORK_TYPE_IRON,
                         0
-                    )
+                    ),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -348,7 +347,7 @@ _(для более подробной информации о каждом ти
                         CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
                         WorkInterface::WORK_TYPE_IRON,
                         1
-                    )
+                    ),
                 ],
             ],
             [
@@ -361,7 +360,7 @@ _(для более подробной информации о каждом ти
                     'callback_data' => CallbackFactory::pack(
                         CallbackInterface::CALLBACK_GET_INFO,
                         WorkInterface::WORK_TYPE_ARMY
-                    )
+                    ),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -373,7 +372,7 @@ _(для более подробной информации о каждом ти
                         CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
                         WorkInterface::WORK_TYPE_ARMY,
                         0
-                    )
+                    ),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -385,7 +384,7 @@ _(для более подробной информации о каждом ти
                         CallbackInterface::CALLBACK_HIRE_OR_FIRE_PEOPLE,
                         WorkInterface::WORK_TYPE_ARMY,
                         1
-                    )
+                    ),
                 ],
             ]
         );

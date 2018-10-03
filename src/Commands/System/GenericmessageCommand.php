@@ -3,6 +3,7 @@
 namespace App\Commands\System;
 
 use App\Entity\Kingdom;
+use App\Entity\User;
 use App\Factory\ScreenFactory;
 use App\Factory\StateFactory;
 use App\Manager\BotManager;
@@ -12,7 +13,7 @@ use Longman\TelegramBot\Request;
 class GenericmessageCommand extends BaseCommand
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(BotManager $botManager, Update $update = null)
     {
@@ -24,10 +25,11 @@ class GenericmessageCommand extends BaseCommand
     }
 
     /**
-     * Command execute method
+     * Command execute method.
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -39,20 +41,19 @@ class GenericmessageCommand extends BaseCommand
         $message = $botManager->getMessage();
         if ($message) {
             $user = $botManager->getUser();
-            $stateName = $user->getState();
+            $state = $user->getState();
+            $stateName = $state[User::STATE_NAME_KEY] ?? null;
+
             if (null !== $stateName) {
-                $state = null;
+                $stateStrategy = null;
                 /** @var StateFactory $stateFactory */
                 $stateFactory = $botManager->get(StateFactory::class);
                 if ($stateFactory->isAvailable($stateName)) {
-                    $state = $stateFactory->create(
-                        $stateName,
-                        $botManager
-                    );
+                    $stateStrategy = $stateFactory->create($stateName);
                 }
 
-                if (null !== $state) {
-                    $state->execute();
+                if (null !== $stateStrategy) {
+                    $stateStrategy->execute($message);
                 }
             }
 
@@ -62,10 +63,7 @@ class GenericmessageCommand extends BaseCommand
                 $screenFactory = $botManager->get(ScreenFactory::class);
                 $screenName = $message->getText();
                 if ($screenFactory->isAvailable($screenName)) {
-                    $screen = $screenFactory->create(
-                        $screenName,
-                        $botManager
-                    );
+                    $screen = $screenFactory->create($screenName);
                 }
 
                 if (null !== $screen) {

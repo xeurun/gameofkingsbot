@@ -134,30 +134,32 @@ class Kingdom
     public function changeName(string $value): self
     {
         $this->name = $value;
+
         return $this;
     }
 
-    /**
-     * @param string $resourceType
-     * @return mixed
-     */
     public function getResource(string $resourceType)
     {
         switch ($resourceType) {
             case ResourceInterface::RESOURCE_GOLD:
                 $value = $this->gold;
+
                 break;
             case ResourceInterface::RESOURCE_FOOD:
                 $value = $this->food;
+
                 break;
             case ResourceInterface::RESOURCE_WOOD:
                 $value = $this->wood;
+
                 break;
             case ResourceInterface::RESOURCE_STONE:
                 $value = $this->stone;
+
                 break;
             case ResourceInterface::RESOURCE_IRON:
                 $value = $this->iron;
+
                 break;
             default:
                 throw new \InvalidArgumentException('Undefined resource type: ' . $resourceType);
@@ -166,28 +168,28 @@ class Kingdom
         return $value;
     }
 
-    /**
-     * @param string $resourceType
-     * @param mixed $value
-     * @return self
-     */
     public function setResource(string $resourceType, $value): self
     {
         switch ($resourceType) {
             case ResourceInterface::RESOURCE_GOLD:
                 $this->gold = $value;
+
                 break;
             case ResourceInterface::RESOURCE_FOOD:
                 $this->food = $value;
+
                 break;
             case ResourceInterface::RESOURCE_WOOD:
                 $this->wood = $value;
+
                 break;
             case ResourceInterface::RESOURCE_STONE:
                 $this->stone = $value;
+
                 break;
             case ResourceInterface::RESOURCE_IRON:
                 $this->iron = $value;
+
                 break;
             default:
                 throw new \InvalidArgumentException('Undefined resource type: ' . $resourceType);
@@ -196,27 +198,28 @@ class Kingdom
         return $this;
     }
 
-    /**
-     * @param string $workType
-     * @return int
-     */
     public function getWorkerCount(string $workType): int
     {
         switch ($workType) {
             case WorkInterface::WORK_TYPE_FOOD:
                 $value = $this->onFood;
+
                 break;
             case WorkInterface::WORK_TYPE_WOOD:
                 $value = $this->onWood;
+
                 break;
             case WorkInterface::WORK_TYPE_STONE:
                 $value = $this->onStone;
+
                 break;
             case WorkInterface::WORK_TYPE_IRON:
                 $value = $this->onIron;
+
                 break;
             case WorkInterface::WORK_TYPE_ARMY:
                 $value = $this->onArmy;
+
                 break;
             default:
                 throw new \InvalidArgumentException('Undefined resource type: ' . $workType);
@@ -225,28 +228,28 @@ class Kingdom
         return $value;
     }
 
-    /**
-     * @param string $workType
-     * @param int $value
-     * @return self
-     */
     public function setWorkerCount(string $workType, int $value): self
     {
         switch ($workType) {
             case WorkInterface::WORK_TYPE_FOOD:
                 $this->onFood = $value;
+
                 break;
             case WorkInterface::WORK_TYPE_WOOD:
                 $this->onWood = $value;
+
                 break;
             case WorkInterface::WORK_TYPE_STONE:
                 $this->onStone = $value;
+
                 break;
             case WorkInterface::WORK_TYPE_IRON:
                 $this->onIron = $value;
+
                 break;
             case WorkInterface::WORK_TYPE_ARMY:
                 $this->onArmy = $value;
+
                 break;
             default:
                 throw new \InvalidArgumentException('Undefined work type: ' . $workType);
@@ -260,18 +263,11 @@ class Kingdom
         return $this->user;
     }
 
-    /**
-     * @return int
-     */
     public function getTax(): int
     {
         return $this->tax;
     }
 
-    /**
-     * @param mixed $tax
-     * @return self
-     */
     public function setTax($tax): self
     {
         if ($tax <= 0) {
@@ -279,28 +275,20 @@ class Kingdom
         }
 
         $this->tax = $tax;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getAdviserState()
     {
         return $this->adviserState;
     }
 
-    /**
-     * @param mixed $adviserState
-     */
     public function setAdviserState($adviserState): void
     {
         $this->adviserState = $adviserState;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
     public function getGrabResourcesDate(): \DateTimeInterface
     {
         return $this->grabResourcesDate;
@@ -309,13 +297,10 @@ class Kingdom
     public function setGrabResourcesDate($grabResourcesDate): self
     {
         $this->grabResourcesDate = $grabResourcesDate;
+
         return $this;
     }
 
-    /**
-     * @param string $structureTypeCode
-     * @return Structure|null
-     */
     public function getStructure(string $structureTypeCode): ?Structure
     {
         foreach ($this->getStructures() as $structure) {

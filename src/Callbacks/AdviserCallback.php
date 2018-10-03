@@ -7,16 +7,11 @@ use App\Factory\CallbackFactory;
 use App\Interfaces\AdviserInterface;
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\TranslatorInterface;
-use App\Manager\BotManager;
-use App\Screens\MainMenuScreen;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 class AdviserCallback extends BaseCallback
 {
-    /**
-     * @return ServerResponse
-     */
     public function execute(): ServerResponse
     {
         $data = $this->tutorial();
@@ -25,21 +20,19 @@ class AdviserCallback extends BaseCallback
     }
 
     /**
-     * @return array
      * @throws
      */
     public function tutorial(): array
     {
         $kingdom = $this->botManager->getKingdom();
-        $message = $this->callbackQuery->getMessage();
         $callbackData = CallbackFactory::getData($this->callbackQuery);
         $c = $callbackData[1];
         $data = [
             'chat_id' => $this->botManager->getUser()->getId(),
-            'message_id' => $message->getMessageId(),
-            'parse_mode' => 'Markdown'
+            'message_id' => $this->message->getMessageId(),
+            'parse_mode' => 'Markdown',
         ];
-        if ($c === '1') {
+        if ('1' === $c) {
             switch ($kingdom->getAdviserState()) {
                 case AdviserInterface::ADVISER_SHOW_INITIAL_TUTORIAL:
                     $name = ScreenInterface::SCREEN_TREASURE;
@@ -49,6 +42,7 @@ class AdviserCallback extends BaseCallback
 _(сделать это вы можете нажав соответствующую кнопку ниже)_
 TEXT;
                     $kingdom->setAdviserState(AdviserInterface::ADVISER_SHOW_WAREHOUSE_TUTORIAL);
+
                     break;
                 case AdviserInterface::ADVISER_SHOW_WAREHOUSE_TUTORIAL:
                     $name = ScreenInterface::SCREEN_EDICTS;
@@ -58,6 +52,7 @@ TEXT;
 _(сделать это вы можете нажав соответствующую кнопку ниже)_
 TEXT;
                     $kingdom->setAdviserState(AdviserInterface::ADVISER_SHOW_EDICTS_TUTORIAL);
+
                     break;
                 case AdviserInterface::ADVISER_SHOW_EDICTS_TUTORIAL:
                     $name = ScreenInterface::SCREEN_BUILDINGS;
@@ -67,6 +62,7 @@ TEXT;
 _(нажмите соответствующую кнопку ниже)_
 TEXT;
                     $kingdom->setAdviserState(AdviserInterface::ADVISER_SHOW_BUILDINGS_TUTORIAL);
+
                     break;
                 case AdviserInterface::ADVISER_SHOW_BUILDINGS_TUTORIAL:
                     $name = ScreenInterface::SCREEN_PEOPLE;
@@ -76,6 +72,7 @@ TEXT;
 _(нажмите соответствующую кнопку ниже)_
 TEXT;
                     $kingdom->setAdviserState(AdviserInterface::ADVISER_SHOW_PEOPLE_TUTORIAL);
+
                     break;
                 case AdviserInterface::ADVISER_SHOW_PEOPLE_TUTORIAL:
                     $name = ScreenInterface::SCREEN_BONUSES;
@@ -86,11 +83,12 @@ TEXT;
 _(вернитесь на главное меню нажав кнопку {$back}, далее нажмите ниже кнопку {$name})_
 TEXT;
                     $kingdom->setAdviserState(AdviserInterface::ADVISER_SHOW_BONUSES_TUTORIAL);
+
                     break;
                 case AdviserInterface::ADVISER_SHOW_BONUSES_TUTORIAL:
                     $gender = $this->botManager->getTranslator()->transChoice(
                         TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
-                        $this->botManager->getUser()->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+                        User::AVAILABLE_GENDER_KING === $this->botManager->getUser()->getGender() ? 1 : 0,
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_STATE
                     );
@@ -101,6 +99,7 @@ TEXT;
 _(пункты со знаком 🔜 находятся в разработке, мы проинформируем вас когда закончим над ними работать)_
 TEXT;
                     $kingdom->setAdviserState(null);
+
                     break;
 
             }
@@ -115,7 +114,7 @@ TEXT;
 
         $data = [
             'callback_query_id' => $this->callbackQuery->getId(),
-            'show_alert' => false
+            'show_alert' => false,
         ];
 
         $data['text'] = 'Как прикажете!';

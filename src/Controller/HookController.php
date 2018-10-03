@@ -18,10 +18,6 @@ class HookController extends AbstractController
     /** @var EntityManagerInterface */
     protected $entityManager;
 
-    /**
-     * @param BotManager $botManager
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(BotManager $botManager, EntityManagerInterface $entityManager)
     {
         $this->botManager = $botManager;
@@ -62,7 +58,7 @@ class HookController extends AbstractController
             $certPath = getenv('CERT_PATH');
             $data = [
                 'max_connections' => 100,
-                'allowed_updates' => ['message', 'inline_query', 'callback_query']
+                'allowed_updates' => ['message', 'inline_query', 'callback_query'],
             ];
 
             if (!empty($certPath)) {

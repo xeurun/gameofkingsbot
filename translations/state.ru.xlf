@@ -48,6 +48,56 @@ _(пришлите сообщение с названием вашего кор�
 _(пришлите сообщение с желаемым именем, оно будет использовано в диалогах, в дальнейшем вы сможете его изменить)_
                 </target>
             </trans-unit>
+            <trans-unit id="input_structure_count_for_buy">
+                <source>input_structure_count_for_buy</source>
+                <target>
+*Советник*: сколько вы хотите купить *%gender%*?
+_(пришлите сообщение с количеством для покупки)_
+                </target>
+            </trans-unit>
+            <trans-unit id="input_people_count_for_hire_or_fire">
+                <source>input_people_count_for_hire_or_fire</source>
+                <target>
+*Советник*: сколько людей вы хотите %type% %workType% *%gender%*?
+_(пришлите сообщение с количеством людей которых необходимо %type%)_
+                </target>
+            </trans-unit>
+            <trans-unit id="castle_level_up">
+                <source>castle_level_up</source>
+                <target>
+*Советник*: вы улучшили свою крепость *%gender%*
+                </target>
+            </trans-unit>
+            <trans-unit id="territory_level_up">
+                <source>territory_level_up</source>
+                <target>
+*Советник*: вы расширили свою территорию *%gender%*
+                </target>
+            </trans-unit>
+            <trans-unit id="structure_level_up">
+                <source>structure_level_up</source>
+                <target>
+*Советник*: вы построили новые здания *%gender%*
+                </target>
+            </trans-unit>
+            <trans-unit id="no_have_free_space">
+                <source>no_have_free_space</source>
+                <target>
+*Советник*: недостаточно территории для постройки *%gender%*
+                </target>
+            </trans-unit>
+            <trans-unit id="no_have_available_resources">
+                <source>no_have_available_resources</source>
+                <target>
+*Советник*: недостаточно ресурсов для постройки *%gender%*
+                </target>
+            </trans-unit>
+            <trans-unit id="no_have_free_space_and_available_resources">
+                <source>no_have_free_space_and_available_resources</source>
+                <target>
+*Советник*: недостаточно ресурсов и территории для постройки *%gender%*
+                </target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

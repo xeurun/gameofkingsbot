@@ -2,7 +2,11 @@
 
 namespace App\Callbacks;
 
+use App\Entity\User;
 use App\Factory\CallbackFactory;
+use App\Factory\StateFactory;
+use App\Interfaces\StateInterface;
+use App\Interfaces\TranslatorInterface;
 use App\Manager\BotManager;
 use App\Manager\PeopleManager;
 use App\Manager\WorkManager;
@@ -20,12 +24,11 @@ class HireOrFirePeopleCallback extends BaseCallback
     protected $peopleManager;
     /** @var WorkManager */
     protected $workManager;
+    /** @var array */
+    protected $callbackData;
 
     /**
-     * @param BotManager $botManager
-     * @param PeopleManager $peopleManager
-     * @param WorkManager $workManager
-     * @param PeopleScreen $peopleScreen
+     * HireOrFirePeopleCallback constructor.
      */
     public function __construct(
         BotManager $botManager,
@@ -38,77 +41,99 @@ class HireOrFirePeopleCallback extends BaseCallback
         $this->peopleScreen = $peopleScreen;
 
         parent::__construct($botManager);
+
+        $this->callbackData = CallbackFactory::getData($this->callbackQuery);
     }
 
     /**
-     * @return ServerResponse
      * @throws TelegramException
      * @throws ORMException
      */
     public function execute(): ServerResponse
     {
-        $data = $this->hireOrFirePeople();
-        return Request::answerCallbackQuery($data);
-    }
+        $user = $this->botManager->getUser();
+        $stateName = StateInterface::STATE_WAIT_INPUT_PEOPLE_COUNT_FOR_HIRE_OR_FIRE;
 
-    /**
-     * @return array
-     * @throws TelegramException
-     */
-    public function hireOrFirePeople(): array
-    {
-        $kingdom = $this->botManager->getKingdom();
-
-        $callbackData = CallbackFactory::getData($this->callbackQuery);
-        $workType = $callbackData[1];
-        if ($callbackData[2] === '1') {
-            if ($this->workManager->free() > 0 && $this->workManager->checkLimit($workType)) {
-                $text = $this->botManager->getTranslator()->trans(
-                    \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_HIRED_PEOPLE,
-                    [],
-                    \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
-                );
-                $kingdom->setWorkerCount($workType, $kingdom->getWorkerCount($workType) + 1);
-            } else {
-                $text = $this->botManager->getTranslator()->trans(
-                    \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_NO_HIRED_PEOPLE,
-                    [],
-                    \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+        $error = null;
+        if ($this->callbackData[2]) {
+            if (0 === $this->workManager->free()) {
+                $error = $this->botManager->getTranslator()->trans(
+                    TranslatorInterface::TRANSLATOR_MESSAGE_NO_HIRED_PEOPLE,
+                    [
+                        '%gender%' => $this->botManager->getTranslator()->transChoice(
+                            TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
+                            User::AVAILABLE_GENDER_KING === $user->getGender() ? 1 : 0,
+                            [],
+                            TranslatorInterface::TRANSLATOR_DOMAIN_STATE
+                        ),
+                    ],
+                    TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
                 );
             }
         } else {
-            $workerCount = $kingdom->getWorkerCount($workType);
-            if ($workerCount > 0) {
-                $text = $this->botManager->getTranslator()->trans(
-                    \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_FIRED_PEOPLE,
-                    [],
-                    \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
-                );
-                $kingdom->setWorkerCount($workType, $kingdom->getWorkerCount($workType) - 1);
-            } else {
-                $text = $this->botManager->getTranslator()->trans(
-                    \App\Interfaces\TranslatorInterface::TRANSLATOR_MESSAGE_NO_FIRED_PEOPLE,
-                    [],
-                    \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
+            $kingdom = $this->botManager->getKingdom();
+            $workerCount = $kingdom->getWorkerCount($this->callbackData[1]);
+            if (0 === $workerCount) {
+                $error = $this->botManager->getTranslator()->trans(
+                    TranslatorInterface::TRANSLATOR_MESSAGE_NO_FIRED_PEOPLE,
+                    [
+                        '%gender%' => $this->botManager->getTranslator()->transChoice(
+                            TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
+                            User::AVAILABLE_GENDER_KING === $user->getGender() ? 1 : 0,
+                            [],
+                            TranslatorInterface::TRANSLATOR_DOMAIN_STATE
+                        ),
+                    ],
+                    TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
                 );
             }
         }
 
-        $entityManager = $this->botManager->getEntityManager();
-        $entityManager->persist($kingdom);
-        $entityManager->flush();
+        if (null === $error) {
+            $this->hireOrFirePeople($stateName, $user);
+            $response = Request::answerCallbackQuery([
+                'callback_query_id' => $this->callbackQuery->getId(),
+                'text' => 'Ваше слово - закон!',
+                'show_alert' => false,
+            ]);
 
-        $message = $this->callbackQuery->getMessage();
-        if ($message) {
-            $data = $this->peopleScreen->getMessageData();
-            $data['message_id'] = $message->getMessageId();
-            Request::editMessageText($data);
+            $stateStrategy = null;
+            /** @var StateFactory $stateFactory */
+            $stateFactory = $this->botManager->get(StateFactory::class);
+            if ($stateFactory->isAvailable($stateName)) {
+                $stateStrategy = $stateFactory->create($stateName);
+            }
+
+            if (null !== $stateStrategy) {
+                $stateStrategy->preExecute();
+            }
+        } else {
+            $response = Request::answerCallbackQuery([
+                'callback_query_id' => $this->callbackQuery->getId(),
+                'text' => $error,
+                'show_alert' => false,
+            ]);
         }
 
-        return [
-            'callback_query_id' => $this->callbackQuery->getId(),
-            'text' => $text,
-            'show_alert' => false,
-        ];
+        return $response;
+    }
+
+    /**
+     * @throws TelegramException
+     */
+    public function hireOrFirePeople(string $stateName, User $user)
+    {
+        $user->setState(
+            $stateName,
+            [
+                'messageId' => $this->message->getMessageId(),
+                'workType' => $this->callbackData[1] ?? null,
+                'hire' => $this->callbackData[2] ?? null,
+            ]
+        );
+
+        $entityManager = $this->botManager->getEntityManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
     }
 }

@@ -30,17 +30,16 @@ class MoveResourcesToWarehouseCallback extends BaseCallback
     }
 
     /**
-     * @return ServerResponse
      * @throws TelegramException
      */
     public function execute(): ServerResponse
     {
         $data = $this->moveResourcesToWarehouse();
+
         return Request::answerCallbackQuery($data);
     }
 
     /**
-     * @return array
      * @throws TelegramException
      */
     public function moveResourcesToWarehouse(): array
@@ -68,7 +67,7 @@ class MoveResourcesToWarehouseCallback extends BaseCallback
                 '%food%' => CurrencyHelper::costFormat($foodDiff),
                 '%wood%' => CurrencyHelper::costFormat($woodDiff),
                 '%stone%' => CurrencyHelper::costFormat($stoneDiff),
-                '%iron%' => CurrencyHelper::costFormat($ironDiff)
+                '%iron%' => CurrencyHelper::costFormat($ironDiff),
             ],
             \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
         );
@@ -89,12 +88,9 @@ class MoveResourcesToWarehouseCallback extends BaseCallback
         $entityManager->persist($kingdom);
         $entityManager->flush();
 
-        $message = $this->callbackQuery->getMessage();
-        if ($message) {
-            $data = $this->warehouseScreen->getMessageData();
-            $data['message_id'] = $message->getMessageId();
-            Request::editMessageText($data);
-        }
+        $data = $this->warehouseScreen->getMessageData();
+        $data['message_id'] = $this->message->getMessageId();
+        Request::editMessageText($data);
 
         return [
             'callback_query_id' => $this->callbackQuery->getId(),

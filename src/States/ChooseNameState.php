@@ -10,6 +10,7 @@ use App\Interfaces\StateInterface;
 use App\Interfaces\TranslatorInterface;
 use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Keyboard;
+use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Request;
 
 class ChooseNameState extends BaseState
@@ -27,10 +28,10 @@ class ChooseNameState extends BaseState
             [
                 '%gender%' => $this->botManager->getTranslator()->transChoice(
                     TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
-                    $user->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+                    User::AVAILABLE_GENDER_KING === $user->getGender() ? 1 : 0,
                     [],
                     TranslatorInterface::TRANSLATOR_DOMAIN_STATE
-                )
+                ),
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_STATE
         );
@@ -39,22 +40,23 @@ class ChooseNameState extends BaseState
             'chat_id' => $chatId,
             'text' => $text,
             'reply_markup' => Keyboard::remove(),
-            'parse_mode' => 'Markdown'
+            'parse_mode' => 'Markdown',
         ]);
     }
 
     /**
-     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      * @throws ORMException
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
-    public function execute(): void
+    public function execute(Message $message): void
     {
         $user = $this->botManager->getUser();
-        $name = trim($this->message->getText(true));
+        $name = trim($message->getText(true));
         if (!empty($name)) {
             $entityManager = $this->botManager->getEntityManager();
-            if ($user->getKingdom() === null) {
+            if (null === $user->getKingdom()) {
                 $user->setState(StateInterface::STATE_WAIT_INPUT_KINGDOM_NAME);
             } else {
                 $user->setState(null);
@@ -63,27 +65,26 @@ class ChooseNameState extends BaseState
             $entityManager->persist($user);
             $entityManager->flush();
 
-            if ($user->getKingdom() === null) {
-                $stateName = $user->getState();
-                $state = null;
+            if (null === $user->getKingdom()) {
+                $state = $user->getState();
+                $stateName = $state[User::STATE_NAME_KEY] ?? null;
+
+                $stateStrategy = null;
                 /** @var StateFactory $stateFactory */
                 $stateFactory = $this->botManager->get(StateFactory::class);
                 if ($stateFactory->isAvailable($stateName)) {
-                    $state = $stateFactory->create(
-                        $stateName,
-                        $this->botManager
-                    );
+                    $stateStrategy = $stateFactory->create($stateName);
                 }
 
-                if (null !== $state) {
-                    $state->preExecute();
+                if (null !== $stateStrategy) {
+                    $stateStrategy->preExecute();
                 }
             } else {
                 $screen = null;
                 /** @var ScreenFactory $screenFactory */
                 $screenFactory = $this->botManager->get(ScreenFactory::class);
                 if ($screenFactory->isAvailable(ScreenInterface::SCREEN_MAIN_MENU)) {
-                    $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU, $this->botManager);
+                    $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU);
                 }
 
                 if (null !== $screen) {

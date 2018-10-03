@@ -12,10 +12,6 @@ class PeopleManager
     /** @var KingdomManager */
     protected $kingdomManager;
 
-    /**
-     * @param BotManager $botManager
-     * @param KingdomManager $kingdomManager
-     */
     public function __construct(BotManager $botManager, KingdomManager $kingdomManager)
     {
         $this->botManager = $botManager;
@@ -24,8 +20,7 @@ class PeopleManager
 
     /**
      * 1 people eat food unit
-     * If tax low, people eat lower
-     * @return float
+     * If tax low, people eat lower.
      */
     public function eat(): float
     {
@@ -37,8 +32,7 @@ class PeopleManager
 
     /**
      * 1 people pay gold unit
-     * If tax big, people pay more
-     * @return float
+     * If tax big, people pay more.
      */
     public function pay(): float
     {

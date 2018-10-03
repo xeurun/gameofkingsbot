@@ -16,27 +16,19 @@ use App\Manager\PeopleManager;
 use App\Manager\ResourceManager;
 use App\Manager\WorkManager;
 use Longman\TelegramBot\Entities\InlineKeyboard;
-use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 class WarehouseScreen extends BaseScreen
 {
     /** @var KingdomManager */
     protected $kingdomManager;
-    /** @var WorkManager  */
+    /** @var WorkManager */
     protected $workManager;
-    /** @var PeopleManager  */
+    /** @var PeopleManager */
     protected $peopleManager;
-    /** @var ResourceManager  */
+    /** @var ResourceManager */
     protected $resourceManager;
 
-    /**
-     * @param BotManager $botManager
-     * @param KingdomManager $kingdomManager
-     * @param WorkManager $workManager
-     * @param PeopleManager $peopleManager
-     * @param ResourceManager $resourceManager
-     */
     public function __construct(
         BotManager $botManager,
         KingdomManager $kingdomManager,
@@ -52,7 +44,6 @@ class WarehouseScreen extends BaseScreen
     }
 
     /**
-     * @return bool
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected function sendAdvice(): bool
@@ -60,18 +51,18 @@ class WarehouseScreen extends BaseScreen
         $inlineKeyboard = new InlineKeyboard([
             [
                 'text' => '✅ Продолжить',
-                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1)
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1),
             ],
             [
                 'text' => 'Достаточно ❌',
-                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0)
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0),
             ],
         ]);
 
         $user = $this->botManager->getUser();
         $gender = $this->botManager->getTranslator()->transChoice(
             TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
-            $user->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+            User::AVAILABLE_GENDER_KING === $user->getGender() ? 1 : 0,
             [],
             TranslatorInterface::TRANSLATOR_DOMAIN_STATE
         );
@@ -90,19 +81,19 @@ class WarehouseScreen extends BaseScreen
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
     {
         Request::sendMessage($this->getMessageData());
-        if ($this->botManager->getKingdom()->getAdviserState() === AdviserInterface::ADVISER_SHOW_WAREHOUSE_TUTORIAL) {
+        if (AdviserInterface::ADVISER_SHOW_WAREHOUSE_TUTORIAL === $this->botManager->getKingdom()->getAdviserState()) {
             $this->sendAdvice();
         }
     }
 
     /**
-     * @return array
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function getMessageData(): array
@@ -165,7 +156,7 @@ class WarehouseScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_MESSAGE_HOURS,
                         $hours,
                         [
-                            'count' => $hours
+                            'count' => $hours,
                         ],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
@@ -186,7 +177,7 @@ class WarehouseScreen extends BaseScreen
                             [],
                             TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
                         ),
-                        'callback_data' => CallbackInterface::CALLBACK_MOVE_RESOURCES_TO_WAREHOUSE
+                        'callback_data' => CallbackInterface::CALLBACK_MOVE_RESOURCES_TO_WAREHOUSE,
                     ],
                 ]
             );

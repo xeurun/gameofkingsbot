@@ -20,7 +20,8 @@ class StructureTypeRepository extends ServiceEntityRepository
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @return StructureType[]
      */
     public function findAll(): array

@@ -19,7 +19,7 @@ use Longman\TelegramBot\Request;
 class StartCommand extends BaseCommand
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(BotManager $botManager, Update $update = null)
     {
@@ -32,11 +32,12 @@ class StartCommand extends BaseCommand
     }
 
     /**
-     * Command execute method
+     * Command execute method.
      *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      * @throws ORMException
+     *
+     * @return \Longman\TelegramBot\Entities\ServerResponse
      */
     public function execute()
     {
@@ -61,30 +62,29 @@ class StartCommand extends BaseCommand
             }
         }
 
-        if (null === $user->getState() && $user->getKingdom() instanceof Kingdom) {
+        $state = $user->getState();
+        $stateName = $state[User::STATE_NAME_KEY] ?? null;
+
+        if (null === $stateName && $user->getKingdom() instanceof Kingdom) {
             /** @var ScreenFactory $screenFactory */
             $screenFactory = $botManager->get(ScreenFactory::class);
             if ($screenFactory->isAvailable(ScreenInterface::SCREEN_MAIN_MENU)) {
-                $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU, $botManager);
+                $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU);
             }
 
             if (null !== $screen) {
                 $screen->execute();
             }
-        } else if (null !== $user->getState()) {
-            $stateName = $user->getState();
-            $state = null;
+        } elseif (null !== $stateName) {
+            $stateStrategy = null;
             /** @var StateFactory $stateFactory */
             $stateFactory = $this->getTelegram()->get(StateFactory::class);
             if ($stateFactory->isAvailable($stateName)) {
-                $state = $stateFactory->create(
-                    $stateName,
-                    $botManager
-                );
+                $stateStrategy = $stateFactory->create($stateName);
             }
 
-            if (null !== $state) {
-                $state->preExecute();
+            if (null !== $stateStrategy) {
+                $stateStrategy->preExecute();
             }
         }
 

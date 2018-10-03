@@ -44,9 +44,6 @@ class StructureType
      */
     private $ironCost;
 
-    /**
-     * @param string $structureCode
-     */
     public function __construct(string $structureCode)
     {
         $this->code = $structureCode;
@@ -69,24 +66,24 @@ class StructureType
         return $this;
     }
 
-    /**
-     * @param string $resourceType
-     * @return mixed
-     */
     public function getResourceCost(string $resourceType)
     {
         switch ($resourceType) {
             case ResourceInterface::RESOURCE_GOLD:
                 $value = $this->goldCost;
+
                 break;
             case ResourceInterface::RESOURCE_WOOD:
                 $value = $this->woodCost;
+
                 break;
             case ResourceInterface::RESOURCE_STONE:
                 $value = $this->stoneCost;
+
                 break;
             case ResourceInterface::RESOURCE_IRON:
                 $value = $this->ironCost;
+
                 break;
             default:
                 throw new \InvalidArgumentException('Undefined resource type!');
@@ -95,17 +92,11 @@ class StructureType
         return $value;
     }
 
-    /**
-     * @return mixed
-     */
     public function getMaxLevel()
     {
         return $this->maxLevel;
     }
 
-    /**
-     * @param mixed $maxLevel
-     */
     public function setMaxLevel($maxLevel): void
     {
         $this->maxLevel = $maxLevel;

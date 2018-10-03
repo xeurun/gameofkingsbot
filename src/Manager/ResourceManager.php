@@ -7,18 +7,13 @@ use App\Interfaces\WorkInterface;
 
 class ResourceManager
 {
-    /** @var BotManager  */
+    /** @var BotManager */
     protected $botManager;
-    /** @var WorkManager  */
+    /** @var WorkManager */
     protected $workManager;
-    /** @var PeopleManager  */
+    /** @var PeopleManager */
     protected $peopleManager;
 
-    /**
-     * @param BotManager $botManager
-     * @param WorkManager $workManager
-     * @param PeopleManager $peopleManager
-     */
     public function __construct(BotManager $botManager, WorkManager $workManager, PeopleManager $peopleManager)
     {
         $this->botManager = $botManager;
@@ -26,9 +21,6 @@ class ResourceManager
         $this->peopleManager = $peopleManager;
     }
 
-    /**
-     *
-     */
     public function addEveryDayBonus(): void
     {
         $kingdom = $this->botManager->getKingdom();
@@ -48,9 +40,6 @@ class ResourceManager
         }
     }
 
-    /**
-     *
-     */
     public function moveExtractedResourcesToWarehouse(): void
     {
         $kingdom = $this->botManager->getKingdom();
@@ -81,8 +70,8 @@ class ResourceManager
     }
 
     /**
-     * Get the extracted resource count
-     * @param string $resourceName
+     * Get the extracted resource count.
+     *
      * @return float|int|null
      */
     public function getExtractedCountByResourceName(string $resourceName)
@@ -99,18 +88,23 @@ class ResourceManager
         switch ($resourceName) {
             case ResourceInterface::RESOURCE_GOLD:
                 $stack = $goldHourly * $hours;
+
                 break;
             case ResourceInterface::RESOURCE_FOOD:
                 $stack = $foodHourly * $hours;
+
                 break;
             case ResourceInterface::RESOURCE_WOOD:
                 $stack = $woodHourly * $hours;
+
                 break;
             case ResourceInterface::RESOURCE_STONE:
                 $stack = $stoneHourly * $hours;
+
                 break;
             case ResourceInterface::RESOURCE_IRON:
                 $stack = $ironHourly * $hours;
+
                 break;
             default:
                 break;

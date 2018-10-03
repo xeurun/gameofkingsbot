@@ -4,16 +4,13 @@ namespace App\Screens;
 
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\TranslatorInterface;
-use App\Manager\BotManager;
-use App\Manager\PeopleManager;
-use App\Manager\WorkManager;
-use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
 class EventScreen extends BaseScreen
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
@@ -25,7 +22,7 @@ class EventScreen extends BaseScreen
         $text = $this->botManager->getTranslator()->trans(
             TranslatorInterface::TRANSLATOR_MESSAGE_EVENT_SCREEN_MESSAGE,
             [
-                '%title%' => $title
+                '%title%' => $title,
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );

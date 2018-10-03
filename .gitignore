@@ -12,3 +12,7 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+###> friendsofphp/php-cs-fixer ###
+/config/cs.php.cache
+###< friendsofphp/php-cs-fixer ###

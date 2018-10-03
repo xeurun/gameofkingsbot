@@ -21,19 +21,13 @@ use Longman\TelegramBot\Request;
 
 class MainMenuScreen extends BaseScreen
 {
-    /** @var WorkManager  */
+    /** @var WorkManager */
     protected $workManager;
-    /** @var PeopleManager  */
+    /** @var PeopleManager */
     protected $peopleManager;
-    /** @var KingdomManager  */
+    /** @var KingdomManager */
     protected $kingdomManager;
 
-    /**
-     * @param BotManager $botManager
-     * @param WorkManager $workManager
-     * @param PeopleManager $peopleManager
-     * @param KingdomManager $kingdomManager
-     */
     public function __construct(
         BotManager $botManager,
         WorkManager $workManager,
@@ -48,20 +42,20 @@ class MainMenuScreen extends BaseScreen
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
     {
         $this->sendTitle();
         $this->sendMessage();
-        if ($this->botManager->getKingdom()->getAdviserState() === AdviserInterface::ADVISER_SHOW_INITIAL_TUTORIAL) {
+        if (AdviserInterface::ADVISER_SHOW_INITIAL_TUTORIAL === $this->botManager->getKingdom()->getAdviserState()) {
             $this->sendAdvice();
         }
     }
 
     /**
-     * @return bool
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected function sendAdvice(): bool
@@ -69,18 +63,18 @@ class MainMenuScreen extends BaseScreen
         $inlineKeyboard = new InlineKeyboard([
             [
                 'text' => '✅ Да',
-                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1)
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1),
             ],
             [
                 'text' => 'Нет ❌',
-                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0)
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0),
             ],
         ]);
 
         $user = $this->botManager->getUser();
         $gender = $this->botManager->getTranslator()->transChoice(
             TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
-            $user->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+            User::AVAILABLE_GENDER_KING === $user->getGender() ? 1 : 0,
             [],
             TranslatorInterface::TRANSLATOR_DOMAIN_STATE
         );
@@ -98,7 +92,6 @@ class MainMenuScreen extends BaseScreen
     }
 
     /**
-     * @return bool
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected function sendMessage(): bool
@@ -109,7 +102,6 @@ class MainMenuScreen extends BaseScreen
     }
 
     /**
-     * @return array
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function getMessageData(): array
@@ -133,7 +125,7 @@ class MainMenuScreen extends BaseScreen
                     TranslatorInterface::TRANSLATOR_MESSAGE_PEOPLES,
                     $people,
                     [
-                        'count' => CurrencyHelper::costFormat($people)
+                        'count' => CurrencyHelper::costFormat($people),
                     ],
                     TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                 ),
@@ -164,10 +156,10 @@ class MainMenuScreen extends BaseScreen
                     TranslatorInterface::TRANSLATOR_MESSAGE_HOURS,
                     $foodDay,
                     [
-                        '%count%' => $foodDay
+                        '%count%' => $foodDay,
                     ],
                     TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
-                )
+                ),
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
@@ -177,21 +169,21 @@ class MainMenuScreen extends BaseScreen
                 'text' => $this->botManager->getTranslator()->trans(
                     TranslatorInterface::TRANSLATOR_MESSAGE_GROUP_BUTTON,
                     [
-                        'name' => $kingdom->getName()
+                        'name' => $kingdom->getName(),
                     ],
                     TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
                 ),
-                'url' => 'https://t.me/worldofkings'
+                'url' => 'https://t.me/worldofkings',
             ],
             [
                 'text' => $this->botManager->getTranslator()->trans(
                     TranslatorInterface::TRANSLATOR_MESSAGE_CHANNEL_BUTTON,
                     [
-                        'name' => $kingdom->getName()
+                        'name' => $kingdom->getName(),
                     ],
                     TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
                 ),
-                'url' => 'https://t.me/placeofkings'
+                'url' => 'https://t.me/placeofkings',
             ],
         ]);
 
@@ -204,7 +196,6 @@ class MainMenuScreen extends BaseScreen
     }
 
     /**
-     * @return bool
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected function sendTitle(): bool
@@ -230,10 +221,10 @@ class MainMenuScreen extends BaseScreen
                 '%name%' => $this->botManager->getUser()->getName(),
                 '%supreme_gender%' => $this->botManager->getTranslator()->transChoice(
                     TranslatorInterface::TRANSLATOR_MESSAGE_SUPREME_GENDER,
-                    $user->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+                    User::AVAILABLE_GENDER_KING === $user->getGender() ? 1 : 0,
                     [],
                     TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
-                )
+                ),
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
@@ -242,7 +233,7 @@ class MainMenuScreen extends BaseScreen
             'chat_id' => $user->getId(),
             'text' => $text,
             'reply_markup' => $keyboard,
-            'parse_mode' => 'Markdown'
+            'parse_mode' => 'Markdown',
         ];
 
         $response = Request::sendMessage($data);

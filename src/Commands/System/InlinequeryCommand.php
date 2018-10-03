@@ -13,7 +13,7 @@ use Longman\TelegramBot\Request;
 class InlinequeryCommand extends BaseCommand
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(BotManager $botManager, Update $update = null)
     {
@@ -25,8 +25,9 @@ class InlinequeryCommand extends BaseCommand
     }
 
     /**
-     * @return bool|\Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
+     *
+     * @return bool|\Longman\TelegramBot\Entities\ServerResponse
      */
     public function execute()
     {
@@ -35,7 +36,7 @@ class InlinequeryCommand extends BaseCommand
         $query = $inlineQuery->getQuery();
 
         $data = [
-            'inline_query_id' => $inlineQuery->getId()
+            'inline_query_id' => $inlineQuery->getId(),
         ];
 
         $articles = [];
@@ -54,20 +55,21 @@ TEXT;
             'title' => 'Пригласить в игру',
             'description' => <<<TEXT
 Отправьте приглашение и получайте бонусы (используется ваше игровое имя и ваш никнейм)
+
 TEXT
             ,
             'message_text' => $text,
-            'parse_mode' => 'Markdown'
+            'parse_mode' => 'Markdown',
         ];
 
         $results = [];
         foreach ($articles as $key => $value) {
-            if (stripos($value['title'], $query) !== false) {
+            if (false !== stripos($value['title'], $query)) {
                 $results[] = $value;
             }
         }
 
-        if (\count($results) === 0 || (null === $query || trim($query) === '')) {
+        if (0 === \count($results) || (null === $query || '' === trim($query))) {
             $results = $articles;
         }
 
@@ -80,6 +82,7 @@ TEXT
         $data['results'] = $arrayJson;
         $data['cache_time'] = 0;
         $result = Request::answerInlineQuery($data);
+
         return $result->isOk();
     }
 }

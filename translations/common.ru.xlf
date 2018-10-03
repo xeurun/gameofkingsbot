@@ -6,6 +6,10 @@
                 <source>peoples</source>
                 <target>*%count%*` человек`|*%count%*` человека`|*%count%*` человек`</target>
             </trans-unit>
+            <trans-unit id="peoples_raw">
+                <source>peoples</source>
+                <target>*%count%* человек|*%count%* человека|*%count%* человек</target>
+            </trans-unit>
             <trans-unit id="hours">
                 <source>hours</source>
                 <target>*%count%*` час`|*%count%*` часа`|*%count%*` часов`</target>
@@ -70,16 +74,72 @@
                 <source>iron</source>
                 <target>🔨 Железо</target>
             </trans-unit>
+            <trans-unit id="work_type_food">
+                <source>work_type_food</source>
+                <target>🍞 Еда</target>
+            </trans-unit>
+            <trans-unit id="work_type_wood">
+                <source>work_type_wood</source>
+                <target>🌲 Дерево</target>
+            </trans-unit>
+            <trans-unit id="work_type_stone">
+                <source>work_type_stone</source>
+                <target>⛏ Камень</target>
+            </trans-unit>
+            <trans-unit id="work_type_iron">
+                <source>work_type_iron</source>
+                <target>🔨 Железо</target>
+            </trans-unit>
+            <trans-unit id="work_type_army">
+                <source>work_type_army</source>
+                <target>⚔️ Армия</target>
+            </trans-unit>
+            <trans-unit id="to_work_type_food">
+                <source>to_work_type_food</source>
+                <target>для добычи еды 🍞</target>
+            </trans-unit>
+            <trans-unit id="to_work_type_wood">
+                <source>to_work_type_wood</source>
+                <target>для добычи дерева 🌲</target>
+            </trans-unit>
+            <trans-unit id="to_work_type_stone">
+                <source>to_work_type_stone</source>
+                <target>для добычи камня ⛏</target>
+            </trans-unit>
+            <trans-unit id="to_work_type_iron">
+                <source>to_work_type_iron</source>
+                <target>для добычи железа 🔨</target>
+            </trans-unit>
+            <trans-unit id="to_work_type_army">
+                <source>to_work_type_army</source>
+                <target>для службы в️ армии ⚔</target>
+            </trans-unit>
+            <trans-unit id="from_work_type_food">
+                <source>from_work_type_food</source>
+                <target>с добычи еды 🍞</target>
+            </trans-unit>
+            <trans-unit id="from_work_type_wood">
+                <source>from_work_type_wood</source>
+                <target>с добычи дерева 🌲</target>
+            </trans-unit>
+            <trans-unit id="from_work_type_stone">
+                <source>from_work_type_stone</source>
+                <target>с добычи камня ⛏</target>
+            </trans-unit>
+            <trans-unit id="from_work_type_iron">
+                <source>from_work_type_iron</source>
+                <target>с добычи железа 🔨</target>
+            </trans-unit>
+            <trans-unit id="from_work_type_army">
+                <source>from_work_type_army</source>
+                <target>со службы в️ армии ⚔</target>
+            </trans-unit>
             <trans-unit id="taxes">
                 <source>taxes</source>
                 <target>📜 Налог</target>
             </trans-unit>
             <trans-unit id="army">
                 <source>army</source>
-                <target>⚔️ Армия</target>
-            </trans-unit>
-            <trans-unit id="work_type_army">
-                <source>work_type_army</source>
                 <target>⚔️ Армия</target>
             </trans-unit>
             <trans-unit id="ru">
@@ -191,6 +251,18 @@
                 <target>
 {1} Низкого|{2} Среднего|{3}Высокого|]3,Inf[Произвольного
                 </target>
+            </trans-unit>
+            <trans-unit id="hire_or_fire">
+                <source>hire_or_fire</source>
+                <target>
+{0} уволить |{1} нанять
+                 </target>
+            </trans-unit>
+            <trans-unit id="for_hire_or_fire">
+                <source>for_hire_or_fire</source>
+                <target>
+{0} увольнения |{1} найма
+                 </target>
             </trans-unit>
         </body>
     </file>

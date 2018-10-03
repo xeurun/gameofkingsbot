@@ -24,12 +24,6 @@ class RiseOrLowerTaxesCallback extends BaseCallback
     /** @var PeopleManager */
     protected $peopleManager;
 
-    /**
-     * @param BotManager $botManager
-     * @param PeopleManager $peopleManager
-     * @param KingdomManager $kingdomManager
-     * @param PeopleScreen $peopleScreen
-     */
     public function __construct(
         BotManager $botManager,
         PeopleManager $peopleManager,
@@ -43,25 +37,24 @@ class RiseOrLowerTaxesCallback extends BaseCallback
     }
 
     /**
-     * @return ServerResponse
      * @throws TelegramException
      * @throws ORMException
      */
     public function execute(): ServerResponse
     {
         $data = $this->changeTaxLevel();
+
         return Request::answerCallbackQuery($data);
     }
 
     /**
-     * @return array
      * @throws
      */
     public function changeTaxLevel(): array
     {
         $kingdom = $this->botManager->getKingdom();
         $callbackData = CallbackFactory::getData($this->callbackQuery);
-        if ($callbackData[1] === '1') {
+        if ('1' === $callbackData[1]) {
             $taxStatus = $this->botManager->getTranslator()->trans(
                 TranslatorInterface::TRANSLATOR_MESSAGE_RAISE_TAXES,
                 [],
@@ -69,7 +62,7 @@ class RiseOrLowerTaxesCallback extends BaseCallback
             );
 
             $newTax = TaxesInterface::TAXES_LEVEL_HIGH;
-            if ($kingdom->getTax() === TaxesInterface::TAXES_LEVEL_LOW) {
+            if (TaxesInterface::TAXES_LEVEL_LOW === $kingdom->getTax()) {
                 $newTax = TaxesInterface::TAXES_LEVEL_MEDIUM;
             }
         } else {
@@ -79,7 +72,7 @@ class RiseOrLowerTaxesCallback extends BaseCallback
                 TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
             );
             $newTax = TaxesInterface::TAXES_LEVEL_LOW;
-            if ($kingdom->getTax() === TaxesInterface::TAXES_LEVEL_HIGH) {
+            if (TaxesInterface::TAXES_LEVEL_HIGH === $kingdom->getTax()) {
                 $newTax = TaxesInterface::TAXES_LEVEL_MEDIUM;
             }
         }
@@ -89,12 +82,9 @@ class RiseOrLowerTaxesCallback extends BaseCallback
         $entityManager->persist($kingdom);
         $entityManager->flush();
 
-        $message = $this->callbackQuery->getMessage();
-        if ($message) {
-            $data = $this->peopleScreen->getMessageData();
-            $data['message_id'] = $message->getMessageId();
-            Request::editMessageText($data);
-        }
+        $data = $this->peopleScreen->getMessageData();
+        $data['message_id'] = $this->message->getMessageId();
+        Request::editMessageText($data);
 
         $taxLevel = $this->botManager->getTranslator()->transChoice(
             TranslatorInterface::TRANSLATOR_MESSAGE_TAXES_LEVEL,
@@ -107,7 +97,7 @@ class RiseOrLowerTaxesCallback extends BaseCallback
             CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES,
             [
                 '%status%' => $taxStatus,
-                '%level%' => mb_strtolower($taxLevel)
+                '%level%' => mb_strtolower($taxLevel),
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_CALLBACK
         );

@@ -27,7 +27,8 @@ interface StructureInterface
      */
     public const STRUCTURE_TYPE_TERRITORY = 'structure_type_territory';
     /**
-     * Жилое здание
+     * Жилое здание.
+     *
      * @var string
      */
     public const STRUCTURE_TYPE_LIFE_HOUSE = 'structure_type_lifehouse';

@@ -21,10 +21,9 @@ help: ## Help information with commands descriptions
 	@awk 'BEGIN {FS = ":.*?## | # | \\| "} /^[a-zA-Z_-]+:.*?## / {printf "> ${GREEN}%-30s${RESET} %s ${YELLOW}%s${RESET} ${BLUE}%s${RESET}\n", $$1, $$2, $$3, $$4}' $(MAKEFILE_LIST)
 	@echo "############################################################################################################"
 
-
-.PHONY: gen-pub-key
-get-pub-key: ## Generate public key
-    echo openssl rsa -in <insert path to private key> -pubout > <insert path to save public key>
+.PHONY : codestyle-fix
+codestyle-fix: ## @tests Chech if code base sute codestyle requirements
+	$(DC) exec php-fpm vendor/bin/php-cs-fixer fix --config=config/cs.php --verbose
 
 .PHONY: optimize-autoload
 optimize-autoload: ## Optimize autoload

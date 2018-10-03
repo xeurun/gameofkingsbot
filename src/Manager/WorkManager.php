@@ -2,7 +2,6 @@
 
 namespace App\Manager;
 
-use App\Entity\Kingdom;
 use App\Interfaces\WorkInterface;
 
 class WorkManager
@@ -12,19 +11,12 @@ class WorkManager
     /** @var KingdomManager */
     protected $kingdomManager;
 
-    /**
-     * @param BotManager $botManager
-     * @param KingdomManager $kingdomManager
-     */
     public function __construct(BotManager $botManager, KingdomManager $kingdomManager)
     {
         $this->botManager = $botManager;
         $this->kingdomManager = $kingdomManager;
     }
 
-    /**
-     * @return int
-     */
     public function workedHours(): int
     {
         $kingdom = $this->botManager->getKingdom();
@@ -35,10 +27,6 @@ class WorkManager
         return $diff->h + ($diff->days * 24);
     }
 
-    /**
-     * @param string $workType
-     * @return float
-     */
     public function getSalary(string $workType): float
     {
         $kingdom = $this->botManager->getKingdom();
@@ -49,6 +37,7 @@ class WorkManager
                     * WorkInterface::INITIAL_FOOD_SALARY
                     / $kingdom->getTax()
                 );
+
                 break;
             case WorkInterface::WORK_TYPE_WOOD:
                 $value = round(
@@ -56,6 +45,7 @@ class WorkManager
                     * WorkInterface::INITIAL_WOOD_SALARY
                     / $kingdom->getTax()
                 );
+
                 break;
             case WorkInterface::WORK_TYPE_STONE:
                 $value = round(
@@ -63,6 +53,7 @@ class WorkManager
                     * WorkInterface::INITIAL_STONE_SALARY
                     / $kingdom->getTax()
                 );
+
                 break;
             case WorkInterface::WORK_TYPE_IRON:
                 $value = round(
@@ -70,6 +61,7 @@ class WorkManager
                     * WorkInterface::INITIAL_IRON_SALARY
                     / $kingdom->getTax()
                 );
+
                 break;
             default:
                 throw new \InvalidArgumentException('Undefined resource type!');
@@ -78,13 +70,11 @@ class WorkManager
         return $value;
     }
 
-    /**
-     * @return int
-     */
     public function free(): int
     {
         $kingdom = $this->botManager->getKingdom();
         $people = $this->kingdomManager->getPeople();
+
         return $people
             - $kingdom->getWorkerCount(WorkInterface::WORK_TYPE_FOOD)
             - $kingdom->getWorkerCount(WorkInterface::WORK_TYPE_WOOD)
@@ -93,15 +83,11 @@ class WorkManager
             - $kingdom->getWorkerCount(WorkInterface::WORK_TYPE_ARMY);
     }
 
-    /**
-     * @param string $workType
-     * @return bool
-     */
-    public function checkLimit(string $workType): bool
+    public function hasFreeSpaceFor(string $workType, int $count = 1): bool
     {
         $kingdom = $this->botManager->getKingdom();
         $max = $this->kingdomManager->getMaxOn($workType);
 
-        return $kingdom->getWorkerCount($workType) < $max;
+        return $kingdom->getWorkerCount($workType) + $count <= $max;
     }
 }

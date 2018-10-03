@@ -8,19 +8,15 @@ use App\Interfaces\ScreenInterface;
 use App\Interfaces\TranslatorInterface;
 use App\Manager\BotManager;
 use App\Manager\KingdomManager;
-use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Keyboard;
+use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Request;
 
 class KingdomNameState extends BaseState
 {
-    /** @var KingdomManager  */
+    /** @var KingdomManager */
     protected $kingdomManager;
 
-    /**
-     * @param BotManager $botManager
-     * @param KingdomManager $kingdomManager
-     */
     public function __construct(BotManager $botManager, KingdomManager $kingdomManager)
     {
         $this->kingdomManager = $kingdomManager;
@@ -39,10 +35,10 @@ class KingdomNameState extends BaseState
             [
                 '%gender%' => $this->botManager->getTranslator()->transChoice(
                     TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
-                    $user->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+                    User::AVAILABLE_GENDER_KING === $user->getGender() ? 1 : 0,
                     [],
                     TranslatorInterface::TRANSLATOR_DOMAIN_STATE
-                )
+                ),
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_STATE
         );
@@ -51,7 +47,7 @@ class KingdomNameState extends BaseState
             'chat_id' => $user->getId(),
             'text' => $text,
             'reply_markup' => Keyboard::remove(),
-            'parse_mode' => 'Markdown'
+            'parse_mode' => 'Markdown',
         ];
 
         Request::sendMessage($data);
@@ -60,7 +56,7 @@ class KingdomNameState extends BaseState
     /**
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function execute(): void
+    public function execute(Message $message): void
     {
         $user = $this->botManager->getUser();
         $kingdomName = trim($this->message->getText(true));
@@ -82,7 +78,7 @@ class KingdomNameState extends BaseState
             /** @var ScreenFactory $screenFactory */
             $screenFactory = $this->botManager->get(ScreenFactory::class);
             if ($screenFactory->isAvailable(ScreenInterface::SCREEN_MAIN_MENU)) {
-                $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU, $this->botManager);
+                $screen = $screenFactory->create(ScreenInterface::SCREEN_MAIN_MENU);
             }
 
             if (null !== $screen) {

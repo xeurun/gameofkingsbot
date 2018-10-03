@@ -15,7 +15,6 @@ use Longman\TelegramBot\Request;
 class EdictsScreen extends BaseScreen
 {
     /**
-     * @return bool
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected function sendAdvice(): bool
@@ -23,18 +22,18 @@ class EdictsScreen extends BaseScreen
         $inlineKeyboard = new InlineKeyboard([
             [
                 'text' => '✅ Продолжить',
-                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1)
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1),
             ],
             [
                 'text' => 'Достаточно ❌',
-                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0)
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0),
             ],
         ]);
 
         $user = $this->botManager->getUser();
         $gender = $this->botManager->getTranslator()->transChoice(
             TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
-            $user->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+            User::AVAILABLE_GENDER_KING === $user->getGender() ? 1 : 0,
             [],
             TranslatorInterface::TRANSLATOR_DOMAIN_STATE
         );
@@ -55,7 +54,8 @@ class EdictsScreen extends BaseScreen
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
@@ -65,7 +65,7 @@ class EdictsScreen extends BaseScreen
         $text = $this->botManager->getTranslator()->trans(
             TranslatorInterface::TRANSLATOR_MESSAGE_EDICTS_SCREEN_MESSAGE,
             [
-                '%title%' => $title
+                '%title%' => $title,
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
@@ -86,12 +86,12 @@ class EdictsScreen extends BaseScreen
             'chat_id' => $kingdom->getUser()->getId(),
             'text' => $text,
             'reply_markup' => $keyboard,
-            'parse_mode' => 'Markdown'
+            'parse_mode' => 'Markdown',
         ];
 
         Request::sendMessage($data);
 
-        if ($this->botManager->getKingdom()->getAdviserState() === AdviserInterface::ADVISER_SHOW_EDICTS_TUTORIAL) {
+        if (AdviserInterface::ADVISER_SHOW_EDICTS_TUTORIAL === $this->botManager->getKingdom()->getAdviserState()) {
             $this->sendAdvice();
         }
     }

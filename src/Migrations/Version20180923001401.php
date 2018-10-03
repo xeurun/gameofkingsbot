@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
@@ -18,7 +20,7 @@ final class Version20180923001401 extends AbstractMigration
             10000,
             15000,
             100,
-            100
+            100,
         ],
         [
             "'territory'",
@@ -27,7 +29,7 @@ final class Version20180923001401 extends AbstractMigration
             5000,
             10000,
             50,
-            50
+            50,
         ],
         [
             "'lifehouse'",
@@ -36,7 +38,7 @@ final class Version20180923001401 extends AbstractMigration
             3000,
             10000,
             50,
-            50
+            50,
         ],
         [
             "'barn'",
@@ -45,7 +47,7 @@ final class Version20180923001401 extends AbstractMigration
             3000,
             10000,
             50,
-            50
+            50,
         ],
         [
             "'sawmill'",
@@ -54,7 +56,7 @@ final class Version20180923001401 extends AbstractMigration
             3000,
             10000,
             50,
-            50
+            50,
         ],
         [
             "'stonemason'",
@@ -63,7 +65,7 @@ final class Version20180923001401 extends AbstractMigration
             3000,
             10000,
             50,
-            50
+            50,
         ],
         [
             "'smeltery'",
@@ -72,7 +74,7 @@ final class Version20180923001401 extends AbstractMigration
             3000,
             10000,
             50,
-            50
+            50,
         ],
         [
             "'garrison'",
@@ -81,7 +83,7 @@ final class Version20180923001401 extends AbstractMigration
             3000,
             10000,
             50,
-            50
+            50,
         ],
         [
             "'library'",
@@ -90,7 +92,7 @@ final class Version20180923001401 extends AbstractMigration
             100000,
             100000,
             100000,
-            100000
+            100000,
         ],
         [
             "'market'",
@@ -100,13 +102,13 @@ final class Version20180923001401 extends AbstractMigration
             100000,
             100000,
             100000,
-        ]
+        ],
     ];
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $values = [];
         foreach (self::$buildTypes as $buildType) {
@@ -119,10 +121,10 @@ final class Version20180923001401 extends AbstractMigration
         );
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('TRUNCATE TABLE structure_type');
     }

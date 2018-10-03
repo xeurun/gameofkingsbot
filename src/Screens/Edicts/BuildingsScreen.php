@@ -9,7 +9,6 @@ use App\Interfaces\AdviserInterface;
 use App\Interfaces\CallbackInterface;
 use App\Interfaces\ResourceInterface;
 use App\Interfaces\ScreenInterface;
-use App\Interfaces\TaxesInterface;
 use App\Interfaces\TranslatorInterface;
 use App\Manager\BotManager;
 use App\Manager\KingdomManager;
@@ -22,22 +21,15 @@ use Longman\TelegramBot\Request;
 
 class BuildingsScreen extends BaseScreen
 {
-    /** @var WorkManager  */
+    /** @var WorkManager */
     protected $workManager;
-    /** @var PeopleManager  */
+    /** @var PeopleManager */
     protected $peopleManager;
-    /** @var KingdomManager  */
+    /** @var KingdomManager */
     protected $kingdomManager;
-    /** @var StructureTypeRepository  */
+    /** @var StructureTypeRepository */
     protected $buildTypeRepository;
 
-    /**
-     * @param BotManager $botManager
-     * @param WorkManager $workManager
-     * @param PeopleManager $peopleManager
-     * @param KingdomManager $kingdomManager
-     * @param StructureTypeRepository $buildTypeRepository
-     */
     public function __construct(
         BotManager $botManager,
         WorkManager $workManager,
@@ -54,7 +46,6 @@ class BuildingsScreen extends BaseScreen
     }
 
     /**
-     * @return bool
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected function sendAdvice(): bool
@@ -62,18 +53,18 @@ class BuildingsScreen extends BaseScreen
         $inlineKeyboard = new InlineKeyboard([
             [
                 'text' => '✅ Продолжить',
-                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1)
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 1),
             ],
             [
                 'text' => 'Достаточно ❌',
-                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0)
+                'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_ADVISER, 0),
             ],
         ]);
 
         $user = $this->botManager->getUser();
         $gender = $this->botManager->getTranslator()->transChoice(
             TranslatorInterface::TRANSLATOR_MESSAGE_NEW_KING_GENDER,
-            $user->getGender() === User::AVAILABLE_GENDER_KING ? 1 : 0,
+            User::AVAILABLE_GENDER_KING === $user->getGender() ? 1 : 0,
             [],
             TranslatorInterface::TRANSLATOR_DOMAIN_STATE
         );
@@ -93,20 +84,22 @@ _(для более подробной информации о каждом ст
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
     {
         Request::sendMessage($this->getMessageData());
-        if ($this->botManager->getKingdom()->getAdviserState() === AdviserInterface::ADVISER_SHOW_BUILDINGS_TUTORIAL) {
+        if (AdviserInterface::ADVISER_SHOW_BUILDINGS_TUTORIAL === $this->botManager->getKingdom()->getAdviserState()) {
             $this->sendAdvice();
         }
     }
 
     /**
-     * @return array
      * @throws \Longman\TelegramBot\Exception\TelegramException
+     *
+     * @return array
      */
     public function getMessageData()
     {
@@ -132,7 +125,7 @@ _(для более подробной информации о каждом ст
                 '%iron%' => CurrencyHelper::costFormat(
                     $kingdom->getResource(ResourceInterface::RESOURCE_IRON)
                 ),
-                '%size%' => $freeTerritorySize
+                '%size%' => $freeTerritorySize,
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
@@ -174,7 +167,7 @@ _(для более подробной информации о каждом ст
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
                     '%structureLevel%' => $level,
-                    '%structureCost%' => $costText
+                    '%structureCost%' => $costText,
                 ],
                 TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
             );
@@ -186,7 +179,7 @@ _(для более подробной информации о каждом ст
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_GET_INFO, $buildType->getCode())
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_GET_INFO, $buildType->getCode()),
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
@@ -194,8 +187,8 @@ _(для более подробной информации о каждом ст
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
                     ),
-                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_INCREASE_STRUCTURE_LEVEL, $buildType->getCode())
-                ]
+                    'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_INCREASE_STRUCTURE_LEVEL, $buildType->getCode()),
+                ],
             ];
         }
 

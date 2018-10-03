@@ -11,7 +11,7 @@ use Longman\TelegramBot\Request;
 class CallbackqueryCommand extends BaseCommand
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(BotManager $botManager, Update $update = null)
     {
@@ -23,10 +23,11 @@ class CallbackqueryCommand extends BaseCommand
     }
 
     /**
-     * Command execute method
+     * Command execute method.
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
-     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
     {
@@ -47,16 +48,13 @@ class CallbackqueryCommand extends BaseCommand
             $callbackData = CallbackFactory::getData($callbackQuery);
             $callbackName = $callbackData[0] ?? null;
 
-            if ($callbackName === 'null') {
+            if ('null' === $callbackName) {
                 $data['text'] = '';
             } else {
                 /** @var CallbackFactory $callbackFactory */
                 $callbackFactory = $botManager->get(CallbackFactory::class);
                 if ($callbackFactory->isAvailable($callbackName)) {
-                    $callback = $callbackFactory->create(
-                        $callbackName,
-                        $botManager
-                    );
+                    $callback = $callbackFactory->create($callbackName);
                 }
 
                 if (null !== $callback) {

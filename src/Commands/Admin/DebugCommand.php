@@ -15,7 +15,7 @@ use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Request;
 
 /**
- * Admin "/debug" command
+ * Admin "/debug" command.
  */
 class DebugCommand extends AdminCommand
 {
@@ -40,9 +40,8 @@ class DebugCommand extends AdminCommand
     protected $version = '1.1.0';
 
     /**
-     * Command execute method
+     * Command execute method.
      *
-     * @return mixed
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute()
@@ -54,7 +53,7 @@ class DebugCommand extends AdminCommand
 
         $data = ['chat_id' => $chat->getId()];
 
-        if ($text !== 'glasnost' && !$chat->isPrivateChat()) {
+        if ('glasnost' !== $text && !$chat->isPrivateChat()) {
             $data['text'] = 'Only available in a private chat.';
 
             return Request::sendMessage($data);
@@ -93,9 +92,10 @@ class DebugCommand extends AdminCommand
         }
 
         $webhook_info_title = '*Webhook Info:*';
+
         try {
             // Check if we're actually using the Webhook method.
-            if (Request::getInput() === '') {
+            if ('' === Request::getInput()) {
                 $debug_info[] = $webhook_info_title . ' `Using getUpdates method, not Webhook.`';
             } else {
                 $webhook_info_result = json_decode(Request::getWebhookInfo(), true)['result'];

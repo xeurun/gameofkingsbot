@@ -13,7 +13,8 @@ use Longman\TelegramBot\Request;
 class ResearchScreen extends BaseScreen
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
@@ -23,7 +24,7 @@ class ResearchScreen extends BaseScreen
 
         $data = [
             'chat_id' => $kingdom->getUser()->getId(),
-            'parse_mode' => 'Markdown'
+            'parse_mode' => 'Markdown',
         ];
 
         $library = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_LIBRARY);
@@ -31,7 +32,7 @@ class ResearchScreen extends BaseScreen
             $text = $this->botManager->getTranslator()->trans(
                 TranslatorInterface::TRANSLATOR_MESSAGE_RESEACRH_SCREEN_MESSAGE_WITHOUT_LIBRARY,
                 [
-                    '%title%' => $title
+                    '%title%' => $title,
                 ],
                 TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
             );
@@ -39,7 +40,7 @@ class ResearchScreen extends BaseScreen
             $text = $this->botManager->getTranslator()->trans(
                 TranslatorInterface::TRANSLATOR_MESSAGE_RESEACRH_SCREEN_MESSAGE,
                 [
-                    '%title%' => $title
+                    '%title%' => $title,
                 ],
                 TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
             );
@@ -48,13 +49,13 @@ class ResearchScreen extends BaseScreen
                 [
                     [
                         'text' => 'Название',
-                        'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_GET_INFO, 'name')
+                        'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_GET_INFO, 'name'),
                     ],
                     [
                         'text' => 'Изучить',
-                        'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_INCREASE_STRUCTURE_LEVEL, 1)
-                    ]
-                ]
+                        'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_INCREASE_STRUCTURE_LEVEL, 1),
+                    ],
+                ],
             ];
 
             $inlineKeyboard = new InlineKeyboard(

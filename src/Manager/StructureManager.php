@@ -2,7 +2,6 @@
 
 namespace App\Manager;
 
-use App\Entity\Kingdom;
 use App\Entity\Structure;
 use App\Entity\StructureType;
 use App\Interfaces\ResourceInterface;
@@ -10,14 +9,13 @@ use App\Interfaces\StructureInterface;
 
 class StructureManager
 {
-    /** @var BotManager  */
+    /** @var BotManager */
     protected $botManager;
     /** @var KingdomManager */
     protected $kingdomManager;
 
     /**
-     * @param BotManager $botManager
-     * @param KingdomManager $kingdomManager
+     * StructureManager constructor.
      */
     public function __construct(BotManager $botManager, KingdomManager $kingdomManager)
     {
@@ -26,14 +24,11 @@ class StructureManager
     }
 
     /**
-     * @param StructureType $buildType
-     * @return bool
+     * Check.
      */
-    public function checkAvailableResourceForBuyStructure(StructureType $buildType): bool
+    public function hasAvailableForSomeStructure(StructureType $buildType, int $count): bool
     {
         $kingdom = $this->botManager->getKingdom();
-        $freeTerritorySpace = $this->kingdomManager->getTerritorySize()
-            - $this->kingdomManager->getStructureCount();
 
         $result = true;
         foreach (
@@ -41,31 +36,42 @@ class StructureManager
                 ResourceInterface::RESOURCE_GOLD,
                 ResourceInterface::RESOURCE_WOOD,
                 ResourceInterface::RESOURCE_STONE,
-                ResourceInterface::RESOURCE_IRON
+                ResourceInterface::RESOURCE_IRON,
             ] as $resourceType
         ) {
             $result = $kingdom->getResource($resourceType)
-                    >= $buildType->getResourceCost($resourceType);
+                    >= $buildType->getResourceCost($resourceType) * $count;
 
             if (!$result) {
                 break;
             }
         }
 
-        if (
-            $result &&
-            !\in_array($buildType->getCode(), [StructureInterface::STRUCTURE_TYPE_TERRITORY], true)
+        return $result;
+    }
+
+    /**
+     * Check.
+     */
+    public function hasFreeSpaceForSomeStructure(StructureType $buildType, int $count): bool
+    {
+        $freeTerritorySpace = $this->kingdomManager->getTerritorySize()
+            - $this->kingdomManager->getStructureCount();
+
+        if (!\in_array($buildType->getCode(), [StructureInterface::STRUCTURE_TYPE_TERRITORY], true)
         ) {
-            $result = $result && $freeTerritorySpace > 0;
+            $result = $freeTerritorySpace > $count;
+        } else {
+            $result = true;
         }
 
         return $result;
     }
 
     /**
-     * @param Structure $build
+     * Buy.
      */
-    public function processBuyStructure(Structure $build): void
+    public function processBuySomeStructure(Structure $build, int $count): void
     {
         $kingdom = $this->botManager->getKingdom();
         $structureType = $build->getType();
@@ -75,16 +81,16 @@ class StructureManager
                 ResourceInterface::RESOURCE_GOLD,
                 ResourceInterface::RESOURCE_WOOD,
                 ResourceInterface::RESOURCE_STONE,
-                ResourceInterface::RESOURCE_IRON
+                ResourceInterface::RESOURCE_IRON,
             ] as $resourceType
         ) {
             $kingdom->setResource(
                 $resourceType,
                 $kingdom->getResource($resourceType)
-                    - $structureType->getResourceCost($resourceType)
+                    - $structureType->getResourceCost($resourceType) * $count
             );
         }
 
-        $build->setLevel($build->getLevel() + 1);
+        $build->setLevel($build->getLevel() + $count);
     }
 }

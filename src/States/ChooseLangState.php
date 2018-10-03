@@ -5,8 +5,8 @@ namespace App\States;
 use App\Entity\User;
 use App\Factory\StateFactory;
 use App\Interfaces\StateInterface;
-use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Keyboard;
+use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Request;
 
 class ChooseLangState extends BaseState
@@ -31,7 +31,7 @@ class ChooseLangState extends BaseState
                     User::AVAILABLE_LANG_RU,
                     [],
                     \App\Interfaces\TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
-                )
+                ),
             ]
         );
 
@@ -44,17 +44,15 @@ class ChooseLangState extends BaseState
             'chat_id' => $chatId,
             'text' => $text,
             'reply_markup' => $keyboard,
-            'parse_mode' => 'Markdown'
+            'parse_mode' => 'Markdown',
         ]);
     }
 
     /**
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function execute(): void
+    public function execute(Message $message): void
     {
-        $message = $this->botManager->getMessage();
-
         $chosenLang = trim($message->getText(true));
         $langRu = $this->botManager->getTranslator()->trans(
             User::AVAILABLE_LANG_RU,
@@ -67,6 +65,7 @@ class ChooseLangState extends BaseState
         switch ($chosenLang) {
             case $langRu:
                 $lang = User::AVAILABLE_LANG_RU;
+
                 break;
             default:
                 break;
@@ -79,19 +78,18 @@ class ChooseLangState extends BaseState
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $stateName = $user->getState();
-            $state = null;
+            $state = $user->getState();
+            $stateName = $state[User::STATE_NAME_KEY] ?? null;
+
+            $stateStrategy = null;
             /** @var StateFactory $stateFactory */
             $stateFactory = $this->botManager->get(StateFactory::class);
             if ($stateFactory->isAvailable($stateName)) {
-                $state = $stateFactory->create(
-                    $stateName,
-                    $this->botManager
-                );
+                $stateStrategy = $stateFactory->create($stateName);
             }
 
-            if (null !== $state) {
-                $state->preExecute();
+            if (null !== $stateStrategy) {
+                $stateStrategy->preExecute();
             }
         } else {
             $this->preExecute();

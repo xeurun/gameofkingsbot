@@ -9,7 +9,8 @@ use Longman\TelegramBot\Request;
 class DiplomacyScreen extends BaseScreen
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function execute(): void
@@ -18,7 +19,7 @@ class DiplomacyScreen extends BaseScreen
         $text = $this->botManager->getTranslator()->trans(
             TranslatorInterface::TRANSLATOR_MESSAGE_DIPLOMACY_SCREEN_MESSAGE,
             [
-                '%title%' => $title
+                '%title%' => $title,
             ],
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
@@ -26,7 +27,7 @@ class DiplomacyScreen extends BaseScreen
         $data = [
             'chat_id' => $this->botManager->getUser()->getId(),
             'text' => $text,
-            'parse_mode' => 'Markdown'
+            'parse_mode' => 'Markdown',
         ];
 
         Request::sendMessage($data);

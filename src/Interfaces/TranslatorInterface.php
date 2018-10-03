@@ -15,6 +15,10 @@ interface TranslatorInterface
     /** @var string */
     public const TRANSLATOR_DOMAIN_COMMON = 'common';
     /** @var string */
+    public const TRANSLATOR_WORK_TYPE_PREFIX_TO = 'to_';
+    /** @var string */
+    public const TRANSLATOR_WORK_TYPE_PREFIX_FROM = 'from_';
+    /** @var string */
     public const TRANSLATOR_MESSAGE_CHOOSE_LANG = 'choose_lang';
     /** @var string */
     public const TRANSLATOR_MESSAGE_CHOOSE_GENDER = 'choose_gender';
@@ -44,6 +48,12 @@ interface TranslatorInterface
     public const TRANSLATOR_MESSAGE_FIRED_PEOPLE = 'fired_people';
     /** @var string */
     public const TRANSLATOR_MESSAGE_NO_HIRED_PEOPLE = 'no_hired_people';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_NO_COUNT_FOR_FIRE_PEOPLE = 'no_count_for_fire_people';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_NO_COUNT_FOR_HIRE_PEOPLE = 'no_count_for_hire_people';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_HAS_NOT_FREE_SPACE = 'has_not_free_space';
     /** @var string */
     public const TRANSLATOR_MESSAGE_NO_FIRED_PEOPLE = 'no_fired_people';
     /** @var string */
@@ -81,9 +91,19 @@ interface TranslatorInterface
     /** @var string */
     public const TRANSLATOR_MESSAGE_WAREHOUSE_WITHOUT_ADDITIONAL_SCREEN_MESSAGE = 'warehouse_without_additional_screen_message';
     /** @var string */
+    public const TRANSLATOR_MESSAGE_INPUT_STRUCTURE_COUNT_FOR_BUY = 'input_structure_count_for_buy';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_INPUT_PEOPLE_COUNT_FOR_HIRE_OR_FIRE = 'input_people_count_for_hire_or_fire';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_HIRE_OR_FIRE = 'hire_or_fire';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_FOR_HIRE_OR_FIRE = 'for_hire_or_fire';
+    /** @var string */
     public const TRANSLATOR_MESSAGE_HOURS = 'hours';
     /** @var string */
     public const TRANSLATOR_MESSAGE_PEOPLES = 'peoples';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_PEOPLES_RAW = 'peoples_raw';
     /** @var string */
     public const TRANSLATOR_MESSAGE_HIRE = 'hire';
     /** @var string */
@@ -122,4 +142,16 @@ interface TranslatorInterface
     public const TRANSLATOR_MESSAGE_REFER_KINGDOM = 'refer_kingdom';
     /** @var string */
     public const TRANSLATOR_MESSAGE_REFER_SUPREME_GENDER = 'refer_supreme_gender';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_CASTLE_LEVEL_UP = 'castle_level_up';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_TERRITORY_LEVEL_UP = 'territory_level_up';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_STRUCTURE_LEVEL_UP = 'structure_level_up';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_NO_HAVE_FREE_SPACE = 'no_have_free_space';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_NO_HAVE_FREE_SPACE_AND_AVAILABLE_RESOURCES = 'no_have_free_space_and_available_resources';
+    /** @var string */
+    public const TRANSLATOR_MESSAGE_NO_HAVE_AVAILABLE_RESOURCES = 'no_have_available_resources';
 }

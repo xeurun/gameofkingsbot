@@ -10,8 +10,8 @@ RUN docker-php-ext-install intl zip pcntl pdo pdo_mysql bcmath gd opcache
 RUN pecl install apcu
 
 COPY /etc/php/conf.d/custom.ini /usr/local/etc/php/conf.d/
-RUN echo 'date.timezone=${TZ}' > /usr/local/etc/php/conf.d/custom.ini
-RUN echo 'opcache.validate_timestamps=0' > /usr/local/etc/php/conf.d/custom.ini
+RUN echo 'date.timezone=${TZ}' >> /usr/local/etc/php/conf.d/custom.ini
+RUN echo 'opcache.validate_timestamps=0' >> /usr/local/etc/php/conf.d/custom.ini
 
 COPY /etc/php/php-fpm.d/ /usr/local/etc/php/php-fpm.d/
 

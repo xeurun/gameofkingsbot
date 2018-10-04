@@ -181,17 +181,6 @@ _(для более подробной информации о каждом ти
                 ],
                 [
                     'text' => $this->botManager->getTranslator()->trans(
-                        TranslatorInterface::TRANSLATOR_MESSAGE_LOWER,
-                        [],
-                        TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
-                    ),
-                    'callback_data' => CallbackFactory::pack(
-                        CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES,
-                        0
-                    ),
-                ],
-                [
-                    'text' => $this->botManager->getTranslator()->trans(
                         TranslatorInterface::TRANSLATOR_MESSAGE_RAISE,
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
@@ -199,6 +188,17 @@ _(для более подробной информации о каждом ти
                     'callback_data' => CallbackFactory::pack(
                         CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES,
                         1
+                    ),
+                ],
+                [
+                    'text' => $this->botManager->getTranslator()->trans(
+                        TranslatorInterface::TRANSLATOR_MESSAGE_LOWER,
+                        [],
+                        TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+                    ),
+                    'callback_data' => CallbackFactory::pack(
+                        CallbackInterface::CALLBACK_RAISE_OR_LOWER_TAXES,
+                        0
                     ),
                 ],
             ],

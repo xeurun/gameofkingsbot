@@ -30,6 +30,9 @@ class BuildingsScreen extends BaseScreen
     /** @var StructureTypeRepository */
     protected $buildTypeRepository;
 
+    /**
+     * BuildingsScreen constructor.
+     */
     public function __construct(
         BotManager $botManager,
         WorkManager $workManager,
@@ -142,22 +145,22 @@ _(для более подробной информации о каждом ст
             $cost = [];
             $goldCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_GOLD);
             if ($goldCost > 0) {
-                $cost[] = CurrencyHelper::costFormat($goldCost) . ' 💰';
+                $cost[] = '💰 ' . CurrencyHelper::costFormat($goldCost);
             }
             $woodCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_WOOD);
             if ($woodCost > 0) {
-                $cost[] = CurrencyHelper::costFormat($woodCost) . ' 🌲';
+                $cost[] = '🌲 ' . CurrencyHelper::costFormat($woodCost);
             }
             $stoneCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_STONE);
             if ($stoneCost > 0) {
-                $cost[] = CurrencyHelper::costFormat($stoneCost) . ' ⛏';
+                $cost[] = '⛏ ' . CurrencyHelper::costFormat($stoneCost);
             }
             $ironCost = $buildType->getResourceCost(ResourceInterface::RESOURCE_IRON);
             if ($ironCost > 0) {
-                $cost[] = CurrencyHelper::costFormat($ironCost) . ' 🔨';
+                $cost[] = '🔨' . CurrencyHelper::costFormat($ironCost);
             }
 
-            $costText = implode(', ', $cost);
+            $costText = implode(' | ', $cost);
             $text .= $this->botManager->getTranslator()->trans(
                 TranslatorInterface::TRANSLATOR_MESSAGE_BUILDINGS_SCREEN_MESSAGE_STRUCTURE,
                 [
@@ -174,7 +177,7 @@ _(для более подробной информации о каждом ст
 
             $buildings[] = [
                 [
-                    'text' => $this->botManager->getTranslator()->trans(
+                    'text' => '🏛 ' . $this->botManager->getTranslator()->trans(
                         $buildType->getCode(),
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_COMMON

@@ -87,13 +87,13 @@ class WaitInputPeopleCountForHireOrFireState extends BaseState
      */
     public function execute(Message $message): void
     {
+        $user = $this->botManager->getUser();
         $count = trim($message->getText(true));
 
         if (\is_numeric($count) && (int)$count > 0) {
             $count = (int)$count;
 
             $kingdom = $this->botManager->getKingdom();
-            $user = $this->botManager->getUser();
             $state = $user->getState();
             $stateData = $state[User::STATE_DATA_KEY] ?? [];
 
@@ -254,6 +254,16 @@ class WaitInputPeopleCountForHireOrFireState extends BaseState
             Request::sendMessage([
                 'chat_id' => $user->getId(),
                 'text' => $text,
+                'parse_mode' => 'Markdown',
+            ]);
+        } elseif (\is_numeric($count) && 0 === (int)$count) {
+            $user->setState(null);
+            $entityManager = $this->botManager->getEntityManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+            Request::sendMessage([
+                'chat_id' => $user->getId(),
+                'text' => '*Советник*: как прикажите!',
                 'parse_mode' => 'Markdown',
             ]);
         } else {

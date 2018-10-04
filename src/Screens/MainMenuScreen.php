@@ -164,6 +164,49 @@ class MainMenuScreen extends BaseScreen
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
 
+        $keyboard = new Keyboard(
+            [ScreenInterface::SCREEN_TREASURE, ScreenInterface::SCREEN_MAIN_MENU, ScreenInterface::SCREEN_EDICTS],
+            [ScreenInterface::SCREEN_EVENT, ScreenInterface::SCREEN_RESEARCH],
+            [ScreenInterface::SCREEN_BONUSES, ScreenInterface::SCREEN_ACHIEVEMENTS, ScreenInterface::SCREEN_SETTINGS]
+        );
+
+        //Return a random keyboard.
+        $keyboard = $keyboard
+            ->setResizeKeyboard(true)
+            ->setOneTimeKeyboard(false)
+            ->setSelective(false);
+
+        return [
+            'chat_id' => $kingdom->getUser()->getId(),
+            'text' => $text,
+            'reply_markup' => $keyboard,
+            'parse_mode' => 'Markdown',
+        ];
+    }
+
+    /**
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function sendTitle(): bool
+    {
+        $kingdom = $this->botManager->getKingdom();
+        $user = $this->botManager->getUser();
+
+        $text = $this->botManager->getTranslator()->trans(
+            TranslatorInterface::TRANSLATOR_MESSAGE_MAIN_MENU_SCREEN_TITLE,
+            [
+                '%kingdomName%' => $this->botManager->getKingdom()->getName(),
+                '%name%' => $this->botManager->getUser()->getName(),
+                '%supreme_gender%' => $this->botManager->getTranslator()->transChoice(
+                    TranslatorInterface::TRANSLATOR_MESSAGE_SUPREME_GENDER,
+                    User::AVAILABLE_GENDER_KING === $user->getGender() ? 1 : 0,
+                    [],
+                    TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+                ),
+            ],
+            TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
+        );
+
         $inlineKeyboard = new InlineKeyboard([
             [
                 'text' => $this->botManager->getTranslator()->trans(
@@ -187,52 +230,10 @@ class MainMenuScreen extends BaseScreen
             ],
         ]);
 
-        return [
-            'chat_id' => $kingdom->getUser()->getId(),
-            'text' => $text,
-            'reply_markup' => $inlineKeyboard,
-            'parse_mode' => 'Markdown',
-        ];
-    }
-
-    /**
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     */
-    protected function sendTitle(): bool
-    {
-        $user = $this->botManager->getUser();
-
-        $keyboard = new Keyboard(
-            [ScreenInterface::SCREEN_EVENT, ScreenInterface::SCREEN_TREASURE, ScreenInterface::SCREEN_EDICTS],
-            [ScreenInterface::SCREEN_RESEARCH, ScreenInterface::SCREEN_DIPLOMACY],
-            [ScreenInterface::SCREEN_BONUSES, ScreenInterface::SCREEN_ACHIEVEMENTS, ScreenInterface::SCREEN_SETTINGS]
-        );
-
-        //Return a random keyboard.
-        $keyboard = $keyboard
-            ->setResizeKeyboard(true)
-            ->setOneTimeKeyboard(false)
-            ->setSelective(false);
-
-        $text = $this->botManager->getTranslator()->trans(
-            TranslatorInterface::TRANSLATOR_MESSAGE_MAIN_MENU_SCREEN_TITLE,
-            [
-                '%kingdomName%' => $this->botManager->getKingdom()->getName(),
-                '%name%' => $this->botManager->getUser()->getName(),
-                '%supreme_gender%' => $this->botManager->getTranslator()->transChoice(
-                    TranslatorInterface::TRANSLATOR_MESSAGE_SUPREME_GENDER,
-                    User::AVAILABLE_GENDER_KING === $user->getGender() ? 1 : 0,
-                    [],
-                    TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
-                ),
-            ],
-            TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
-        );
-
         $data = [
             'chat_id' => $user->getId(),
             'text' => $text,
-            'reply_markup' => $keyboard,
+            'reply_markup' => $inlineKeyboard,
             'parse_mode' => 'Markdown',
         ];
 

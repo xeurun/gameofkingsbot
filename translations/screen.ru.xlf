@@ -23,9 +23,9 @@
             <trans-unit id="main_menu_screen_message">
                 <source>main_menu_screen_message</source>
                 <target>
-`Ваше Королевство `*%level%*` уровня, его территория `*%territory%*` уровня, налоги установлены на уровень `*%tax%*`, в королевстве `%people%`, еды на `%foodDay%`, ресурсы королевства:`
+`Ваше Королевство `*%level%*` уровня, его территория `*%territory%*` уровня, налоги установлены на уровень `*%tax%*`, у вас `%people%`, еды на `%foodDay%`, ресурсы королевства:`
 
-`🍞`*%food%*` | 💰`*%gold%*` | 🌲`*%wood%*` | ⛏`*%stone%*` | 🔨`*%iron%*
+`💰`*%gold%*` | 🍞`*%food%*` | 🌲`*%wood%*` | ⛏`*%stone%*` | 🔨`*%iron%*
                 </target>
             </trans-unit>
             <trans-unit id="settings_screen_message">
@@ -139,13 +139,13 @@
 
 `Уровень налогов `*%taxLevel%*`, в час люди платят `*%payHourly%*` налогов золотом 💰`
 
-`⚔️ Армия - `*%onArmy% / %maxOnArmy%*
-`🍞 Еда - добывают `*%onFood% / %maxOnFood%*`, в час `*%foodHourly%*
-`🌲 Дерево - добывают `*%onWood% / %maxOnWood%*`, в час `*%woodHourly%*
-`⛏ Камень - добывают `*%onStone% / %maxOnStone%*`, в час `*%stoneHourly%*
-`🔨 Железо - добывают `*%onIron% / %maxOnIron%*`, в час `*%ironHourly%*
+`⚔️ Армия, на службе `*%onArmy% / %maxOnArmy%*
+`🍞 Еда, добывают `*%onFood% / %maxOnFood%*`, в час `*%foodHourly%*
+`🌲 Дерево, добывают `*%onWood% / %maxOnWood%*`, в час `*%woodHourly%*
+`⛏ Камень, добывают `*%onStone% / %maxOnStone%*`, в час `*%stoneHourly%*
+`🔨 Железо, добывают `*%onIron% / %maxOnIron%*`, в час `*%ironHourly%*
 
-`Свободно - `%free%
+`Свободно `%free%
                 </target>
             </trans-unit>
             <trans-unit id="buildings_screen_message">
@@ -162,13 +162,13 @@
                 <source>buildings_screen_message_structure</source>
                 <target>
 `🏛 %structureName% - `*%structureLevel%*
-`Стоимость %structureCost%`
+`%structureCost%`
                 </target>
             </trans-unit>
             <trans-unit id="buildings_screen_message_structure_choose">
                 <source>buildings_screen_message_structure_choose</source>
                 <target>
-выберите здание для покупки или улучшения
+_выберите ниже что вы хотите купить или улучшить_
                 </target>
             </trans-unit>
         </body>

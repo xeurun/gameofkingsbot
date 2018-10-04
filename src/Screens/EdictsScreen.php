@@ -73,6 +73,7 @@ class EdictsScreen extends BaseScreen
         $keyboard = new Keyboard(
             ['text' => ScreenInterface::SCREEN_BUILDINGS],
             ['text' => ScreenInterface::SCREEN_PEOPLE],
+            ['text' => ScreenInterface::SCREEN_DIPLOMACY],
             ['text' => ScreenInterface::SCREEN_BACK]
         );
 

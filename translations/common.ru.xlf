@@ -4,11 +4,11 @@
         <body>
             <trans-unit id="peoples">
                 <source>peoples</source>
-                <target>*%count%*` человек`|*%count%*` человека`|*%count%*` человек`</target>
+                <target>*%count%*` подданных`|*%count%*` подданный`|*%count%*` подданных`</target>
             </trans-unit>
             <trans-unit id="peoples_raw">
                 <source>peoples_raw</source>
-                <target>*%count%* человек|*%count%* человека|*%count%* человек</target>
+                <target>*%count%* подданных|*%count%* подданый|*%count%* подданных</target>
             </trans-unit>
             <trans-unit id="hours">
                 <source>hours</source>
@@ -16,19 +16,19 @@
             </trans-unit>
             <trans-unit id="fire">
                 <source>fire</source>
-                <target>⬇ Уволить</target>
+                <target>⬆ Отправить</target>
             </trans-unit>
             <trans-unit id="hire">
                 <source>hire</source>
-                <target>Нанять ⬆</target>
+                <target>Снять ⬇</target>
             </trans-unit>
             <trans-unit id="raise">
                 <source>raise</source>
-                <target>Увеличить ⬆</target>
+                <target>⬆ Увеличить</target>
             </trans-unit>
             <trans-unit id="lower">
                 <source>lower</source>
-                <target>⬇ Понизить</target>
+                <target>Понизить ⬇</target>
             </trans-unit>
             <trans-unit id="buy_structure">
                 <source>buy_structure</source>
@@ -96,23 +96,23 @@
             </trans-unit>
             <trans-unit id="to_work_type_food">
                 <source>to_work_type_food</source>
-                <target>для добычи еды 🍞</target>
+                <target>на добычу еды 🍞</target>
             </trans-unit>
             <trans-unit id="to_work_type_wood">
                 <source>to_work_type_wood</source>
-                <target>для добычи дерева 🌲</target>
+                <target>на добычу дерева 🌲</target>
             </trans-unit>
             <trans-unit id="to_work_type_stone">
                 <source>to_work_type_stone</source>
-                <target>для добычи камня ⛏</target>
+                <target>на добычу камня ⛏</target>
             </trans-unit>
             <trans-unit id="to_work_type_iron">
                 <source>to_work_type_iron</source>
-                <target>для добычи железа 🔨</target>
+                <target>на добычу железа 🔨</target>
             </trans-unit>
             <trans-unit id="to_work_type_army">
                 <source>to_work_type_army</source>
-                <target>для службы в️ армии ⚔</target>
+                <target>на службу в️ армии ⚔</target>
             </trans-unit>
             <trans-unit id="from_work_type_food">
                 <source>from_work_type_food</source>
@@ -255,13 +255,13 @@
             <trans-unit id="hire_or_fire">
                 <source>hire_or_fire</source>
                 <target>
-{0} уволить |{1} нанять
+{0} снять |{1} отправить
                  </target>
             </trans-unit>
             <trans-unit id="for_hire_or_fire">
                 <source>for_hire_or_fire</source>
                 <target>
-{0} увольнения |{1} найма
+{0} снятия |{1} отправки
                  </target>
             </trans-unit>
         </body>

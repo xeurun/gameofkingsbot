@@ -31,7 +31,7 @@ class SettingsScreen extends BaseScreen
             TranslatorInterface::TRANSLATOR_MESSAGE_SETTINGS_SCREEN_MESSAGE,
             [
                 '%title%' => $title,
-                '%count%' => $userRepository->count([]) * 20,
+                '%count%' => $userRepository->count([]) * 2,
                 '%kingdomName%' => $kingdom->getName(),
                 '%name%' => $user->getName(),
                 '%admin%' => '@alexeystepankov',
@@ -40,6 +40,28 @@ class SettingsScreen extends BaseScreen
         );
 
         $inlineKeyboard = new InlineKeyboard(
+            [
+                [
+                    'text' => $this->botManager->getTranslator()->trans(
+                        TranslatorInterface::TRANSLATOR_MESSAGE_GROUP_BUTTON,
+                        [
+                            'name' => $kingdom->getName(),
+                        ],
+                        TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
+                    ),
+                    'url' => 'https://t.me/worldofkings',
+                ],
+                [
+                    'text' => $this->botManager->getTranslator()->trans(
+                        TranslatorInterface::TRANSLATOR_MESSAGE_CHANNEL_BUTTON,
+                        [
+                            'name' => $kingdom->getName(),
+                        ],
+                        TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
+                    ),
+                    'url' => 'https://t.me/placeofkings',
+                ],
+            ],
             [
                 [
                     'text' => $this->botManager->getTranslator()->trans(

@@ -7,7 +7,7 @@ interface ScreenInterface
     /** @var string */
     public const SCREEN_BACK = '↩️ Назад';
     /** @var string */
-    public const SCREEN_MAIN_MENU = '🤴 Главное меню 👸';
+    public const SCREEN_MAIN_MENU = '🤴 Королевство 👸';
     /** @var string */
     public const SCREEN_EVENT = '🔜 📅 События';
     /** @var string */
@@ -27,5 +27,5 @@ interface ScreenInterface
     /** @var string */
     public const SCREEN_BUILDINGS = '🏛️ Постройки';
     /** @var string */
-    public const SCREEN_PEOPLE = '👪 Люди';
+    public const SCREEN_PEOPLE = '👪 Подданные';
 }

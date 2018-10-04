@@ -4,6 +4,7 @@ namespace App\Screens;
 
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\TranslatorInterface;
+use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Request;
 
 class EventScreen extends BaseScreen
@@ -27,9 +28,23 @@ class EventScreen extends BaseScreen
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
 
+        $keyboard = new Keyboard(
+            ['text' => '🔜 Аудиенция'],
+            ['text' => '🔜 Охота'],
+            ['text' => '🔜 Турнир'],
+            ['text' => ScreenInterface::SCREEN_BACK]
+        );
+
+        //Return a random keyboard.
+        $keyboard = $keyboard
+            ->setResizeKeyboard(true)
+            ->setOneTimeKeyboard(false)
+            ->setSelective(false);
+
         $data = [
             'chat_id' => $kingdom->getUser()->getId(),
             'text' => $text,
+            'reply_markup' => $keyboard,
             'parse_mode' => 'Markdown',
         ];
 

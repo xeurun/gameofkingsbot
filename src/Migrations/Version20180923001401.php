@@ -15,7 +15,6 @@ final class Version20180923001401 extends AbstractMigration
     protected static $buildTypes = [
         [
             "'castle'",
-            1,
             0,
             10000,
             15000,
@@ -23,8 +22,15 @@ final class Version20180923001401 extends AbstractMigration
             100,
         ],
         [
+            "'wall'",
+            0,
+            5000,
+            10000,
+            50,
+            50,
+        ],
+        [
             "'territory'",
-            2,
             0,
             5000,
             10000,
@@ -33,7 +39,6 @@ final class Version20180923001401 extends AbstractMigration
         ],
         [
             "'lifehouse'",
-            3,
             0,
             3000,
             10000,
@@ -42,7 +47,6 @@ final class Version20180923001401 extends AbstractMigration
         ],
         [
             "'barn'",
-            4,
             0,
             3000,
             10000,
@@ -51,7 +55,6 @@ final class Version20180923001401 extends AbstractMigration
         ],
         [
             "'sawmill'",
-            5,
             0,
             3000,
             10000,
@@ -60,7 +63,6 @@ final class Version20180923001401 extends AbstractMigration
         ],
         [
             "'stonemason'",
-            6,
             0,
             3000,
             10000,
@@ -69,7 +71,6 @@ final class Version20180923001401 extends AbstractMigration
         ],
         [
             "'smeltery'",
-            7,
             0,
             3000,
             10000,
@@ -78,7 +79,6 @@ final class Version20180923001401 extends AbstractMigration
         ],
         [
             "'garrison'",
-            8,
             0,
             3000,
             10000,
@@ -87,7 +87,6 @@ final class Version20180923001401 extends AbstractMigration
         ],
         [
             "'library'",
-            9,
             1,
             100000,
             100000,
@@ -96,7 +95,6 @@ final class Version20180923001401 extends AbstractMigration
         ],
         [
             "'market'",
-            10,
             1,
             100000,
             100000,
@@ -111,12 +109,14 @@ final class Version20180923001401 extends AbstractMigration
         $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $values = [];
+        $order = 1;
         foreach (self::$buildTypes as $buildType) {
+            $buildType[] = $order++;
             $values[] = '(' . implode(',', $buildType) . ')';
         }
 
         $this->addSql(
-            'INSERT IGNORE INTO structure_type (`code`, `order`, `max_level`, `gold_cost`, `wood_cost`, `stone_cost`, `iron_cost`) VALUES '
+            'INSERT IGNORE INTO structure_type (`code`, `max_level`, `gold_cost`, `wood_cost`, `stone_cost`, `iron_cost`, `order`) VALUES '
             . implode(',', $values)
         );
     }

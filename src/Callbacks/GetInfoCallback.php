@@ -30,126 +30,126 @@ class GetInfoCallback extends BaseCallback
         switch ($t) {
             case TaxesInterface::TAXES:
                 $text = <<<TEXT
-Налоги определяют размер золота и производительность рабочих, а так же количество употребляемой еды
+Налоги определяют размер золота и производительность подданных, а так же количество употребляемой еды
 TEXT;
 
                 break;
             case ResourceInterface::RESOURCE_FOOD:
                 $text = <<<TEXT
-Еда
+Еда ресурс необходимый подданным для выживания
 TEXT;
 
                 break;
             case ResourceInterface::RESOURCE_WOOD:
                 $text = <<<TEXT
-Древесина
+Древесина ресурс для постройки
 TEXT;
 
                 break;
             case ResourceInterface::RESOURCE_STONE:
                 $text = <<<TEXT
-Камень 
+Камень ресурс для постройки
 TEXT;
 
                 break;
             case ResourceInterface::RESOURCE_IRON:
                 $text = <<<TEXT
-Железо необходимо
+Железо ресурс для постройки
 TEXT;
 
                 break;
             case WorkInterface::WORK_TYPE_FOOD:
                 $text = <<<TEXT
-Еда необходима для постройки некоторых сооружений
+Добыча еды позволяет получать необходимый подданным ресурс - еду
 TEXT;
 
                 break;
             case WorkInterface::WORK_TYPE_WOOD:
                 $text = <<<TEXT
-Дерево необходимо для постройки некоторых сооружений
+Добыча дерева для получения ресурса - дерево
 TEXT;
 
                 break;
             case WorkInterface::WORK_TYPE_STONE:
                 $text = <<<TEXT
-Камни необходимы для постройки некоторых сооружений
+Добыча камня для получения ресурса - камень
 TEXT;
 
                 break;
             case WorkInterface::WORK_TYPE_IRON:
                 $text = <<<TEXT
-Железо необходимо для постройки некоторых сооружений
+Добыча железа для получения ресурса - железо
 TEXT;
 
                 break;
             case WorkInterface::WORK_TYPE_ARMY:
                 $text = <<<TEXT
-Армия защищает ваше королевство и может атаковать чужие
+Армия защищает ваше королевство, а также может атаковать чужое
 TEXT;
 
                 break;
             case StructureInterface::STRUCTURE_TYPE_MARKET:
                 $text = <<<TEXT
-Рынок открывает доступ к обмену и торговли
+Рынок открывает доступ к обмену и торговле
 TEXT;
 
                 break;
             case StructureInterface::STRUCTURE_TYPE_LIBRARY:
                 $text = <<<TEXT
-Библиотека открывает доступ к исследованиям и открывает новые исследования
+Библиотека открывает доступ к исследованиям, ее улучшение открывает новые исследования
 TEXT;
 
                 break;
             case StructureInterface::STRUCTURE_TYPE_CASTLE:
                 $text = <<<TEXT
-Замок увеличивает общий уровень вашего королевства
+Улучшение замока увеличивает общий уровень вашего королевства
 TEXT;
 
                 break;
             case StructureInterface::STRUCTURE_TYPE_TERRITORY:
                 $text = <<<TEXT
-Территория увеличивает доступное количество мест для постройки
+Увеличения территории увеличивает доступное количество мест для постройки
 TEXT;
 
                 break;
             case StructureInterface::STRUCTURE_TYPE_LIFE_HOUSE:
                 $text = <<<TEXT
-Жилые дома увеличивают количество людей в вашем королевства
+Жилые дома увеличивают ваше количество подданных
 TEXT;
 
                 break;
             case StructureInterface::STRUCTURE_TYPE_GARRISON:
                 $text = <<<TEXT
-Гарнизон увеличивает размер вашей армии
+Гарнизон увеличивает максимальный размер вашей армии
 TEXT;
 
                 break;
             case StructureInterface::STRUCTURE_TYPE_SAWMILL:
                 $text = <<<TEXT
-Лесопила увеличивает вместимость хранилища дерева и количество рабочих на добыче дерева
+Лесопилка увеличивает максимальное количество хранимого дерева на складе, а также количество подданных на его добыче
 TEXT;
 
                 break;
             case StructureInterface::STRUCTURE_TYPE_STONEMASON:
                 $text = <<<TEXT
-Каменоломня увеличивает вместимость хранилища камней и количество рабочих на добыче камня
+Каменоломня увеличивает максимальное количество хранимых камней на складе, а также количество подданных на их добыче
 TEXT;
 
                 break;
             case StructureInterface::STRUCTURE_TYPE_SMELTERY:
                 $text = <<<TEXT
-Плавильня увеличивает вместимость хранилища железа и количество рабочих на железа
+Плавильня увеличивает максимальное количество хранимого железа на складе, а также количество подданных на его добыче
 TEXT;
 
                 break;
             case StructureInterface::STRUCTURE_TYPE_BARN:
                 $text = <<<TEXT
-Амбар увеличивает вместимость хранилища еды и количество рабочих на добыче еды
+Амбар увеличивает максимальное количество хранимой еды на складе, а также количество подданных на ее добыче
 TEXT;
 
                 break;
             default:
-                $text = 'Не найдена запрашиваемая информация!';
+                $text = 'Извините, не найдена информация по запрашиваемому объекту!';
 
                 break;
         }

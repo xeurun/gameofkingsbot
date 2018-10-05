@@ -24,11 +24,11 @@
             </trans-unit>
             <trans-unit id="raise">
                 <source>raise</source>
-                <target>⬆ Увеличить</target>
+                <target>Увеличить ⬆</target>
             </trans-unit>
             <trans-unit id="lower">
                 <source>lower</source>
-                <target>Понизить ⬇</target>
+                <target>⬇ Понизить</target>
             </trans-unit>
             <trans-unit id="buy_structure">
                 <source>buy_structure</source>

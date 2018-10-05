@@ -9,9 +9,9 @@ interface WorkInterface
     /** @var int */
     public const INITIAL_WOOD_SALARY = 100;
     /** @var int */
-    public const INITIAL_STONE_SALARY = 5;
+    public const INITIAL_STONE_SALARY = 20;
     /** @var int */
-    public const INITIAL_IRON_SALARY = 3;
+    public const INITIAL_IRON_SALARY = 10;
 
     /** @var int */
     public const INITIAL_ON_ARMY = 0.1 * ResourceInterface::INITIAL_PEOPLE;

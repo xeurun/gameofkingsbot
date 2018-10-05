@@ -4,11 +4,11 @@
         <body>
             <trans-unit id="peoples">
                 <source>peoples</source>
-                <target>*%count%*` подданных`|*%count%*` подданный`|*%count%*` подданных`</target>
+                <target>*%count%*` подданный`|*%count%*` подданных`|*%count%*` подданных`</target>
             </trans-unit>
             <trans-unit id="peoples_raw">
                 <source>peoples_raw</source>
-                <target>*%count%* подданных|*%count%* подданый|*%count%* подданных</target>
+                <target>*%count%* подданный|*%count%* подданых|*%count%* подданных</target>
             </trans-unit>
             <trans-unit id="hours">
                 <source>hours</source>

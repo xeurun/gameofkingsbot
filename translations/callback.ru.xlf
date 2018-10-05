@@ -62,31 +62,31 @@
             </trans-unit>
             <trans-unit id="hired_people">
                 <source>hired_people</source>
-                <target>*Советник*: вы наняли %people% %workType% *%gender%*</target>
+                <target>*Советник*: вы отправили %people% %workType% *%gender%*</target>
             </trans-unit>
             <trans-unit id="fired_people">
                 <source>fired_people</source>
-                <target>*Советник*: вы уволили %people% %workType% *%gender%*</target>
+                <target>*Советник*: вы снялт %people% %workType% *%gender%*</target>
             </trans-unit>
             <trans-unit id="no_hired_people">
                 <source>no_hired_people</source>
-                <target>*Советник*: Нет свободных людей для работы *%gender%* постройте больше жилых домов</target>
+                <target>*Советник*: Нет свободных подданных для отправки *%gender%* постройте больше жилых домов</target>
             </trans-unit>
             <trans-unit id="has_not_free_space">
                 <source>has_not_free_space</source>
-                <target>*Советник*: Нет места для рабочих, постройте новые рабочие здания *%gender%*</target>
+                <target>*Советник*: Нет места для отправки, постройте новые строения *%gender%*</target>
             </trans-unit>
             <trans-unit id="no_fired_people">
                 <source>no_fired_people</source>
-                <target>*Советник*: Некого увольнять %gender%</target>
+                <target>*Советник*: Некого снимать %gender%</target>
             </trans-unit>
             <trans-unit id="no_count_for_fire_people">
                 <source>no_count_for_fire_people</source>
-                <target>*Советник*: Нет такого количества рабочих чтобы их уволить %gender%</target>
+                <target>*Советник*: Недостаточно подданных чтобы их снять %gender%</target>
             </trans-unit>
             <trans-unit id="no_count_for_hire_people">
                 <source>no_count_for_hire_people</source>
-                <target>*Советник*: Нет такого количества свободных людей чтобы их нанять %gender% постройте больше жилых домов</target>
+                <target>*Советник*: Недостаточно свободных подданных %gender% постройте больше жилых домов</target>
             </trans-unit>
             <trans-unit id="every_day_bonus_received">
                 <source>every_day_bonus_received</source>

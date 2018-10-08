@@ -79,6 +79,7 @@ class User
         $this->username = $user->getUsername();
         $this->name = $user->getFirstName();
         $this->setState(StateInterface::STATE_WAIT_CHOOSE_GENDER);
+        $this->processDate = new \DateTime();
     }
 
     /**

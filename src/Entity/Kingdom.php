@@ -99,6 +99,7 @@ class Kingdom
         $this->name = $kingdomName;
         $this->user = $user;
 
+        $this->setResource(ResourceInterface::RESOURCE_PEOPLE, ResourceInterface::INITIAL_PEOPLE);
         $this->setResource(ResourceInterface::RESOURCE_FOOD, ResourceInterface::INITIAL_FOOD);
         $this->setResource(ResourceInterface::RESOURCE_WOOD, ResourceInterface::INITIAL_WOOD);
         $this->setResource(ResourceInterface::RESOURCE_STONE, ResourceInterface::INITIAL_STONE);

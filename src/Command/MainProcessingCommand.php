@@ -19,6 +19,7 @@ class MainProcessingCommand extends Command
 {
     /** @var string */
     protected static $defaultName = 'main-processing';
+
     /** @var UserRepository */
     protected $userRepository;
     /** @var BotManager */

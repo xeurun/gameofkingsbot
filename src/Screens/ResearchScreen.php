@@ -3,15 +3,31 @@
 namespace App\Screens;
 
 use App\Factory\CallbackFactory;
+use App\Helper\CurrencyHelper;
 use App\Interfaces\CallbackInterface;
+use App\Interfaces\ResourceInterface;
 use App\Interfaces\ScreenInterface;
 use App\Interfaces\StructureInterface;
 use App\Interfaces\TranslatorInterface;
+use App\Manager\BotManager;
+use App\Repository\ResearchTypeRepository;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Request;
 
 class ResearchScreen extends BaseScreen
 {
+    /** @var ResearchTypeRepository */
+    protected $researchTypeRepository;
+
+    /**
+     * ResearchScreen constructor.
+     */
+    public function __construct(BotManager $botManager, ResearchTypeRepository $researchTypeRepository)
+    {
+        $this->researchTypeRepository = $researchTypeRepository;
+        parent::__construct($botManager);
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -45,18 +61,44 @@ class ResearchScreen extends BaseScreen
                 TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
             );
 
-            $researches = [
-                [
+            $researches = [];
+            $researchesTypes = $this->researchTypeRepository->findAll();
+            foreach ($researchesTypes as $researchType) {
+                $cost = [];
+                $goldCost = $researchType->getResourceCost(ResourceInterface::RESOURCE_GOLD);
+                if ($goldCost > 0) {
+                    $cost[] = '💰 ' . CurrencyHelper::costFormat($goldCost);
+                }
+                $woodCost = $researchType->getResourceCost(ResourceInterface::RESOURCE_WOOD);
+                if ($woodCost > 0) {
+                    $cost[] = '🌲 ' . CurrencyHelper::costFormat($woodCost);
+                }
+                $stoneCost = $researchType->getResourceCost(ResourceInterface::RESOURCE_STONE);
+                if ($stoneCost > 0) {
+                    $cost[] = '⛏ ' . CurrencyHelper::costFormat($stoneCost);
+                }
+                $ironCost = $researchType->getResourceCost(ResourceInterface::RESOURCE_IRON);
+                if ($ironCost > 0) {
+                    $cost[] = '🔨' . CurrencyHelper::costFormat($ironCost);
+                }
+
+                $researches = [
                     [
-                        'text' => 'Название',
-                        'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_GET_INFO, 'name'),
+                        [
+                            'text' => $this->botManager->getTranslator()->trans(
+                                $researchType->getCode(),
+                                [],
+                                TranslatorInterface::TRANSLATOR_DOMAIN_COMMON
+                            ),
+                            'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_GET_INFO, $researchType->getCode()),
+                        ],
+                        [
+                            'text' => 'Изучить',
+                            'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_INCREASE_RESEARCH_LEVEL, 1),
+                        ],
                     ],
-                    [
-                        'text' => 'Изучить',
-                        'callback_data' => CallbackFactory::pack(CallbackInterface::CALLBACK_INCREASE_STRUCTURE_LEVEL, 1),
-                    ],
-                ],
-            ];
+                ];
+            }
 
             $inlineKeyboard = new InlineKeyboard(
                 ...$researches

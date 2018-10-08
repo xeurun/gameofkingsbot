@@ -6,7 +6,6 @@ use App\Commands\System\CallbackqueryCommand;
 use App\Commands\System\GenericmessageCommand;
 use App\Commands\System\InlinequeryCommand;
 use App\Commands\System\StartCommand;
-use App\Commands\User\HelpCommand;
 use App\Entity\Kingdom;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -82,16 +81,19 @@ class BotManager extends Telegram
             \Longman\TelegramBot\Commands\SystemCommands\InlinequeryCommand::class
         );
 
-        class_alias(
-            HelpCommand::class,
-            \Longman\TelegramBot\Commands\UserCommands\HelpCommand::class
-        );
-
         TelegramLog::initErrorLog('php://stderr');
         TelegramLog::initDebugLog('php://stdout');
         TelegramLog::initUpdateLog('php://stdout');
 
         parent::__construct($apiKey, $botUsername);
+    }
+
+    /**
+     * Init
+     */
+    public function init(User $user): void
+    {
+        $this->user = $user;
     }
 
     /**
@@ -121,14 +123,14 @@ class BotManager extends Telegram
         $updateType = $update->getUpdateType();
 
         if (self::UPDATE_TYPE_CALLBCK_QUERY === $updateType) {
-            $this->setCallbackQuery($update->getCallbackQuery());
+            $this->callbackQuery = $update->getCallbackQuery();
             $from = $update->getCallbackQuery()->getFrom();
         } else {
             if (self::UPDATE_TYPE_MESSAGE === $updateType) {
-                $this->setMessage($update->getMessage());
+                $this->message = $update->getMessage();
                 $from = $update->getMessage()->getFrom();
             } elseif (self::UPDATE_TYPE_INLINE_QUERY === $updateType) {
-                $this->setInlineQuery($update->getInlineQuery());
+                $this->inlineQuery = $update->getInlineQuery();
                 $from = $update->getInlineQuery()->getFrom();
             }
         }
@@ -149,7 +151,7 @@ class BotManager extends Telegram
                 $this->entityManager->flush();
             }
 
-            $this->user = $fromUser;
+            $this->init($fromUser);
 
             $response = parent::processUpdate($update);
         }
@@ -157,60 +159,57 @@ class BotManager extends Telegram
         return $response;
     }
 
+    /**
+     * Get
+     */
     public function getCallbackQuery(): ?CallbackQuery
     {
         return $this->callbackQuery;
     }
 
-    public function setCallbackQuery(?CallbackQuery $callbackQuery): self
-    {
-        $this->callbackQuery = $callbackQuery;
-
-        return $this;
-    }
-
+    /**
+     * Get
+     */
     public function getMessage(): ?Message
     {
         return $this->message;
     }
 
-    public function setMessage(?Message $value): self
-    {
-        $this->message = $value;
-
-        return $this;
-    }
-
+    /**
+     * Get
+     */
     public function getInlineQuery(): ?InlineQuery
     {
         return $this->inlineQuery;
     }
 
-    public function setInlineQuery(?InlineQuery $inlineQuery): self
-    {
-        $this->inlineQuery = $inlineQuery;
-
-        return $this;
-    }
-
     /**
-     * @param string $class
+     * Get
      */
-    public function get($class)
+    public function get(string $class)
     {
         return $this->container->get($class);
     }
 
+    /**
+     * Get
+     */
     public function getTranslator(): TranslatorInterface
     {
         return $this->translator;
     }
 
+    /**
+     * Get
+     */
     public function getEntityManager(): EntityManagerInterface
     {
         return $this->entityManager;
     }
 
+    /**
+     * Get
+     */
     public function getKingdom(): Kingdom
     {
         if ($this->getUser()) {
@@ -220,6 +219,9 @@ class BotManager extends Telegram
         throw new \UnexpectedValueException('Not initialized kingdom');
     }
 
+    /**
+     * Get
+     */
     public function getUser(): User
     {
         return $this->user;

@@ -39,7 +39,7 @@ class AdviserCallback extends BaseCallback
                     $data['text'] = <<<TEXT
 *Советник*: для начала посетите «{$name}»
 
-_(сделать это вы можете нажав соответствующую кнопку ниже)_
+_(для этого нажмите соответствующую кнопку ниже)_
 TEXT;
                     $kingdom->setAdviserState(AdviserInterface::ADVISER_SHOW_WAREHOUSE_TUTORIAL);
 
@@ -47,9 +47,9 @@ TEXT;
                 case AdviserInterface::ADVISER_SHOW_WAREHOUSE_TUTORIAL:
                     $name = ScreenInterface::SCREEN_EDICTS;
                     $data['text'] = <<<TEXT
-*Советник*: теперь давайте перейдем к «{$name}»
+*Советник*: теперь давайте я расскажу про «{$name}»
 
-_(сделать это вы можете нажав соответствующую кнопку ниже)_
+_(нажмите соответствующую кнопку ниже)_
 TEXT;
                     $kingdom->setAdviserState(AdviserInterface::ADVISER_SHOW_EDICTS_TUTORIAL);
 
@@ -57,7 +57,7 @@ TEXT;
                 case AdviserInterface::ADVISER_SHOW_EDICTS_TUTORIAL:
                     $name = ScreenInterface::SCREEN_BUILDINGS;
                     $data['text'] = <<<TEXT
-*Советник*: в первую очередь давайте я расскажу вам про «{$name}»
+*Советник*: в первую очередь давайте я расскажу вам про тип указов - «{$name}»
 
 _(нажмите соответствующую кнопку ниже)_
 TEXT;
@@ -67,7 +67,7 @@ TEXT;
                 case AdviserInterface::ADVISER_SHOW_BUILDINGS_TUTORIAL:
                     $name = ScreenInterface::SCREEN_PEOPLE;
                     $data['text'] = <<<TEXT
-*Советник*: а теперь рассмотрим «{$name}»
+*Советник*: а теперь давайте поговорим про тип указов - «{$name}»
 
 _(нажмите соответствующую кнопку ниже)_
 TEXT;

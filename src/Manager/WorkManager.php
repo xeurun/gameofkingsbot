@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Helper\DateTimeHelper;
 use App\Interfaces\WorkInterface;
 
 class WorkManager
@@ -20,11 +21,7 @@ class WorkManager
     public function workedHours(): int
     {
         $kingdom = $this->botManager->getKingdom();
-
-        $now = new \DateTime();
-        $diff = $now->diff($kingdom->getGrabResourcesDate());
-
-        return $diff->h + ($diff->days * 24);
+        return DateTimeHelper::hourBetween(null, $kingdom->getGrabResourcesDate());
     }
 
     public function getSalary(string $workType): float

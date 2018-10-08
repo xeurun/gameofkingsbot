@@ -26,6 +26,10 @@ class Kingdom
      */
     private $name;
     /**
+     * @ORM\Column(type="integer", options={"default": 100})
+     */
+    private $people;
+    /**
      * @ORM\Column(type="float", precision=2, options={"default": 0})
      */
     private $food;
@@ -87,6 +91,9 @@ class Kingdom
      */
     private $structures;
 
+    /**
+     * Kingdom
+     */
     public function __construct(string $kingdomName, User $user)
     {
         $this->name = $kingdomName;
@@ -106,12 +113,15 @@ class Kingdom
         $this->setWorkerCount(WorkInterface::WORK_TYPE_STONE, WorkInterface::INITIAL_ON_STONE);
         $this->setWorkerCount(WorkInterface::WORK_TYPE_IRON, WorkInterface::INITIAL_ON_IRON);
 
-        $this->setGrabResourcesDate(new \DateTime('yesterday'));
+        $this->setGrabResourcesDate(new \DateTime('-1 hour'));
         $this->setAdviserState(AdviserInterface::ADVISER_SHOW_INITIAL_TUTORIAL);
 
         $this->structures = new ArrayCollection();
     }
 
+    /**
+     * Add structure
+     */
     public function addStructure(Structure $structure): self
     {
         if (!$this->structures->contains($structure)) {
@@ -121,16 +131,25 @@ class Kingdom
         return $this;
     }
 
+    /**
+     * Get
+     */
     public function getId(): int
     {
         return $this->id;
     }
 
+    /**
+     * Get
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * Change
+     */
     public function changeName(string $value): self
     {
         $this->name = $value;
@@ -138,9 +157,17 @@ class Kingdom
         return $this;
     }
 
+    /**
+     * Get
+     * @return mixed
+     */
     public function getResource(string $resourceType)
     {
         switch ($resourceType) {
+            case ResourceInterface::RESOURCE_PEOPLE:
+                $value = $this->people;
+
+                break;
             case ResourceInterface::RESOURCE_GOLD:
                 $value = $this->gold;
 
@@ -168,9 +195,17 @@ class Kingdom
         return $value;
     }
 
+    /**
+     * Set
+     * @param mixed $value
+     */
     public function setResource(string $resourceType, $value): self
     {
         switch ($resourceType) {
+            case ResourceInterface::RESOURCE_PEOPLE:
+                $this->people = $value;
+
+                break;
             case ResourceInterface::RESOURCE_GOLD:
                 $this->gold = $value;
 
@@ -198,6 +233,9 @@ class Kingdom
         return $this;
     }
 
+    /**
+     * Get
+     */
     public function getWorkerCount(string $workType): int
     {
         switch ($workType) {
@@ -228,6 +266,9 @@ class Kingdom
         return $value;
     }
 
+    /**
+     * Set
+     */
     public function setWorkerCount(string $workType, int $value): self
     {
         switch ($workType) {
@@ -258,16 +299,25 @@ class Kingdom
         return $this;
     }
 
+    /**
+     * Get
+     */
     public function getUser(): User
     {
         return $this->user;
     }
 
+    /**
+     * Get
+     */
     public function getTax(): int
     {
         return $this->tax;
     }
 
+    /**
+     * Set
+     */
     public function setTax($tax): self
     {
         if ($tax <= 0) {
@@ -279,21 +329,33 @@ class Kingdom
         return $this;
     }
 
+    /**
+     * Get
+     */
     public function getAdviserState()
     {
         return $this->adviserState;
     }
 
+    /**
+     * Set
+     */
     public function setAdviserState($adviserState): void
     {
         $this->adviserState = $adviserState;
     }
 
+    /**
+     * Get
+     */
     public function getGrabResourcesDate(): \DateTimeInterface
     {
         return $this->grabResourcesDate;
     }
 
+    /**
+     * Set
+     */
     public function setGrabResourcesDate($grabResourcesDate): self
     {
         $this->grabResourcesDate = $grabResourcesDate;
@@ -301,6 +363,9 @@ class Kingdom
         return $this;
     }
 
+    /**
+     * Get
+     */
     public function getStructure(string $structureTypeCode): ?Structure
     {
         foreach ($this->getStructures() as $structure) {
@@ -320,6 +385,9 @@ class Kingdom
         return $this->structures;
     }
 
+    /**
+     * Remove
+     */
     public function removeStructure(Structure $structure): self
     {
         if ($this->structures->contains($structure)) {

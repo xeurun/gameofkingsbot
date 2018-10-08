@@ -166,43 +166,51 @@
 {0} верховная королева 👸|{1} верховный король 🤴
                  </target>
             </trans-unit>
-            <trans-unit id=">structure_type_castle">
+            <trans-unit id="structure_type_castle">
                 <source>structure_type_castle</source>
                 <target>Замок</target>
             </trans-unit>
-            <trans-unit id=">structure_type_territory">
+            <trans-unit id="structure_type_territory">
                 <source>structure_type_territory</source>
                 <target>Территория</target>
             </trans-unit>
-            <trans-unit id=">structure_type_lifehouse">
+            <trans-unit id="structure_type_wall">
+                <source>structure_type_wall</source>
+                <target>Стена</target>
+            </trans-unit>
+            <trans-unit id="structure_type_punishment">
+                <source>structure_type_punishment</source>
+                <target>Казна</target>
+            </trans-unit>
+            <trans-unit id="structure_type_lifehouse">
                 <source>structure_type_lifehouse</source>
                 <target>Жилое здание</target>
             </trans-unit>
-            <trans-unit id=">structure_type_barn">
+            <trans-unit id="structure_type_barn">
                 <source>structure_type_barn</source>
                 <target>Амбар</target>
             </trans-unit>
-            <trans-unit id=">structure_type_sawmill">
+            <trans-unit id="structure_type_sawmill">
                 <source>structure_type_sawmill</source>
                 <target>Лесопилка</target>
             </trans-unit>
-            <trans-unit id=">structure_type_stonemason">
+            <trans-unit id="structure_type_stonemason">
                 <source>structure_type_stonemason</source>
                 <target>Каменоломня</target>
             </trans-unit>
-            <trans-unit id=">structure_type_smeltery">
+            <trans-unit id="structure_type_smeltery">
                 <source>structure_type_smeltery</source>
                 <target>Плавильня</target>
             </trans-unit>
-            <trans-unit id=">structure_type_library">
+            <trans-unit id="structure_type_library">
                 <source>structure_type_library</source>
                 <target>Библиотека</target>
             </trans-unit>
-            <trans-unit id=">structure_type_market">
+            <trans-unit id="structure_type_market">
                 <source>structure_type_market</source>
                 <target>Рынок</target>
             </trans-unit>
-            <trans-unit id=">structure_type_garrison">
+            <trans-unit id="structure_type_garrison">
                 <source>structure_type_garrison</source>
                 <target>Гарнизон</target>
             </trans-unit>
@@ -213,6 +221,14 @@
             <trans-unit id="territory">
                 <source>territory</source>
                 <target>Территория</target>
+            </trans-unit>
+            <trans-unit id="wall">
+                <source>wall</source>
+                <target>Стена</target>
+            </trans-unit>
+            <trans-unit id="punishment">
+                <source>punishment</source>
+                <target>Казна</target>
             </trans-unit>
             <trans-unit id="lifehouse">
                 <source>lifehouse</source>
@@ -263,6 +279,10 @@
                 <target>
 {0} снятия |{1} отправки
                  </target>
+            </trans-unit>
+            <trans-unit id="research_type_economy">
+                <source>research_type_economy</source>
+                <target>Экономика</target>
             </trans-unit>
         </body>
     </file>

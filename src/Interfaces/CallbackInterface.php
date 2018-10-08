@@ -47,6 +47,12 @@ interface CallbackInterface
      */
     public const CALLBACK_INCREASE_STRUCTURE_LEVEL = 'callback_increase_structure_level';
     /**
+     * Increase the research level.
+     *
+     * @var string
+     */
+    public const CALLBACK_INCREASE_RESEARCH_LEVEL = 'callback_increase_research_level';
+    /**
      * Change state.
      *
      * @var string

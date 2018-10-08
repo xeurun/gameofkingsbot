@@ -13,14 +13,27 @@ class ResourceManager
     protected $workManager;
     /** @var PeopleManager */
     protected $peopleManager;
+    /** @var KingdomManager */
+    protected $kingdomManager;
 
-    public function __construct(BotManager $botManager, WorkManager $workManager, PeopleManager $peopleManager)
-    {
+    /**
+     * ResourceManager constructor.
+     */
+    public function __construct(
+        BotManager $botManager,
+        WorkManager $workManager,
+        PeopleManager $peopleManager,
+        KingdomManager $kingdomManager
+    ) {
         $this->botManager = $botManager;
         $this->workManager = $workManager;
         $this->peopleManager = $peopleManager;
+        $this->kingdomManager = $kingdomManager;
     }
 
+    /**
+     * Add every day bonus
+     */
     public function addEveryDayBonus(): void
     {
         $kingdom = $this->botManager->getKingdom();
@@ -40,6 +53,9 @@ class ResourceManager
         }
     }
 
+    /**
+     * Move res to warehouse
+     */
     public function moveExtractedResourcesToWarehouse(): void
     {
         $kingdom = $this->botManager->getKingdom();
@@ -51,7 +67,7 @@ class ResourceManager
         $extractedStone = $this->getExtractedCountByResourceName(ResourceInterface::RESOURCE_STONE);
         $extractedIron = $this->getExtractedCountByResourceName(ResourceInterface::RESOURCE_IRON);
 
-        $bonus = [
+        $resources = [
             ResourceInterface::RESOURCE_GOLD => $extractedGold,
             ResourceInterface::RESOURCE_FOOD => $extractedFood,
             ResourceInterface::RESOURCE_WOOD => $extractedWood,
@@ -59,11 +75,21 @@ class ResourceManager
             ResourceInterface::RESOURCE_IRON => $extractedIron,
         ];
 
-        foreach ($bonus as $resourceType => $bonusValue) {
-            $kingdom->setResource(
-                $resourceType,
-                $kingdom->getResource($resourceType) + $bonusValue
-            );
+        foreach ($resources as $resourceType => $resourceValue) {
+            $max = $this->kingdomManager->getMax($resourceType);
+            $newValue = $kingdom->getResource($resourceType) + $resourceValue;
+
+            if ($newValue > $max) {
+                $kingdom->setResource(
+                    $resourceType,
+                    $max
+                );
+            } else {
+                $kingdom->setResource(
+                    $resourceType,
+                    $newValue
+                );
+            }
         }
 
         $kingdom->setGrabResourcesDate($today);

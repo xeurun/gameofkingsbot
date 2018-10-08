@@ -27,3 +27,7 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+        dql:
+            datetime_functions:
+                timediff: DoctrineExtensions\Query\Mysql\TimeDiff
+                hour: DoctrineExtensions\Query\Mysql\Hour

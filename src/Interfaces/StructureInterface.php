@@ -25,10 +25,16 @@ interface StructureInterface
     /**
      * @var string
      */
+    public const STRUCTURE_TYPE_WALL = 'structure_type_wall';
+    /**
+     * @var string
+     */
     public const STRUCTURE_TYPE_TERRITORY = 'structure_type_territory';
     /**
-     * Жилое здание.
-     *
+     * @var string
+     */
+    public const STRUCTURE_TYPE_PUNISHMENT = 'structure_type_punishment';
+    /**
      * @var string
      */
     public const STRUCTURE_TYPE_LIFE_HOUSE = 'structure_type_lifehouse';

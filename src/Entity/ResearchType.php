@@ -6,9 +6,9 @@ use App\Interfaces\ResourceInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\StructureTypeRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ResearchTypeRepository")
  */
-class StructureType
+class ResearchType
 {
     /**
      * @ORM\Id()
@@ -41,11 +41,11 @@ class StructureType
     private $ironCost;
 
     /**
-     * StructureType constructor.
+     * ResearchType constructor.
      */
-    public function __construct(string $structureCode)
+    public function __construct(string $researchCode)
     {
-        $this->code = $structureCode;
+        $this->code = $researchCode;
     }
 
     /**

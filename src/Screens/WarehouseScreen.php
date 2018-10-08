@@ -29,6 +29,9 @@ class WarehouseScreen extends BaseScreen
     /** @var ResourceManager */
     protected $resourceManager;
 
+    /**
+     * WarehouseScreen constructor.
+     */
     public function __construct(
         BotManager $botManager,
         KingdomManager $kingdomManager,

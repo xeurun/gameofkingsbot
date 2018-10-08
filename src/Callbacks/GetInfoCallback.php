@@ -148,6 +148,18 @@ TEXT;
 TEXT;
 
                 break;
+            case StructureInterface::STRUCTURE_TYPE_PUNISHMENT:
+                $text = <<<TEXT
+Казна увеличивает максимальное количество хранимого золота на складе
+TEXT;
+
+                break;
+            case StructureInterface::STRUCTURE_TYPE_WALL:
+                $text = <<<TEXT
+Стена укрепляет оборону вашего королевства
+TEXT;
+
+                break;
             default:
                 $text = 'Извините, не найдена информация по запрашиваемому объекту!';
 

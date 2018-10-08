@@ -29,6 +29,9 @@ class PeopleScreen extends BaseScreen
     /** @var PeopleManager */
     protected $peopleManager;
 
+    /**
+     * PeopleScreen constructor.
+     */
     public function __construct(
         BotManager $botManager,
         KingdomManager $kingdomManager,
@@ -68,8 +71,8 @@ class PeopleScreen extends BaseScreen
         $name = ScreenInterface::SCREEN_PEOPLE;
         $data = [
             'chat_id' => $this->botManager->getUser()->getId(),
-            'text' => '*Советник*: ' . $gender . " «{$name}» " . ' также не малозначимая часть вашего королевства, тут вы можете управлять налогами, а также нанимать и уволнять людей с различных видов работы
-_(для более подробной информации о каждом типе работ нажмите на его название)_',
+            'text' => '*Советник*: ' . $gender . " «{$name}» " . ' также не малозначимая часть вашего королевства, тут вы можете управлять налогами, а также нанимать и увольнять людей с различных видов работ
+_(для более подробной информации о каждом типе работы нажмите на ее название)_',
             'reply_markup' => $inlineKeyboard,
             'parse_mode' => 'Markdown',
         ];

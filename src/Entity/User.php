@@ -64,6 +64,10 @@ class User
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $refer;
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $processDate;
 
     /**
      * User constructor.
@@ -77,31 +81,49 @@ class User
         $this->setState(StateInterface::STATE_WAIT_CHOOSE_GENDER);
     }
 
+    /**
+     * Get
+     */
     public function getId(): int
     {
         return $this->id;
     }
 
+    /**
+     * Get
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * Set
+     */
     public function setName($name): void
     {
         $this->name = $name;
     }
 
+    /**
+     * Get
+     */
     public function getUsername(): ?string
     {
         return $this->username;
     }
 
+    /**
+     * Get
+     */
     public function getLang(): string
     {
         return $this->lang;
     }
 
+    /**
+     * Set
+     */
     public function setLang(?string $value): self
     {
         $this->lang = $value;
@@ -109,11 +131,17 @@ class User
         return $this;
     }
 
+    /**
+     * Get
+     */
     public function getGender(): string
     {
         return $this->gender;
     }
 
+    /**
+     * Set
+     */
     public function setGender(?string $value): self
     {
         $this->gender = $value;
@@ -121,11 +149,17 @@ class User
         return $this;
     }
 
+    /**
+     * Get
+     */
     public function getState(): array
     {
         return $this->state ?? [];
     }
 
+    /**
+     * Set
+     */
     public function setState(?string $state, array $data = []): self
     {
         if (null !== $state) {
@@ -143,11 +177,17 @@ class User
         return $this;
     }
 
+    /**
+     * Get
+     */
     public function getKingdom(): ?Kingdom
     {
         return $this->kingdom;
     }
 
+    /**
+     * Set
+     */
     public function setKingdom(Kingdom $kingdom): self
     {
         $this->kingdom = $kingdom;
@@ -155,23 +195,53 @@ class User
         return $this;
     }
 
+    /**
+     * Get
+     */
     public function getBonusDate(): ?\DateTimeInterface
     {
         return $this->bonusDate;
     }
 
-    public function setBonusDate($bonusDate): self
+    /**
+     * Set
+     */
+    public function setBonusDate(\DateTimeInterface $bonusDate): self
     {
         $this->bonusDate = $bonusDate;
 
         return $this;
     }
 
+    /**
+     * Get
+     */
+    public function getProcessDate(): ?\DateTimeInterface
+    {
+        return $this->processDate;
+    }
+
+    /**
+     * Set
+     */
+    public function setProcessDate(\DateTimeInterface $value): self
+    {
+        $this->processDate = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set
+     */
     public function setRefer(?User $value): void
     {
         $this->refer = $value;
     }
 
+    /**
+     * Get
+     */
     public function getRefer()
     {
         return $this->refer;

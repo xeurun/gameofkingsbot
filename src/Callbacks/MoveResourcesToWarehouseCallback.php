@@ -19,6 +19,9 @@ class MoveResourcesToWarehouseCallback extends BaseCallback
     /** @var WarehouseScreen */
     protected $warehouseScreen;
 
+    /**
+     * MoveResourcesToWarehouseCallback constructor.
+     */
     public function __construct(
         BotManager $botManager,
         ResourceManager $resourceManager,

@@ -16,11 +16,17 @@ class KingdomManager
     /** @var BotManager */
     protected $botManager;
 
+    /**
+     * KingdomManager constructor.
+     */
     public function __construct(BotManager $botManager)
     {
         $this->botManager = $botManager;
     }
 
+    /**
+     * Create new kingdom.
+     */
     public function createNewKingdom(string $kingdomName): Kingdom
     {
         /** @var StructureTypeRepository $buildTypeRepository */
@@ -42,6 +48,9 @@ class KingdomManager
         return $kingdom;
     }
 
+    /**
+     * Get structure count.
+     */
     public function getStructureCount(): int
     {
         $kingdom = $this->botManager->getKingdom();
@@ -56,16 +65,22 @@ class KingdomManager
     }
 
     /**
-     * @return float|int
+     * Get territory size.
      */
     public function getTerritorySize()
     {
         $kingdom = $this->botManager->getKingdom();
 
-        return $this->level($kingdom, StructureInterface::STRUCTURE_TYPE_TERRITORY)
+        return $this->getCurrentStructureLevel(
+            $kingdom,
+            StructureInterface::STRUCTURE_TYPE_TERRITORY
+            )
             * StructureInterface::STRUCTURE_TYPE_TERRITORY_ADD_SIZE;
     }
 
+    /**
+     * Get tax.
+     */
     public function getTax(): string
     {
         $kingdom = $this->botManager->getKingdom();
@@ -93,7 +108,7 @@ class KingdomManager
     }
 
     /**
-     * @param int $newTaxLevelValue
+     * Set tax.
      */
     public function setTax(Kingdom $kingdom, string $newTaxLevel, ?int $newTaxLevelValue = null): void
     {
@@ -119,19 +134,29 @@ class KingdomManager
         }
     }
 
-    public function getPeople()
+    /**
+     * Get people count.
+     */
+    public function getPeople(): int
     {
         $kingdom = $this->botManager->getKingdom();
-        $level = $this->level($kingdom, StructureInterface::STRUCTURE_TYPE_LIFE_HOUSE);
+        $level = $this->getCurrentStructureLevel(
+            $kingdom,
+            StructureInterface::STRUCTURE_TYPE_LIFE_HOUSE
+        );
 
-        return ResourceInterface::INITIAL_PEOPLE + ($level * StructureInterface::STRUCTURE_TYPE_LIFE_HOUSE_ADD_PEOPLE);
+        return $kingdom->getResource(ResourceInterface::RESOURCE_PEOPLE) +
+            ($level * StructureInterface::STRUCTURE_TYPE_LIFE_HOUSE_ADD_PEOPLE);
     }
 
-    public function level(Kingdom $kingdom, string $structureType): float
+    /**
+     * Get structure level.
+     */
+    public function getCurrentStructureLevel(Kingdom $kingdom, string $structureType): float
     {
-        $castle = $kingdom->getStructure($structureType);
-        if ($castle) {
-            $level = $castle->getLevel();
+        $structure = $kingdom->getStructure($structureType);
+        if ($structure) {
+            $level = $structure->getLevel();
         } else {
             $level = 0;
         }
@@ -139,6 +164,9 @@ class KingdomManager
         return $level;
     }
 
+    /**
+     * Get max resource.
+     */
     public function getMax(string $resourceType): float
     {
         $kingdom = $this->botManager->getKingdom();
@@ -151,15 +179,15 @@ class KingdomManager
                 if ($structure) {
                     $level = $structure->getLevel();
                 }
-                $initialCount = ResourceInterface::INITIAL_PEOPLE_MAX;
+                $initialCount = ResourceInterface::INITIAL_PEOPLE_MAX * $level;
 
                 break;
             case ResourceInterface::RESOURCE_GOLD:
-                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_SMELTERY);
+                $structure = $kingdom->getStructure(StructureInterface::STRUCTURE_TYPE_PUNISHMENT);
                 if ($structure) {
                     $level = $structure->getLevel();
                 }
-                $initialCount = ResourceInterface::INITIAL_GOLD_MAX;
+                $initialCount = ResourceInterface::INITIAL_GOLD_MAX * $level;
 
                 break;
             case ResourceInterface::RESOURCE_FOOD:
@@ -167,7 +195,7 @@ class KingdomManager
                 if ($structure) {
                     $level = $structure->getLevel();
                 }
-                $initialCount = ResourceInterface::INITIAL_FOOD_MAX;
+                $initialCount = ResourceInterface::INITIAL_FOOD_MAX * $level;
 
                 break;
             case ResourceInterface::RESOURCE_WOOD:
@@ -175,7 +203,7 @@ class KingdomManager
                 if ($structure) {
                     $level = $structure->getLevel();
                 }
-                $initialCount = ResourceInterface::INITIAL_WOOD_MAX;
+                $initialCount = ResourceInterface::INITIAL_WOOD_MAX * $level;
 
                 break;
             case ResourceInterface::RESOURCE_STONE:
@@ -183,7 +211,7 @@ class KingdomManager
                 if ($structure) {
                     $level = $structure->getLevel();
                 }
-                $initialCount = ResourceInterface::INITIAL_STONE_MAX;
+                $initialCount = ResourceInterface::INITIAL_STONE_MAX * $level;
 
                 break;
             case ResourceInterface::RESOURCE_IRON:
@@ -191,7 +219,7 @@ class KingdomManager
                 if ($structure) {
                     $level = $structure->getLevel();
                 }
-                $initialCount = ResourceInterface::INITIAL_IRON_MAX;
+                $initialCount = ResourceInterface::INITIAL_IRON_MAX * $level;
 
                 break;
             default:
@@ -202,7 +230,7 @@ class KingdomManager
     }
 
     /**
-     * @return float
+     * Get max workers.
      */
     public function getMaxOn(string $workType): int
     {

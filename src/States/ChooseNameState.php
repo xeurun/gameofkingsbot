@@ -21,7 +21,6 @@ class ChooseNameState extends BaseState
     public function preExecute(): void
     {
         $user = $this->botManager->getUser();
-        $chatId = $this->message->getChat()->getId();
 
         $text = $this->botManager->getTranslator()->trans(
             TranslatorInterface::TRANSLATOR_MESSAGE_CHOOSE_NAME,
@@ -37,7 +36,7 @@ class ChooseNameState extends BaseState
         );
 
         Request::sendMessage([
-            'chat_id' => $chatId,
+            'chat_id' => $user->getId(),
             'text' => $text,
             'reply_markup' => Keyboard::remove(),
             'parse_mode' => 'Markdown',

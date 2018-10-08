@@ -43,7 +43,7 @@ class EdictsScreen extends BaseScreen
         $pName = ScreenInterface::SCREEN_PEOPLE;
         $data = [
             'chat_id' => $this->botManager->getUser()->getId(),
-            'text' => '*Советник*: ' . $gender . " «{$name}» " . ' делятся на указы относящиеся к постройкам королества - ' . "«{$bName}»" . ' и указы относящиеся к людям королевства - ' . "«{$pName}»",
+            'text' => '*Советник*: ' . $gender . " «{$name}» " . ' делятся на указы относящиеся к постройкам королества - ' . "«{$bName}»" . ' и указы относящиеся к вашим подданным - ' . "«{$pName}»",
             'reply_markup' => $inlineKeyboard,
             'parse_mode' => 'Markdown',
         ];

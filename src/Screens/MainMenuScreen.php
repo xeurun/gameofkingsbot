@@ -111,8 +111,8 @@ class MainMenuScreen extends BaseScreen
         $eatHourly = $this->peopleManager->eat();
         $foodDay = round($kingdom->getResource(ResourceInterface::RESOURCE_FOOD) / $eatHourly);
 
-        $level = $this->kingdomManager->level($kingdom, StructureInterface::STRUCTURE_TYPE_CASTLE);
-        $territory = $this->kingdomManager->level($kingdom, StructureInterface::STRUCTURE_TYPE_TERRITORY);
+        $level = $this->kingdomManager->getCurrentStructureLevel($kingdom, StructureInterface::STRUCTURE_TYPE_CASTLE);
+        $territory = $this->kingdomManager->getCurrentStructureLevel($kingdom, StructureInterface::STRUCTURE_TYPE_TERRITORY);
         $people = $this->kingdomManager->getPeople();
 
         $text = $this->botManager->getTranslator()->trans(
@@ -164,10 +164,24 @@ class MainMenuScreen extends BaseScreen
             TranslatorInterface::TRANSLATOR_DOMAIN_SCREEN
         );
 
+        $user = $this->botManager->getUser();
         $keyboard = new Keyboard(
-            [ScreenInterface::SCREEN_TREASURE, ScreenInterface::SCREEN_MAIN_MENU, ScreenInterface::SCREEN_EDICTS],
-            [ScreenInterface::SCREEN_EVENT, ScreenInterface::SCREEN_RESEARCH],
-            [ScreenInterface::SCREEN_BONUSES, ScreenInterface::SCREEN_ACHIEVEMENTS, ScreenInterface::SCREEN_SETTINGS]
+            [
+                ScreenInterface::SCREEN_TREASURE,
+                User::AVAILABLE_GENDER_KING === $user->getGender()
+                    ? ScreenInterface::SCREEN_KINGDOM_KING
+                    : ScreenInterface::SCREEN_KINGDOM_QUEEN,
+                ScreenInterface::SCREEN_EDICTS,
+            ],
+            [
+                ScreenInterface::SCREEN_EVENT,
+                ScreenInterface::SCREEN_RESEARCH,
+            ],
+            [
+                ScreenInterface::SCREEN_BONUSES,
+                ScreenInterface::SCREEN_ACHIEVEMENTS,
+                ScreenInterface::SCREEN_SETTINGS,
+            ]
         );
 
         //Return a random keyboard.

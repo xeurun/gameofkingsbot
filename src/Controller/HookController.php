@@ -18,6 +18,9 @@ class HookController extends AbstractController
     /** @var EntityManagerInterface */
     protected $entityManager;
 
+    /**
+     * HookController constructor.
+     */
     public function __construct(BotManager $botManager, EntityManagerInterface $entityManager)
     {
         $this->botManager = $botManager;

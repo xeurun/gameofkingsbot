@@ -59,7 +59,7 @@ class KingdomNameState extends BaseState
     public function execute(Message $message): void
     {
         $user = $this->botManager->getUser();
-        $kingdomName = trim($this->message->getText(true));
+        $kingdomName = trim($message->getText(true));
         if (!empty($kingdomName)) {
             $entityManager = $this->botManager->getEntityManager();
             $kingdom = $user->getKingdom();

@@ -9,6 +9,10 @@ interface ScreenInterface
     /** @var string */
     public const SCREEN_MAIN_MENU = '🤴 Королевство 👸';
     /** @var string */
+    public const SCREEN_KINGDOM_KING = '🤴 Королевство';
+    /** @var string */
+    public const SCREEN_KINGDOM_QUEEN = '👸 Королевство';
+    /** @var string */
     public const SCREEN_EVENT = '🔜 📅 События';
     /** @var string */
     public const SCREEN_EDICTS = '📖 Указы';

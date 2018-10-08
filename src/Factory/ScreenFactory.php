@@ -38,6 +38,8 @@ class ScreenFactory
     {
         switch ($screenName) {
             case ScreenInterface::SCREEN_MAIN_MENU:
+            case ScreenInterface::SCREEN_KINGDOM_KING:
+            case ScreenInterface::SCREEN_KINGDOM_QUEEN:
             case ScreenInterface::SCREEN_BACK:
                 $screen = $this->botManager->get(MainMenuScreen::class);
 

@@ -30,15 +30,15 @@ class StructureTypeRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return BuildType[] Returns an array of BuildType objects
+//     * @return StructureType[] Returns an array of StructureType objects
 //     */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
+            ->orderBy('s.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -47,10 +47,10 @@ class StructureTypeRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?BuildType
+    public function findOneBySomeField($value): ?StructureType
     {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

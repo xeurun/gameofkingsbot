@@ -68,7 +68,7 @@ class MainProcessingCommand extends Command
                 'HOUR(TIMEDIFF(u.processDate, :now))',
                 1
             )
-        )->setParameter(':now', $now);
+        )->setParameter('now', $now);
 
         $dataProvider = $qb->getQuery()->iterate();
 

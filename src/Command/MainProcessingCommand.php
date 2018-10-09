@@ -88,13 +88,7 @@ class MainProcessingCommand extends Command
                 if ($kingdom instanceof Kingdom) {
                     $hourDiff = DateTimeHelper::hourBetween($now, $processDate);
 
-                    $eat = $this->peopleManager->eat($hourDiff);
-                    $newValue = $kingdom->getResource(ResourceInterface::RESOURCE_FOOD)
-                        - $eat;
-
-                    $io->writeln("\tEat: {$eat}");
-                    $kingdom->setResource(ResourceInterface::RESOURCE_FOOD, $newValue);
-
+                    // First check current value
                     if (
                         $kingdom->getResource(ResourceInterface::RESOURCE_FOOD) < 0 &&
                         $kingdom->getResource(ResourceInterface::RESOURCE_PEOPLE) > ResourceInterface::MIN_ALIVE_PEOPLE
@@ -106,10 +100,22 @@ class MainProcessingCommand extends Command
 
                         Request::sendMessage([
                             'chat_id' => $user->getId(),
-                            'text' => '*Советник*: в королевстве умирают люди, срочно нужна еда!',
+                            'text' => <<<TEXT
+*Советник*: в королевстве нехватает еды, если через час ее не будет, начнут умирать люди!
+_(при недостаточном количестве еды, каждый час будет умирать один человек)_
+TEXT
+                        ,
                             'parse_mode' => 'Markdown',
                         ]);
                     }
+
+                    // Eat
+                    $eat = $this->peopleManager->eat($hourDiff);
+                    $newValue = $kingdom->getResource(ResourceInterface::RESOURCE_FOOD)
+                        - $eat;
+
+                    $io->writeln("\tEat: {$eat}");
+                    $kingdom->setResource(ResourceInterface::RESOURCE_FOOD, $newValue);
                 }
 
                 $io->write("\tDone!");

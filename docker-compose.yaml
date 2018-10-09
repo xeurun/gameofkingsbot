@@ -7,6 +7,9 @@ networks:
     internal: true
     name: local
 
+volumes:
+  db:
+
 services:
   mysql:
     container_name: ${DOCKER_PROJECT_NAME}-mysql
@@ -22,7 +25,7 @@ services:
     ports:
       - 33${PORT_SUFFIX}:3306
     volumes:
-      - .docker/var/lib/mysql:/var/lib/mysql
+      - db:/var/lib/mysql
     environment:
       TZ: ${TIMEZONE}
       MYSQL_ROOT_PASSWORD: ${DOCKER_PROJECT_NAME}
@@ -47,6 +50,23 @@ services:
     volumes:
       - .:/app
       - /etc/letsencrypt:/etc/letsencrypt
+  php-cron:
+    container_name: ${DOCKER_PROJECT_NAME}-php-cron
+    build:
+      context: .docker
+      dockerfile: php-cron.${DOCKER_ENV}.Dockerfile
+      args:
+        VERSION: 7.2-cli-alpine
+    environment:
+      TZ: ${TIMEZONE}
+      XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
+    networks:
+      - public
+      - local
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app
   nginx:
     container_name: ${DOCKER_PROJECT_NAME}-nginx
     build:
@@ -66,10 +86,11 @@ services:
     volumes:
       - .:/app
       - /etc/ssl:/etc/ssl
-      - /home/projects/docker/proxy/snippets:/etc/nginx/snippets
       - /etc/letsencrypt:/etc/letsencrypt
+      - /home/projects/docker/proxy/snippets:/etc/nginx/snippets
       - /var/www/letsencrypt:/var/www/letsencrypt
   composer:
+    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
     container_name: ${DOCKER_PROJECT_NAME}-composer
     build:
       context: .docker

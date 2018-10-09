@@ -31,5 +31,13 @@ interface ScreenInterface
     /** @var string */
     public const SCREEN_BUILDINGS = '🏛️ Постройки';
     /** @var string */
+    public const SCREEN_TOP = '🔜 Рейтинг';
+    /** @var string */
+    public const SCREEN_TOP_STRUCTURES = '🔜 По строениям';
+    /** @var string */
+    public const SCREEN_TOP_PEOPLES = '🔜 По людям';
+    /** @var string */
+    public const SCREEN_TOP_RESOURCES = '🔜 По ресурсам';
+    /** @var string */
     public const SCREEN_PEOPLE = '👪 Подданные';
 }

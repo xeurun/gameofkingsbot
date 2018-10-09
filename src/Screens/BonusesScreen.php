@@ -73,19 +73,19 @@ class BonusesScreen extends BaseScreen
             [
                 [
                     'text' => $this->botManager->getTranslator()->trans(
-                        TranslatorInterface::TRANSLATOR_MESSAGE_ENTER_TO_GROUP_BUTTON,
-                        [],
-                        TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
-                    ),
-                    'url' => 'https://t.me/worldofkings',
-                ],
-                [
-                    'text' => $this->botManager->getTranslator()->trans(
                         TranslatorInterface::TRANSLATOR_MESSAGE_SUBSCRIBE_ON_CHANNEL_BUTTON,
                         [],
                         TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
                     ),
                     'url' => 'https://t.me/placeofkings',
+                ],
+                [
+                    'text' => $this->botManager->getTranslator()->trans(
+                        TranslatorInterface::TRANSLATOR_MESSAGE_ENTER_TO_GROUP_BUTTON,
+                        [],
+                        TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
+                    ),
+                    'url' => 'https://t.me/worldofkings',
                 ],
             ], [
                 [

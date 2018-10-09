@@ -43,16 +43,6 @@ class SettingsScreen extends BaseScreen
             [
                 [
                     'text' => $this->botManager->getTranslator()->trans(
-                        TranslatorInterface::TRANSLATOR_MESSAGE_GROUP_BUTTON,
-                        [
-                            'name' => $kingdom->getName(),
-                        ],
-                        TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
-                    ),
-                    'url' => 'https://t.me/worldofkings',
-                ],
-                [
-                    'text' => $this->botManager->getTranslator()->trans(
                         TranslatorInterface::TRANSLATOR_MESSAGE_CHANNEL_BUTTON,
                         [
                             'name' => $kingdom->getName(),
@@ -60,6 +50,16 @@ class SettingsScreen extends BaseScreen
                         TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
                     ),
                     'url' => 'https://t.me/placeofkings',
+                ],
+                [
+                    'text' => $this->botManager->getTranslator()->trans(
+                        TranslatorInterface::TRANSLATOR_MESSAGE_GROUP_BUTTON,
+                        [
+                            'name' => $kingdom->getName(),
+                        ],
+                        TranslatorInterface::TRANSLATOR_DOMAIN_INLINE
+                    ),
+                    'url' => 'https://t.me/worldofkings',
                 ],
             ],
             [

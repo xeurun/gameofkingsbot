@@ -5,7 +5,7 @@ namespace App\Helper;
 class DateTimeHelper
 {
     /**
-     * Get hour
+     * Get hour.
      */
     public static function hourBetween(
         ?\DateTimeInterface $left = null,

@@ -29,6 +29,7 @@ class MainProcessingCommand extends Command
 
     /**
      * MainProcessingCommand constructor.
+     *
      * @throws
      */
     public function __construct(
@@ -55,6 +56,7 @@ class MainProcessingCommand extends Command
 
     /**
      * @throws
+     *
      * @return int|null|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -74,10 +76,10 @@ class MainProcessingCommand extends Command
 
         $batchSize = 100;
         $i = 0;
-        while (($userRow = $dataProvider->next()) !== false) {
+        while (false !== ($userRow = $dataProvider->next())) {
             $user = $userRow[0] ?? null;
             if ($user instanceof User) {
-                $io->writeln( "\t{$user->getId()} processing...");
+                $io->writeln("\t{$user->getId()} processing...");
 
                 $this->botManager->init($user);
                 $processDate = $user->getProcessDate();
@@ -90,7 +92,7 @@ class MainProcessingCommand extends Command
                     $newValue = $kingdom->getResource(ResourceInterface::RESOURCE_FOOD)
                         - $eat;
 
-                    $io->writeln( "\tEat: {$eat}");
+                    $io->writeln("\tEat: {$eat}");
                     $kingdom->setResource(ResourceInterface::RESOURCE_FOOD, $newValue);
 
                     if (
@@ -110,11 +112,11 @@ class MainProcessingCommand extends Command
                     }
                 }
 
-                $io->write( "\tDone!");
+                $io->write("\tDone!");
                 $user->setProcessDate($now);
             }
 
-            if ($i % $batchSize === 0) {
+            if (0 === $i % $batchSize) {
                 $this->botManager->getEntityManager()->flush();
                 $this->botManager->getEntityManager()->clear();
             }

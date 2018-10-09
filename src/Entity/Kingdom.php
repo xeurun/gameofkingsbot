@@ -92,7 +92,7 @@ class Kingdom
     private $structures;
 
     /**
-     * Kingdom
+     * Kingdom.
      */
     public function __construct(string $kingdomName, User $user)
     {
@@ -121,7 +121,7 @@ class Kingdom
     }
 
     /**
-     * Add structure
+     * Add structure.
      */
     public function addStructure(Structure $structure): self
     {
@@ -133,7 +133,7 @@ class Kingdom
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getId(): int
     {
@@ -141,7 +141,7 @@ class Kingdom
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getName(): string
     {
@@ -149,7 +149,7 @@ class Kingdom
     }
 
     /**
-     * Change
+     * Change.
      */
     public function changeName(string $value): self
     {
@@ -159,8 +159,7 @@ class Kingdom
     }
 
     /**
-     * Get
-     * @return mixed
+     * Get.
      */
     public function getResource(string $resourceType)
     {
@@ -197,8 +196,7 @@ class Kingdom
     }
 
     /**
-     * Set
-     * @param mixed $value
+     * Set.
      */
     public function setResource(string $resourceType, $value): self
     {
@@ -235,7 +233,7 @@ class Kingdom
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getWorkerCount(string $workType): int
     {
@@ -268,7 +266,7 @@ class Kingdom
     }
 
     /**
-     * Set
+     * Set.
      */
     public function setWorkerCount(string $workType, int $value): self
     {
@@ -301,7 +299,7 @@ class Kingdom
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getUser(): User
     {
@@ -309,7 +307,7 @@ class Kingdom
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getTax(): int
     {
@@ -317,7 +315,7 @@ class Kingdom
     }
 
     /**
-     * Set
+     * Set.
      */
     public function setTax($tax): self
     {
@@ -331,7 +329,7 @@ class Kingdom
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getAdviserState()
     {
@@ -339,7 +337,7 @@ class Kingdom
     }
 
     /**
-     * Set
+     * Set.
      */
     public function setAdviserState($adviserState): void
     {
@@ -347,7 +345,7 @@ class Kingdom
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getGrabResourcesDate(): \DateTimeInterface
     {
@@ -355,7 +353,7 @@ class Kingdom
     }
 
     /**
-     * Set
+     * Set.
      */
     public function setGrabResourcesDate($grabResourcesDate): self
     {
@@ -365,7 +363,7 @@ class Kingdom
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getStructure(string $structureTypeCode): ?Structure
     {
@@ -387,7 +385,7 @@ class Kingdom
     }
 
     /**
-     * Remove
+     * Remove.
      */
     public function removeStructure(Structure $structure): self
     {

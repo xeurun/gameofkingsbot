@@ -83,7 +83,7 @@ class User
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getId(): int
     {
@@ -91,7 +91,7 @@ class User
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getName(): ?string
     {
@@ -99,7 +99,7 @@ class User
     }
 
     /**
-     * Set
+     * Set.
      */
     public function setName($name): void
     {
@@ -107,7 +107,7 @@ class User
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getUsername(): ?string
     {
@@ -115,7 +115,7 @@ class User
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getLang(): string
     {
@@ -123,7 +123,7 @@ class User
     }
 
     /**
-     * Set
+     * Set.
      */
     public function setLang(?string $value): self
     {
@@ -133,7 +133,7 @@ class User
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getGender(): string
     {
@@ -141,7 +141,7 @@ class User
     }
 
     /**
-     * Set
+     * Set.
      */
     public function setGender(?string $value): self
     {
@@ -151,7 +151,7 @@ class User
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getState(): array
     {
@@ -159,7 +159,7 @@ class User
     }
 
     /**
-     * Set
+     * Set.
      */
     public function setState(?string $state, array $data = []): self
     {
@@ -179,7 +179,7 @@ class User
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getKingdom(): ?Kingdom
     {
@@ -187,7 +187,7 @@ class User
     }
 
     /**
-     * Set
+     * Set.
      */
     public function setKingdom(Kingdom $kingdom): self
     {
@@ -197,7 +197,7 @@ class User
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getBonusDate(): ?\DateTimeInterface
     {
@@ -205,7 +205,7 @@ class User
     }
 
     /**
-     * Set
+     * Set.
      */
     public function setBonusDate(\DateTimeInterface $bonusDate): self
     {
@@ -215,7 +215,7 @@ class User
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getProcessDate(): ?\DateTimeInterface
     {
@@ -223,7 +223,7 @@ class User
     }
 
     /**
-     * Set
+     * Set.
      */
     public function setProcessDate(\DateTimeInterface $value): self
     {
@@ -233,7 +233,7 @@ class User
     }
 
     /**
-     * Set
+     * Set.
      */
     public function setRefer(?User $value): void
     {
@@ -241,7 +241,7 @@ class User
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getRefer()
     {

@@ -107,6 +107,8 @@ class ScreenFactory
         return [
             ScreenInterface::SCREEN_BACK,
             ScreenInterface::SCREEN_MAIN_MENU,
+            ScreenInterface::SCREEN_KINGDOM_KING,
+            ScreenInterface::SCREEN_KINGDOM_QUEEN,
             ScreenInterface::SCREEN_EVENT,
             ScreenInterface::SCREEN_EDICTS,
             ScreenInterface::SCREEN_TREASURE,

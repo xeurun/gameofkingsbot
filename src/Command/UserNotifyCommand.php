@@ -4,13 +4,11 @@ namespace App\Command;
 
 use App\Entity\Kingdom;
 use App\Entity\User;
-use App\Helper\DateTimeHelper;
 use App\Interfaces\ResourceInterface;
 use App\Manager\BotManager;
 use App\Manager\KingdomManager;
 use App\Manager\PeopleManager;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Longman\TelegramBot\Request;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,6 +30,7 @@ class UserNotifyCommand extends Command
 
     /**
      * MainProcessingCommand constructor.
+     *
      * @throws
      */
     public function __construct(
@@ -60,6 +59,7 @@ class UserNotifyCommand extends Command
 
     /**
      * @throws
+     *
      * @return int|null|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -73,10 +73,10 @@ class UserNotifyCommand extends Command
 
         $batchSize = 100;
         $i = 0;
-        while (($userRow = $dataProvider->next()) !== false) {
+        while (false !== ($userRow = $dataProvider->next())) {
             $user = $userRow[0] ?? null;
             if ($user instanceof User) {
-                $io->writeln( "\t{$user->getId()} processing...");
+                $io->writeln("\t{$user->getId()} processing...");
 
                 $this->botManager->init($user);
 
@@ -104,11 +104,11 @@ TEXT
                     ]);
                 }
 
-                $io->write( "\tDone!");
+                $io->write("\tDone!");
                 $user->setProcessDate($now);
             }
 
-            if ($i % $batchSize === 0) {
+            if (0 === $i % $batchSize) {
                 $this->botManager->getEntityManager()->clear();
             }
 

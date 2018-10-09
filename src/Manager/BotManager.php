@@ -89,7 +89,7 @@ class BotManager extends Telegram
     }
 
     /**
-     * Init
+     * Init.
      */
     public function init(User $user): void
     {
@@ -160,7 +160,7 @@ class BotManager extends Telegram
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getCallbackQuery(): ?CallbackQuery
     {
@@ -168,7 +168,7 @@ class BotManager extends Telegram
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getMessage(): ?Message
     {
@@ -176,7 +176,7 @@ class BotManager extends Telegram
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getInlineQuery(): ?InlineQuery
     {
@@ -184,7 +184,7 @@ class BotManager extends Telegram
     }
 
     /**
-     * Get
+     * Get.
      */
     public function get(string $class)
     {
@@ -192,7 +192,7 @@ class BotManager extends Telegram
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getTranslator(): TranslatorInterface
     {
@@ -200,7 +200,7 @@ class BotManager extends Telegram
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getEntityManager(): EntityManagerInterface
     {
@@ -208,7 +208,7 @@ class BotManager extends Telegram
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getKingdom(): Kingdom
     {
@@ -220,7 +220,7 @@ class BotManager extends Telegram
     }
 
     /**
-     * Get
+     * Get.
      */
     public function getUser(): User
     {

@@ -32,7 +32,7 @@ class ResourceManager
     }
 
     /**
-     * Add every day bonus
+     * Add every day bonus.
      */
     public function addEveryDayBonus(): void
     {
@@ -54,7 +54,7 @@ class ResourceManager
     }
 
     /**
-     * Move res to warehouse
+     * Move res to warehouse.
      */
     public function moveExtractedResourcesToWarehouse(): void
     {

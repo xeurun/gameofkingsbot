@@ -19,12 +19,12 @@ abstract class BaseState
     }
 
     /**
-     * Pre execute
+     * Pre execute.
      */
     abstract public function preExecute(): void;
 
     /**
-     * Execute
+     * Execute.
      */
     abstract public function execute(Message $message): void;
 }

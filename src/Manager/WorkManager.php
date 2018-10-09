@@ -21,6 +21,7 @@ class WorkManager
     public function workedHours(): int
     {
         $kingdom = $this->botManager->getKingdom();
+
         return DateTimeHelper::hourBetween(null, $kingdom->getGrabResourcesDate());
     }
 

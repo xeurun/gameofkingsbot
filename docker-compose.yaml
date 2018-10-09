@@ -90,7 +90,6 @@ services:
       - /home/projects/docker/proxy/snippets:/etc/nginx/snippets
       - /var/www/letsencrypt:/var/www/letsencrypt
   composer:
-    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
     container_name: ${DOCKER_PROJECT_NAME}-composer
     build:
       context: .docker

@@ -89,6 +89,7 @@ class MainProcessingCommand extends Command
                     $hourDiff = DateTimeHelper::hourBetween($now, $processDate);
 
                     // First check current value
+                    $die = false;
                     if (
                         $kingdom->getResource(ResourceInterface::RESOURCE_FOOD) < 0 &&
                         $kingdom->getResource(ResourceInterface::RESOURCE_PEOPLE) > ResourceInterface::MIN_ALIVE_PEOPLE
@@ -97,16 +98,7 @@ class MainProcessingCommand extends Command
                             ResourceInterface::RESOURCE_PEOPLE,
                             $kingdom->getResource(ResourceInterface::RESOURCE_PEOPLE) - $hourDiff
                         );
-
-                        Request::sendMessage([
-                            'chat_id' => $user->getId(),
-                            'text' => <<<TEXT
-*Советник*: в королевстве нехватает еды, если через час ее не будет, начнут умирать люди!
-_(при недостаточном количестве еды, каждый час будет умирать один человек)_
-TEXT
-                        ,
-                            'parse_mode' => 'Markdown',
-                        ]);
+                        $die = true;
                     }
 
                     // Eat
@@ -116,6 +108,22 @@ TEXT
 
                     $io->writeln("\tEat: {$eat}");
                     $kingdom->setResource(ResourceInterface::RESOURCE_FOOD, $newValue);
+
+                    if ($kingdom->getResource(ResourceInterface::RESOURCE_FOOD) < 0) {
+                        $addText = $die
+                            ? 'умирают люди от нехватки еды, если через час ее не будет, они продолжат умирать'
+                            : 'нехватает еды, если через час ее не будет, начнут умирать люди';
+
+                        Request::sendMessage([
+                            'chat_id' => $user->getId(),
+                            'text' => <<<TEXT
+*Советник*: в королевстве {$addText}!
+_(при недостаточном количестве еды, каждый час будет умирать один человек)_
+TEXT
+                            ,
+                            'parse_mode' => 'Markdown',
+                        ]);
+                    }
                 }
 
                 $io->write("\tDone!");

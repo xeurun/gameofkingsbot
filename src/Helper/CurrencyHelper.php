@@ -9,7 +9,7 @@ class CurrencyHelper
      */
     public static function costFormat($value): string
     {
-        if ($value >= 1000) {
+        if ($value >= 1000 || $value <= -1000) {
             $x = round($value);
             $xNumberFormat = number_format($x);
             $xArray = explode(',', $xNumberFormat);

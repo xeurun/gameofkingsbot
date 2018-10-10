@@ -109,8 +109,7 @@ _(для более подробной информации о каждом ст
         $kingdom = $this->botManager->getKingdom();
         $title = ScreenInterface::SCREEN_BUILDINGS;
 
-        $freeTerritorySize = $this->kingdomManager->getTerritorySize()
-            - $this->kingdomManager->getStructureCount();
+        $freeTerritorySize = $this->kingdomManager->getFreeStructureSpace();
 
         $text = $this->botManager->getTranslator()->trans(
             TranslatorInterface::TRANSLATOR_MESSAGE_BUILDINGS_SCREEN_MESSAGE,

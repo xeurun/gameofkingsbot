@@ -49,6 +49,15 @@ class KingdomManager
     }
 
     /**
+     * @return float|int
+     */
+    public function getFreeStructureSpace()
+    {
+        return $this->getTerritorySize()
+            - $this->getStructureCount();
+    }
+
+    /**
      * Get structure count.
      */
     public function getStructureCount(): int

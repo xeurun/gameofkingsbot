@@ -66,15 +66,19 @@
             </trans-unit>
             <trans-unit id="fired_people">
                 <source>fired_people</source>
-                <target>*Советник*: вы снялт %people% %workType% *%gender%*</target>
+                <target>*Советник*: вы сняли %people% %workType% *%gender%*</target>
             </trans-unit>
             <trans-unit id="no_hired_people">
                 <source>no_hired_people</source>
-                <target>*Советник*: Нет свободных подданных для отправки *%gender%* постройте больше жилых домов</target>
+                <target>*Советник*: Нет свободных подданных *%gender%* постройте больше жилых домов</target>
             </trans-unit>
             <trans-unit id="has_not_free_space">
                 <source>has_not_free_space</source>
-                <target>*Советник*: Нет места для отправки, постройте новые строения *%gender%*</target>
+                <target>
+*Советник*: для такого количества нет места *%gender%*
+
+_(купите новые здания)_
+                </target>
             </trans-unit>
             <trans-unit id="no_fired_people">
                 <source>no_fired_people</source>

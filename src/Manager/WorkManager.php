@@ -81,6 +81,20 @@ class WorkManager
             - $kingdom->getWorkerCount(WorkInterface::WORK_TYPE_ARMY);
     }
 
+    /**
+     * @return bool
+     */
+    public function maxHireSpace(string $workType): int
+    {
+        $kingdom = $this->botManager->getKingdom();
+        $max = $this->kingdomManager->getMaxOn($workType);
+
+        return $max - $kingdom->getWorkerCount($workType);
+    }
+
+    /**
+     * @return bool
+     */
     public function hasFreeSpaceFor(string $workType, int $count = 1): bool
     {
         $kingdom = $this->botManager->getKingdom();

@@ -96,7 +96,7 @@ class HookController extends AbstractController
         try {
             $this->entityManager->beginTransaction();
             $m = $request->get('m', '/start');
-            $callbackName = $request->get('c', '{callback_get_info@structure_type_barn');
+            $callbackName = $request->get('c', '{callback_get_info@structure_type_barn}');
 
             $this->botManager->setCustomInput('{
                 "update_id":119409613, 

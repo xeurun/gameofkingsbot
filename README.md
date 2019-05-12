@@ -1,4 +1,4 @@
-# Quiz client
+# GameOfKingsBot
 
 <h4 align="center">
 An open source platform application for make telegram bot games

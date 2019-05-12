@@ -24,7 +24,7 @@ An open source platform application for make telegram bot games
     <a href="https://github.com/xeurun/gameofkingsbot/issues">
     	<img src="https://img.shields.io/github/issues/xeurun/gameofkingsbot.svg">
     </a>
-    <a href="https://opensource.org/licenses/MIT">
+    <a href="https://choosealicense.com/licenses/gpl-3.0/">
     	<img src="https://img.shields.io/badge/license-GPL3-blue.svg">
     </a>
 </p>
